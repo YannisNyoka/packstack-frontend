@@ -1,8 +1,22 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import * as Sentry from '@sentry/react'
 import './index.css'
 import App from './App.jsx'
 import { resolveTenantSlug } from './api/tenant.js'
+
+// This app routinely renders real customer PII (name, phone, email) pulled
+// from packstack-backend - opt out of Sentry's default user/request data
+// collection rather than take the default. See instrument.js in
+// packstack-backend for the same reasoning applied server-side.
+Sentry.init({
+  dsn: import.meta.env.VITE_SENTRY_DSN,
+  environment: import.meta.env.MODE,
+  dataCollection: {
+    userInfo: false,
+    httpBodies: [],
+  },
+})
 
 const root = createRoot(document.getElementById('root'))
 
