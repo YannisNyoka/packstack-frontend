@@ -1,5 +1,6 @@
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
+import { OnboardingChecklist } from '../components/OnboardingChecklist.jsx';
 import styles from './DashboardLayout.module.css';
 
 const STATUS_BANNER = {
@@ -73,6 +74,7 @@ export function DashboardLayout() {
             {isOwner && <Link to="/dashboard/settings">Manage billing</Link>}
           </div>
         )}
+        <OnboardingChecklist />
         <Outlet />
       </main>
     </div>
