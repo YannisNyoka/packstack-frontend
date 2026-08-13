@@ -882,8 +882,10 @@ function DomainsSection() {
     setVerifyingDomain(domain);
     setError(null);
     try {
-      await domainsApi.verifyDomain(domain);
-      if (pendingInstructions?.domain === domain) setPendingInstructions(null);
+      const result = await domainsApi.verifyDomain(domain);
+      // Ownership (TXT) can be verified while Vercel routing still isn't set
+      // up yet - show those instructions instead of clearing the callout.
+      setPendingInstructions(result.vercelDnsInstructions ? { domain, vercelDnsInstructions: result.vercelDnsInstructions } : null);
       await load();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Verification failed.');
@@ -928,13 +930,31 @@ function DomainsSection() {
       </form>
       {addError && <p className="error-text">{addError}</p>}
 
-      {pendingInstructions && (
+      {pendingInstructions?.dnsInstructions && (
         <div className="card" style={{ boxShadow: 'none', marginBottom: 16, background: 'var(--color-warning-bg)' }}>
           <p style={{ margin: '0 0 6px' }}>
-            Add this TXT record to verify <strong>{pendingInstructions.domain}</strong>:
+            Add this TXT record to verify you own <strong>{pendingInstructions.domain}</strong>:
           </p>
           <code style={{ display: 'block', fontSize: 13 }}>
             {pendingInstructions.dnsInstructions.host} → {pendingInstructions.dnsInstructions.value}
+          </code>
+        </div>
+      )}
+
+      {pendingInstructions?.vercelDnsInstructions && (
+        <div className="card" style={{ boxShadow: 'none', marginBottom: 16, background: 'var(--color-warning-bg)' }}>
+          <p style={{ margin: '0 0 6px' }}>
+            Ownership verified. Now point <strong>{pendingInstructions.domain}</strong> at PackStack so it actually
+            serves your site - add whichever of these matches your domain, then click Verify again:
+          </p>
+          <code style={{ display: 'block', fontSize: 13, marginBottom: 4 }}>
+            If it's a root domain (e.g. {pendingInstructions.domain}): {pendingInstructions.vercelDnsInstructions.apex.type}{' '}
+            {pendingInstructions.vercelDnsInstructions.apex.host} → {pendingInstructions.vercelDnsInstructions.apex.value}
+          </code>
+          <code style={{ display: 'block', fontSize: 13 }}>
+            If it's a subdomain (e.g. book.{pendingInstructions.domain}):{' '}
+            {pendingInstructions.vercelDnsInstructions.subdomain.type} {pendingInstructions.vercelDnsInstructions.subdomain.host} →{' '}
+            {pendingInstructions.vercelDnsInstructions.subdomain.value}
           </code>
         </div>
       )}
@@ -968,14 +988,14 @@ function DomainsSection() {
                   <span className={`badge ${SSL_BADGE[mapping.sslStatus] || 'badge-neutral'}`}>{mapping.sslStatus}</span>
                 </td>
                 <td style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }}>
-                  {!mapping.verified && (
+                  {mapping.sslStatus !== 'issued' && (
                     <button
                       type="button"
                       className="btn btn-sm"
                       disabled={verifyingDomain === mapping.domain}
                       onClick={() => handleVerify(mapping.domain)}
                     >
-                      {verifyingDomain === mapping.domain ? 'Checking…' : 'Verify'}
+                      {verifyingDomain === mapping.domain ? 'Checking…' : mapping.verified ? 'Check SSL status' : 'Verify'}
                     </button>
                   )}
                   <button type="button" className="btn btn-sm btn-danger" onClick={() => handleRemove(mapping.domain)}>
