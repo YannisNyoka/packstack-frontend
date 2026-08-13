@@ -5,6 +5,13 @@ import { DashboardLayout, trialBanner } from '../DashboardLayout.jsx'
 import { useAuth } from '../../auth/AuthContext.jsx'
 
 vi.mock('../../auth/AuthContext.jsx')
+// DashboardLayout renders OnboardingChecklist, which needs a resolved tenant
+// slug (normally set by main.jsx's boot sequence, never run in these tests)
+// and hits the services/staff APIs - stub both so rendering the layout here
+// doesn't require the full app boot or real network calls.
+vi.mock('../../api/tenant.js', () => ({ getTenantSlug: () => 'test-salon' }))
+vi.mock('../../api/services.js', () => ({ listServices: () => Promise.resolve([]) }))
+vi.mock('../../api/staff.js', () => ({ listStaff: () => Promise.resolve([]) }))
 
 const DAY_MS = 24 * 60 * 60 * 1000
 

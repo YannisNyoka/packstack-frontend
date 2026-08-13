@@ -16,5 +16,8 @@ jobs:
           node-version: 20
       - run: npm ci
       - run: npm run lint
-      - run: npm test
+      # threads (vite.config.js's default, chosen because forks hangs in the
+      # sandboxed local dev environment this repo is usually worked in) fails
+      # outright on GitHub Actions runners - forks is the one that works here.
+      - run: npm test -- --pool=forks
       - run: npm run build
