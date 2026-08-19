@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { OnboardingChecklist } from '../components/OnboardingChecklist.jsx';
@@ -36,6 +37,7 @@ const NAV_ITEMS = [
 export function DashboardLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
   const isOwner = user?.role === 'owner';
   const banner = STATUS_BANNER[user?.tenantStatus] || trialBanner(user?.tenantStatus, user?.trialEndsAt);
 
@@ -46,7 +48,23 @@ export function DashboardLayout() {
 
   return (
     <div className={styles.shell}>
-      <aside className={styles.sidebar}>
+      <header className={styles.mobileBar}>
+        <button
+          type="button"
+          className={styles.menuButton}
+          onClick={() => setMenuOpen(true)}
+          aria-label="Open menu"
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+        <span className={styles.mobileBrand}>PackStack</span>
+      </header>
+
+      {menuOpen && <div className={styles.backdrop} onClick={() => setMenuOpen(false)} />}
+
+      <aside className={`${styles.sidebar} ${menuOpen ? styles.sidebarOpen : ''}`}>
         <div className={styles.brand}>PackStack</div>
         <nav className={styles.nav}>
           {NAV_ITEMS.filter((item) => !item.ownerOnly || isOwner).map((item) => (
@@ -55,6 +73,7 @@ export function DashboardLayout() {
               to={item.to}
               end={item.end}
               className={({ isActive }) => `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`}
+              onClick={() => setMenuOpen(false)}
             >
               {item.label}
             </NavLink>

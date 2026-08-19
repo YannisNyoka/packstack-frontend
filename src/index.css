@@ -176,9 +176,18 @@ a {
 }
 
 table.table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
+}
+
+table.table tbody,
+table.table thead,
+table.table tr {
+  width: 100%;
 }
 
 table.table th {

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useSuperAdminAuth } from '../superadmin/SuperAdminAuthContext.jsx';
 import styles from './DashboardLayout.module.css';
@@ -10,6 +11,7 @@ const NAV_ITEMS = [
 export function SuperAdminLayout() {
   const { admin, logout } = useSuperAdminAuth();
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   async function handleLogout() {
     await logout();
@@ -18,7 +20,23 @@ export function SuperAdminLayout() {
 
   return (
     <div className={styles.shell}>
-      <aside className={styles.sidebar}>
+      <header className={styles.mobileBar}>
+        <button
+          type="button"
+          className={styles.menuButton}
+          onClick={() => setMenuOpen(true)}
+          aria-label="Open menu"
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+        <span className={styles.mobileBrand}>PackStack Admin</span>
+      </header>
+
+      {menuOpen && <div className={styles.backdrop} onClick={() => setMenuOpen(false)} />}
+
+      <aside className={`${styles.sidebar} ${menuOpen ? styles.sidebarOpen : ''}`}>
         <div className={styles.brand}>PackStack Admin</div>
         <nav className={styles.nav}>
           {NAV_ITEMS.map((item) => (
@@ -27,6 +45,7 @@ export function SuperAdminLayout() {
               to={item.to}
               end={item.end}
               className={({ isActive }) => `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`}
+              onClick={() => setMenuOpen(false)}
             >
               {item.label}
             </NavLink>
