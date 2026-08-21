@@ -29,56 +29,53 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/book" element={<BookingPage />} />
-          <Route path="/manage" element={<ManagePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/billing/success" element={<BillingSuccessPage />} />
-          <Route path="/billing/cancelled" element={<BillingCancelledPage />} />
-          <Route
-            path="/dashboard"
-            element={
-              <RequireAuth>
-                <DashboardLayout />
-              </RequireAuth>
-            }
-          >
-            <Route index element={<AppointmentsPage />} />
-            <Route path="staff" element={<StaffPage />} />
-            <Route path="services" element={<ServicesPage />} />
-            <Route path="customers" element={<CustomersPage />} />
-            <Route path="settings" element={<SettingsPage />} />
-          </Route>
-
-          <Route
-            element={
-              <SuperAdminAuthProvider>
-                <Outlet />
-              </SuperAdminAuthProvider>
-            }
-          >
-            <Route path="/superadmin/login" element={<SuperAdminLoginPage />} />
+        {/* Global, like AuthProvider - so any customer-facing page (landing,
+            booking wizard) can tell whether a customer is already logged in,
+            not just the /account/* routes. */}
+        <CustomerAuthProvider>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/book" element={<BookingPage />} />
+            <Route path="/manage" element={<ManagePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/billing/success" element={<BillingSuccessPage />} />
+            <Route path="/billing/cancelled" element={<BillingCancelledPage />} />
             <Route
-              path="/superadmin"
+              path="/dashboard"
               element={
-                <RequireSuperAdmin>
-                  <SuperAdminLayout />
-                </RequireSuperAdmin>
+                <RequireAuth>
+                  <DashboardLayout />
+                </RequireAuth>
               }
             >
-              <Route index element={<TenantsPage />} />
-              <Route path="plans" element={<PlansPage />} />
+              <Route index element={<AppointmentsPage />} />
+              <Route path="staff" element={<StaffPage />} />
+              <Route path="services" element={<ServicesPage />} />
+              <Route path="customers" element={<CustomersPage />} />
+              <Route path="settings" element={<SettingsPage />} />
             </Route>
-          </Route>
 
-          <Route
-            element={
-              <CustomerAuthProvider>
-                <Outlet />
-              </CustomerAuthProvider>
-            }
-          >
+            <Route
+              element={
+                <SuperAdminAuthProvider>
+                  <Outlet />
+                </SuperAdminAuthProvider>
+              }
+            >
+              <Route path="/superadmin/login" element={<SuperAdminLoginPage />} />
+              <Route
+                path="/superadmin"
+                element={
+                  <RequireSuperAdmin>
+                    <SuperAdminLayout />
+                  </RequireSuperAdmin>
+                }
+              >
+                <Route index element={<TenantsPage />} />
+                <Route path="plans" element={<PlansPage />} />
+              </Route>
+            </Route>
+
             <Route path="/account/login" element={<CustomerLoginPage />} />
             <Route path="/account/signup" element={<CustomerSignupPage />} />
             <Route
@@ -89,10 +86,10 @@ export default function App() {
                 </RequireCustomerAuth>
               }
             />
-          </Route>
 
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </CustomerAuthProvider>
       </AuthProvider>
     </BrowserRouter>
   );

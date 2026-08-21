@@ -25,7 +25,7 @@ export function CustomerLoginPage() {
     setError(null);
     try {
       await login(phone, password);
-      navigate(location.state?.from?.pathname || '/account', { replace: true });
+      navigate(location.state?.from?.pathname || '/book', { replace: true });
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Something went wrong. Please try again.');
     } finally {

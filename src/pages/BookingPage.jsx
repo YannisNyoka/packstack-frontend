@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import * as bookingApi from '../api/publicBooking.js';
 import { ApiError } from '../api/client.js';
+import { useCustomerAuth } from '../auth/CustomerAuthContext.jsx';
 import styles from './BookingPage.module.css';
 
 const RETURN_STATUS = new URLSearchParams(window.location.search).get('depositSuccess')
@@ -12,6 +14,7 @@ const RETURN_STATUS = new URLSearchParams(window.location.search).get('depositSu
       : null;
 
 export function BookingPage() {
+  const { customer, booting: customerAuthBooting } = useCustomerAuth();
   const [theme, setTheme] = useState(null);
   const [services, setServices] = useState([]);
   const [staff, setStaff] = useState([]);
@@ -187,6 +190,12 @@ export function BookingPage() {
       className={styles.wrap}
       style={{ '--brand': primaryColor, '--color-primary': primaryColor, '--color-accent': accentColor }}
     >
+      {!customerAuthBooting && customer && (
+        <div className={styles.accountBar}>
+          <Link to="/account">My Account</Link>
+        </div>
+      )}
+
       <header className={styles.header}>
         {theme?.logoUrl && <img src={theme.logoUrl} alt="" className={styles.logo} />}
         <h1>{theme?.businessName || 'Book an appointment'}</h1>

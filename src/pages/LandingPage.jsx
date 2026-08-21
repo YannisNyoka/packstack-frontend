@@ -3,9 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import * as bookingApi from '../api/publicBooking.js';
 import { ApiError } from '../api/client.js';
 import { Footer } from '../components/Footer.jsx';
+import { useCustomerAuth } from '../auth/CustomerAuthContext.jsx';
 import styles from './LandingPage.module.css';
 
 export function LandingPage() {
+  const { customer } = useCustomerAuth();
   const [theme, setTheme] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(null);
@@ -56,8 +58,8 @@ export function LandingPage() {
           <span>{theme?.businessName}</span>
         </div>
         <div className={styles.navLinks}>
-          <Link to="/account/login" className={styles.navLink}>
-            Log in
+          <Link to={customer ? '/account' : '/account/login'} className={styles.navLink}>
+            {customer ? 'My Account' : 'Log in'}
           </Link>
           <Link to="/book" className={styles.navCta}>
             Book Now

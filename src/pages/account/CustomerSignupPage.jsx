@@ -31,7 +31,7 @@ export function CustomerSignupPage() {
     setError(null);
     try {
       await signup({ name, phone, email: email || undefined, password });
-      navigate('/account', { replace: true });
+      navigate('/book', { replace: true });
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Something went wrong. Please try again.');
     } finally {
