@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import * as bookingApi from '../api/publicBooking.js';
 import { ApiError } from '../api/client.js';
 import { useCustomerAuth } from '../auth/CustomerAuthContext.jsx';
+import { AccountHeader } from '../components/AccountHeader.jsx';
 import styles from './BookingPage.module.css';
 
 const RETURN_STATUS = new URLSearchParams(window.location.search).get('depositSuccess')
@@ -146,7 +147,9 @@ export function BookingPage() {
   if (loading) {
     return (
       <div className={styles.wrap}>
-        <p className="muted">Loading…</p>
+        <div className={styles.inner}>
+          <p className="muted">Loading…</p>
+        </div>
       </div>
     );
   }
@@ -154,7 +157,9 @@ export function BookingPage() {
   if (loadError) {
     return (
       <div className={styles.wrap}>
-        <p className="error-text">{loadError}</p>
+        <div className={styles.inner}>
+          <p className="error-text">{loadError}</p>
+        </div>
       </div>
     );
   }
@@ -162,24 +167,26 @@ export function BookingPage() {
   if (RETURN_STATUS) {
     return (
       <div className={styles.wrap}>
-        <div className="card">
-          {RETURN_STATUS === 'success' ? (
-            <>
-              <h2 style={{ marginTop: 0 }}>Thanks for your payment!</h2>
-              <p className="muted">We're confirming your booking now - you'll receive a confirmation shortly.</p>
-            </>
-          ) : (
-            <>
-              <h2 style={{ marginTop: 0 }}>Payment not completed</h2>
-              <p className="muted">
-                Your payment {RETURN_STATUS === 'cancelled' ? 'was cancelled' : 'did not go through'}, so your slot
-                was not reserved. Please try booking again.
-              </p>
-              <a className="btn btn-primary" style={{ marginTop: 8 }} href="/">
-                Book again
-              </a>
-            </>
-          )}
+        <div className={styles.inner}>
+          <div className="card">
+            {RETURN_STATUS === 'success' ? (
+              <>
+                <h2 style={{ marginTop: 0 }}>Thanks for your payment!</h2>
+                <p className="muted">We're confirming your booking now - you'll receive a confirmation shortly.</p>
+              </>
+            ) : (
+              <>
+                <h2 style={{ marginTop: 0 }}>Payment not completed</h2>
+                <p className="muted">
+                  Your payment {RETURN_STATUS === 'cancelled' ? 'was cancelled' : 'did not go through'}, so your slot
+                  was not reserved. Please try booking again.
+                </p>
+                <a className="btn btn-primary" style={{ marginTop: 8 }} href="/">
+                  Book again
+                </a>
+              </>
+            )}
+          </div>
         </div>
       </div>
     );
@@ -190,17 +197,17 @@ export function BookingPage() {
       className={styles.wrap}
       style={{ '--brand': primaryColor, '--color-primary': primaryColor, '--color-accent': accentColor }}
     >
-      {!customerAuthBooting && customer && (
-        <div className={styles.accountBar}>
-          <Link to="/account">My Account</Link>
-        </div>
-      )}
+      <div className={styles.inner}>
+      <AccountHeader
+        theme={theme}
+        right={!customerAuthBooting && customer ? <Link to="/account">My Account</Link> : null}
+      />
 
-      <header className={styles.header}>
-        {theme?.logoUrl && <img src={theme.logoUrl} alt="" className={styles.logo} />}
-        <h1>{theme?.businessName || 'Book an appointment'}</h1>
-        {theme?.tagline && <p className="muted">{theme.tagline}</p>}
-      </header>
+      {theme?.tagline && (
+        <header className={styles.header}>
+          <p className="muted">{theme.tagline}</p>
+        </header>
+      )}
 
       {step !== 'confirmation' && (
         <ol className={styles.steps}>
@@ -391,6 +398,7 @@ export function BookingPage() {
             </a>
           </div>
         )}
+      </div>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import * as manageApi from '../api/appointmentManage.js';
 import * as bookingApi from '../api/publicBooking.js';
 import { ApiError } from '../api/client.js';
+import { AccountHeader } from '../components/AccountHeader.jsx';
 import styles from './BookingPage.module.css';
 
 const FINAL_STATUSES = ['completed', 'cancelled', 'no_show'];
@@ -107,7 +108,9 @@ export function ManagePage() {
   if (loading) {
     return (
       <div className={styles.wrap}>
-        <p className="muted">Loading…</p>
+        <div className={styles.inner}>
+          <p className="muted">Loading…</p>
+        </div>
       </div>
     );
   }
@@ -115,7 +118,9 @@ export function ManagePage() {
   if (loadError) {
     return (
       <div className={styles.wrap}>
-        <p className="error-text">{loadError}</p>
+        <div className={styles.inner}>
+          <p className="error-text">{loadError}</p>
+        </div>
       </div>
     );
   }
@@ -129,8 +134,10 @@ export function ManagePage() {
       className={styles.wrap}
       style={{ '--brand': primaryColor, '--color-primary': primaryColor, '--color-accent': accentColor }}
     >
+      <div className={styles.inner}>
+      <AccountHeader theme={theme} />
+
       <header className={styles.header}>
-        {theme?.logoUrl && <img src={theme.logoUrl} alt="" className={styles.logo} />}
         <h1>Your appointment</h1>
       </header>
 
@@ -227,6 +234,7 @@ export function ManagePage() {
             </div>
           </div>
         )}
+      </div>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import { useCustomerAuth } from '../../auth/CustomerAuthContext.jsx';
 import * as accountApi from '../../api/customerAccount.js';
 import * as bookingApi from '../../api/publicBooking.js';
 import { ApiError } from '../../api/client.js';
+import { AccountHeader } from '../../components/AccountHeader.jsx';
 import styles from './CustomerProfilePage.module.css';
 
 const TABS = [
@@ -399,16 +400,17 @@ export function CustomerProfilePage() {
       className={styles.wrap}
       style={{ '--brand': primaryColor, '--color-primary': primaryColor, '--color-accent': accentColor }}
     >
-      <header className={styles.header}>
-        <div>
-          {theme?.logoUrl && <img src={theme.logoUrl} alt="" className={styles.logo} />}
-          <h1>{theme?.businessName || 'My account'}</h1>
-          <p className="muted">Welcome back, {customer?.name}</p>
-        </div>
-        <button type="button" className="btn btn-sm" onClick={logout}>
-          Log out
-        </button>
-      </header>
+      <div className={styles.inner}>
+      <AccountHeader
+        theme={theme}
+        right={
+          <button type="button" className="btn btn-sm" onClick={logout}>
+            Log out
+          </button>
+        }
+      />
+
+      <p className={`muted ${styles.welcome}`}>Welcome back, {customer?.name}</p>
 
       <div className={styles.tabs}>
         {TABS.map((tab) => (
@@ -429,6 +431,7 @@ export function CustomerProfilePage() {
         {activeTab === 'loyalty' && <LoyaltyTab />}
         {activeTab === 'profile' && <ProfileTab />}
         {activeTab === 'password' && <PasswordTab />}
+      </div>
       </div>
     </div>
   );

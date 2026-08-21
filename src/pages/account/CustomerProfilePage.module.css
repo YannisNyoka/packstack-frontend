@@ -1,24 +1,16 @@
 .wrap {
+  min-height: 100%;
+  background: color-mix(in srgb, var(--brand, var(--color-primary)) 5%, var(--color-bg));
+  padding: 24px 20px 48px;
+}
+
+.inner {
   max-width: 720px;
   margin: 0 auto;
-  padding: 32px 20px;
 }
 
-.header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.header h1 {
-  margin: 8px 0 4px;
-  font-size: 22px;
-}
-
-.logo {
-  max-height: 48px;
+.welcome {
+  margin: -8px 0 20px;
 }
 
 .tabs {

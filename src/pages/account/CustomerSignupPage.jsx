@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCustomerAuth } from '../../auth/CustomerAuthContext.jsx';
 import * as bookingApi from '../../api/publicBooking.js';
 import { ApiError } from '../../api/client.js';
+import { AccountHeader } from '../../components/AccountHeader.jsx';
 import styles from './CustomerAuthPages.module.css';
 
 export function CustomerSignupPage() {
@@ -47,12 +48,10 @@ export function CustomerSignupPage() {
       className={styles.wrap}
       style={{ '--brand': primaryColor, '--color-primary': primaryColor, '--color-accent': accentColor }}
     >
-      <header className={styles.header}>
-        {theme?.logoUrl && <img src={theme.logoUrl} alt="" className={styles.logo} />}
-        <h1>{theme?.businessName || 'Create an account'}</h1>
-      </header>
+      <div className={styles.inner}>
+        <AccountHeader theme={theme} />
 
-      <form className="card" onSubmit={handleSubmit}>
+        <form className="card" onSubmit={handleSubmit}>
         <h2 className={styles.title}>Sign up</h2>
 
         <div className="field">
@@ -115,7 +114,8 @@ export function CustomerSignupPage() {
         <p className={styles.footer}>
           Already have an account? <Link to="/account/login">Log in</Link>
         </p>
-      </form>
+        </form>
+      </div>
     </div>
   );
 }
