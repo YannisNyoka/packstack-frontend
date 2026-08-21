@@ -35,7 +35,14 @@ export default function App() {
         <CustomerAuthProvider>
           <Routes>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/book" element={<BookingPage />} />
+            <Route
+              path="/book"
+              element={
+                <RequireCustomerAuth>
+                  <BookingPage />
+                </RequireCustomerAuth>
+              }
+            />
             <Route path="/manage" element={<ManagePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/billing/success" element={<BillingSuccessPage />} />
