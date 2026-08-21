@@ -18,6 +18,11 @@ import { SuperAdminLayout } from './layout/SuperAdminLayout.jsx';
 import { SuperAdminLoginPage } from './pages/SuperAdminLoginPage.jsx';
 import { TenantsPage } from './pages/superadmin/TenantsPage.jsx';
 import { PlansPage } from './pages/superadmin/PlansPage.jsx';
+import { CustomerAuthProvider } from './auth/CustomerAuthContext.jsx';
+import { RequireCustomerAuth } from './auth/RequireCustomerAuth.jsx';
+import { CustomerLoginPage } from './pages/account/CustomerLoginPage.jsx';
+import { CustomerSignupPage } from './pages/account/CustomerSignupPage.jsx';
+import { CustomerProfilePage } from './pages/account/CustomerProfilePage.jsx';
 
 export default function App() {
   return (
@@ -63,6 +68,25 @@ export default function App() {
               <Route index element={<TenantsPage />} />
               <Route path="plans" element={<PlansPage />} />
             </Route>
+          </Route>
+
+          <Route
+            element={
+              <CustomerAuthProvider>
+                <Outlet />
+              </CustomerAuthProvider>
+            }
+          >
+            <Route path="/account/login" element={<CustomerLoginPage />} />
+            <Route path="/account/signup" element={<CustomerSignupPage />} />
+            <Route
+              path="/account"
+              element={
+                <RequireCustomerAuth>
+                  <CustomerProfilePage />
+                </RequireCustomerAuth>
+              }
+            />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />
