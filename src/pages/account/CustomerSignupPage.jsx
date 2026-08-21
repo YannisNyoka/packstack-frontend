@@ -39,8 +39,14 @@ export function CustomerSignupPage() {
     }
   }
 
+  const primaryColor = theme?.colors?.primary || '#111827';
+  const accentColor = theme?.colors?.accent || primaryColor;
+
   return (
-    <div className={styles.wrap} style={{ '--brand': theme?.colors?.primary || '#111827' }}>
+    <div
+      className={styles.wrap}
+      style={{ '--brand': primaryColor, '--color-primary': primaryColor, '--color-accent': accentColor }}
+    >
       <header className={styles.header}>
         {theme?.logoUrl && <img src={theme.logoUrl} alt="" className={styles.logo} />}
         <h1>{theme?.businessName || 'Create an account'}</h1>

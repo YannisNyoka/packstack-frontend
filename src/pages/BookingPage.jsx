@@ -137,6 +137,7 @@ export function BookingPage() {
   }
 
   const primaryColor = theme?.colors?.primary || '#111827';
+  const accentColor = theme?.colors?.accent || primaryColor;
   const today = new Date().toISOString().slice(0, 10);
 
   if (loading) {
@@ -182,7 +183,10 @@ export function BookingPage() {
   }
 
   return (
-    <div className={styles.wrap} style={{ '--brand': primaryColor }}>
+    <div
+      className={styles.wrap}
+      style={{ '--brand': primaryColor, '--color-primary': primaryColor, '--color-accent': accentColor }}
+    >
       <header className={styles.header}>
         {theme?.logoUrl && <img src={theme.logoUrl} alt="" className={styles.logo} />}
         <h1>{theme?.businessName || 'Book an appointment'}</h1>

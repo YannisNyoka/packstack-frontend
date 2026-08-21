@@ -391,8 +391,14 @@ export function CustomerProfilePage() {
     bookingApi.getTheme().then(setTheme).catch(() => {});
   }, []);
 
+  const primaryColor = theme?.colors?.primary || '#111827';
+  const accentColor = theme?.colors?.accent || primaryColor;
+
   return (
-    <div className={styles.wrap} style={{ '--brand': theme?.colors?.primary || '#111827' }}>
+    <div
+      className={styles.wrap}
+      style={{ '--brand': primaryColor, '--color-primary': primaryColor, '--color-accent': accentColor }}
+    >
       <header className={styles.header}>
         <div>
           {theme?.logoUrl && <img src={theme.logoUrl} alt="" className={styles.logo} />}

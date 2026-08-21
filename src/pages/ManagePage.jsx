@@ -19,6 +19,7 @@ export function ManagePage() {
   const token = searchParams.get('token');
 
   const [appointment, setAppointment] = useState(null);
+  const [theme, setTheme] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(null);
 
@@ -50,6 +51,7 @@ export function ManagePage() {
       return;
     }
     load();
+    bookingApi.getTheme().then(setTheme).catch(() => {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
@@ -119,10 +121,16 @@ export function ManagePage() {
   }
 
   const canModify = !FINAL_STATUSES.includes(appointment.status);
+  const primaryColor = theme?.colors?.primary || '#111827';
+  const accentColor = theme?.colors?.accent || primaryColor;
 
   return (
-    <div className={styles.wrap}>
+    <div
+      className={styles.wrap}
+      style={{ '--brand': primaryColor, '--color-primary': primaryColor, '--color-accent': accentColor }}
+    >
       <header className={styles.header}>
+        {theme?.logoUrl && <img src={theme.logoUrl} alt="" className={styles.logo} />}
         <h1>Your appointment</h1>
       </header>
 

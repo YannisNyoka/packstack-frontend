@@ -36,6 +36,7 @@ export function LandingPage() {
   }
 
   const primaryColor = theme?.colors?.primary || '#111827';
+  const accentColor = theme?.colors?.accent || primaryColor;
   const heroEnabled = theme?.heroEnabled !== false;
   const heroMedia =
     theme?.heroMediaType === 'video' && theme?.heroVideoUrl
@@ -45,7 +46,10 @@ export function LandingPage() {
         : null;
 
   return (
-    <div className={styles.page} style={{ '--brand': primaryColor }}>
+    <div
+      className={styles.page}
+      style={{ '--brand': primaryColor, '--color-primary': primaryColor, '--color-accent': accentColor }}
+    >
       <nav className={styles.nav}>
         <div className={styles.navBrand}>
           {theme?.logoUrl && <img src={theme.logoUrl} alt="" className={styles.navLogo} />}
