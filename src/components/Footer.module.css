@@ -1,0 +1,66 @@
+.footer {
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+  margin-top: auto;
+}
+
+.inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.logo {
+  height: 28px;
+  border-radius: 4px;
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.socials {
+  display: flex;
+  gap: 12px;
+}
+
+.socialLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: inherit;
+  transition: background 0.15s;
+}
+
+.socialLink:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.copyright {
+  text-align: center;
+  font-size: 12px;
+  opacity: 0.6;
+  padding: 16px 24px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}

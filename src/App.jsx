@@ -11,6 +11,7 @@ import { ServicesPage } from './pages/ServicesPage.jsx';
 import { CustomersPage } from './pages/CustomersPage.jsx';
 import { SettingsPage } from './pages/SettingsPage.jsx';
 import { BookingPage } from './pages/BookingPage.jsx';
+import { LandingPage } from './pages/LandingPage.jsx';
 import { ManagePage } from './pages/ManagePage.jsx';
 import { SuperAdminAuthProvider } from './superadmin/SuperAdminAuthContext.jsx';
 import { RequireSuperAdmin } from './superadmin/RequireSuperAdmin.jsx';
@@ -29,7 +30,8 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route path="/" element={<BookingPage />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/book" element={<BookingPage />} />
           <Route path="/manage" element={<ManagePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/billing/success" element={<BillingSuccessPage />} />

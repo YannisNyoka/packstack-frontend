@@ -21,3 +21,9 @@ export function uploadLogo(file) {
 export function uploadBanner(file) {
   return uploadImage('/settings/theme/banner', file);
 }
+
+export function uploadHeroVideo(file) {
+  const formData = new FormData();
+  formData.append('video', file);
+  return apiUpload('/settings/theme/hero-video', formData);
+}

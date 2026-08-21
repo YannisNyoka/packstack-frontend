@@ -51,9 +51,13 @@ const emptyThemeForm = {
   tagline: '',
   logoUrl: '',
   bannerUrl: '',
+  heroMediaType: 'image',
+  heroVideoUrl: '',
+  heroEnabled: true,
+  heroBadgeText: '',
   colors: { primary: '#111827', secondary: '#6B7280', accent: '#D946EF' },
   contactInfo: { phone: '', email: '', address: '' },
-  socialLinks: { instagram: '', facebook: '', whatsapp: '' },
+  socialLinks: { instagram: '', facebook: '', whatsapp: '', tiktok: '', website: '' },
 };
 
 function BrandingSection() {
@@ -68,6 +72,8 @@ function BrandingSection() {
   const [logoUploadError, setLogoUploadError] = useState(null);
   const [bannerUploading, setBannerUploading] = useState(false);
   const [bannerUploadError, setBannerUploadError] = useState(null);
+  const [heroVideoUploading, setHeroVideoUploading] = useState(false);
+  const [heroVideoUploadError, setHeroVideoUploadError] = useState(null);
 
   async function load() {
     setLoading(true);
@@ -78,6 +84,10 @@ function BrandingSection() {
         tagline: theme.tagline || '',
         logoUrl: theme.logoUrl || '',
         bannerUrl: theme.bannerUrl || '',
+        heroMediaType: theme.heroMediaType || 'image',
+        heroVideoUrl: theme.heroVideoUrl || '',
+        heroEnabled: theme.heroEnabled !== false,
+        heroBadgeText: theme.heroBadgeText || '',
         colors: { ...emptyThemeForm.colors, ...theme.colors },
         contactInfo: { ...emptyThemeForm.contactInfo, ...theme.contactInfo },
         socialLinks: { ...emptyThemeForm.socialLinks, ...theme.socialLinks },
@@ -149,6 +159,22 @@ function BrandingSection() {
       setBannerUploadError(err instanceof ApiError ? err.message : 'Failed to upload banner.');
     } finally {
       setBannerUploading(false);
+    }
+  }
+
+  async function handleHeroVideoFile(e) {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    setHeroVideoUploading(true);
+    setHeroVideoUploadError(null);
+    try {
+      const theme = await themeApi.uploadHeroVideo(file);
+      setForm((f) => ({ ...f, heroVideoUrl: theme.heroVideoUrl || '' }));
+    } catch (err) {
+      setHeroVideoUploadError(err instanceof ApiError ? err.message : 'Failed to upload video.');
+    } finally {
+      setHeroVideoUploading(false);
     }
   }
 
@@ -251,6 +277,95 @@ function BrandingSection() {
           )}
 
           <div>
+            <label style={{ display: 'block', marginBottom: 8, fontSize: 14, fontWeight: 600 }}>Landing page hero</label>
+            <p className="muted" style={{ marginTop: -4, marginBottom: 12, fontSize: 13 }}>
+              Controls the full-width banner at the top of your landing page (packstack.co.za/&lt;yourslug&gt;) -
+              the background image or video, the small badge text over it, and whether it shows at all.
+            </p>
+
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+              <input
+                type="checkbox"
+                checked={form.heroEnabled}
+                onChange={(e) => setForm({ ...form, heroEnabled: e.target.checked })}
+              />
+              <span>Show the hero banner</span>
+            </label>
+
+            {form.heroEnabled && (
+              <>
+                <div className="field" style={{ maxWidth: 280 }}>
+                  <label htmlFor="theme-hero-badge">Badge text (optional)</label>
+                  <input
+                    id="theme-hero-badge"
+                    className="input"
+                    placeholder="e.g. Dube, Soweto · Est. 2019"
+                    value={form.heroBadgeText}
+                    onChange={(e) => setForm({ ...form, heroBadgeText: e.target.value })}
+                  />
+                </div>
+
+                <div style={{ display: 'flex', gap: 16, marginBottom: 14 }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <input
+                      type="radio"
+                      name="heroMediaType"
+                      checked={form.heroMediaType === 'image'}
+                      onChange={() => setForm({ ...form, heroMediaType: 'image' })}
+                    />
+                    <span>Background image</span>
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <input
+                      type="radio"
+                      name="heroMediaType"
+                      checked={form.heroMediaType === 'video'}
+                      onChange={() => setForm({ ...form, heroMediaType: 'video' })}
+                    />
+                    <span>Background video</span>
+                  </label>
+                </div>
+
+                {form.heroMediaType === 'image' ? (
+                  <p className="muted" style={{ fontSize: 13 }}>
+                    Uses the Banner image above.
+                  </p>
+                ) : (
+                  <div className="field" style={{ maxWidth: 420 }}>
+                    <label htmlFor="theme-hero-video">Hero video URL</label>
+                    <input
+                      id="theme-hero-video"
+                      className="input"
+                      placeholder="https://…"
+                      value={form.heroVideoUrl}
+                      onChange={(e) => setForm({ ...form, heroVideoUrl: e.target.value })}
+                    />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 6 }}>
+                      <input
+                        id="theme-hero-video-file"
+                        type="file"
+                        accept="video/mp4,video/webm,video/quicktime"
+                        onChange={handleHeroVideoFile}
+                        disabled={heroVideoUploading}
+                        style={{ fontSize: 13 }}
+                      />
+                      {heroVideoUploading && <span className="muted" style={{ fontSize: 13 }}>Uploading…</span>}
+                    </div>
+                    <p className="muted" style={{ fontSize: 12, marginTop: 4 }}>
+                      MP4, WebM or MOV, up to 50MB.
+                    </p>
+                    {heroVideoUploadError && (
+                      <p className="error-text" style={{ fontSize: 13 }}>
+                        {heroVideoUploadError}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+
+          <div>
             <label style={{ display: 'block', marginBottom: 8, fontSize: 14, fontWeight: 600 }}>Colors</label>
             <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
               {['primary', 'secondary', 'accent'].map((key) => (
@@ -342,6 +457,26 @@ function BrandingSection() {
                   className="input"
                   value={form.socialLinks.whatsapp}
                   onChange={(e) => setSocial('whatsapp', e.target.value)}
+                />
+              </div>
+              <div className="field">
+                <label htmlFor="theme-social-tiktok">TikTok</label>
+                <input
+                  id="theme-social-tiktok"
+                  className="input"
+                  placeholder="https://tiktok.com/@…"
+                  value={form.socialLinks.tiktok}
+                  onChange={(e) => setSocial('tiktok', e.target.value)}
+                />
+              </div>
+              <div className="field">
+                <label htmlFor="theme-social-website">Website</label>
+                <input
+                  id="theme-social-website"
+                  className="input"
+                  placeholder="https://…"
+                  value={form.socialLinks.website}
+                  onChange={(e) => setSocial('website', e.target.value)}
                 />
               </div>
             </div>
