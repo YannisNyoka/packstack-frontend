@@ -4,6 +4,7 @@ import * as bookingApi from '../api/publicBooking.js';
 import { ApiError } from '../api/client.js';
 import { useCustomerAuth } from '../auth/CustomerAuthContext.jsx';
 import { AccountHeader } from '../components/AccountHeader.jsx';
+import { Calendar } from '../components/Calendar.jsx';
 import styles from './BookingPage.module.css';
 
 const RETURN_STATUS = new URLSearchParams(window.location.search).get('depositSuccess')
@@ -277,10 +278,7 @@ export function BookingPage() {
         {step === 'time' && (
           <div>
             <h2 style={{ marginTop: 0 }}>Pick a date and time</h2>
-            <div className="field" style={{ maxWidth: 220 }}>
-              <label htmlFor="booking-date">Date</label>
-              <input id="booking-date" type="date" className="input" min={today} value={date} onChange={(e) => loadSlots(e.target.value)} />
-            </div>
+            <Calendar value={date} minDate={today} onChange={loadSlots} />
 
             {slotsError && <p className="error-text">{slotsError}</p>}
             {slotsLoading && <p className="muted">Loading times…</p>}

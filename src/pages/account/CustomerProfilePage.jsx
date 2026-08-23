@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useCustomerAuth } from '../../auth/CustomerAuthContext.jsx';
 import * as accountApi from '../../api/customerAccount.js';
 import * as bookingApi from '../../api/publicBooking.js';
 import { ApiError } from '../../api/client.js';
 import { AccountHeader } from '../../components/AccountHeader.jsx';
+import { Calendar } from '../../components/Calendar.jsx';
 import styles from './CustomerProfilePage.module.css';
 
 const TABS = [
@@ -110,17 +112,8 @@ function AppointmentCard({ appointment, canManage, onChanged }) {
 
       {action === 'reschedule' && (
         <div className={styles.actionPanel}>
-          <div className="field" style={{ maxWidth: 220 }}>
-            <label htmlFor={`date-${appointment._id}`}>New date</label>
-            <input
-              id={`date-${appointment._id}`}
-              type="date"
-              className="input"
-              min={new Date().toISOString().slice(0, 10)}
-              value={date}
-              onChange={(e) => loadSlots(e.target.value)}
-            />
-          </div>
+          <p className={styles.rescheduleLabel}>New date</p>
+          <Calendar value={date} minDate={new Date().toISOString().slice(0, 10)} onChange={loadSlots} />
 
           {slotsError && <p className="error-text">{slotsError}</p>}
           {slotsLoading && <p className="muted">Loading times…</p>}
@@ -404,9 +397,12 @@ export function CustomerProfilePage() {
       <AccountHeader
         theme={theme}
         right={
-          <button type="button" className="btn btn-sm" onClick={logout}>
-            Log out
-          </button>
+          <>
+            <Link to="/book">Book Now</Link>
+            <button type="button" className="btn btn-sm" onClick={logout}>
+              Log out
+            </button>
+          </>
         }
       />
 

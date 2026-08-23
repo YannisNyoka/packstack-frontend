@@ -4,6 +4,7 @@ import * as manageApi from '../api/appointmentManage.js';
 import * as bookingApi from '../api/publicBooking.js';
 import { ApiError } from '../api/client.js';
 import { AccountHeader } from '../components/AccountHeader.jsx';
+import { Calendar } from '../components/Calendar.jsx';
 import styles from './BookingPage.module.css';
 
 const FINAL_STATUSES = ['completed', 'cancelled', 'no_show'];
@@ -171,17 +172,7 @@ export function ManagePage() {
         {mode === 'reschedule' && (
           <div style={{ marginTop: 16 }}>
             <h2 style={{ marginTop: 0, fontSize: 16 }}>Pick a new time</h2>
-            <div className="field" style={{ maxWidth: 220 }}>
-              <label htmlFor="reschedule-date">Date</label>
-              <input
-                id="reschedule-date"
-                type="date"
-                className="input"
-                min={new Date().toISOString().slice(0, 10)}
-                value={date}
-                onChange={(e) => loadSlots(e.target.value)}
-              />
-            </div>
+            <Calendar value={date} minDate={new Date().toISOString().slice(0, 10)} onChange={loadSlots} />
 
             {slotsError && <p className="error-text">{slotsError}</p>}
             {slotsLoading && <p className="muted">Loading times…</p>}
