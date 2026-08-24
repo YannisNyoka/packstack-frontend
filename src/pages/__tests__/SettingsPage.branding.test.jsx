@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import userEvent from '@testing-library/user-event'
 import { SettingsPage } from '../SettingsPage.jsx'
 import { useAuth } from '../../auth/AuthContext.jsx'
@@ -8,6 +9,17 @@ import * as integrationsApi from '../../api/integrations.js'
 import * as billingApi from '../../api/billing.js'
 import * as domainsApi from '../../api/domains.js'
 import * as tenantSettingsApi from '../../api/tenantSettings.js'
+
+// SettingsPage's Branding section embeds a live preview (LandingPreview)
+// that uses <Link>/useNavigate - needs a Router ancestor, same as it always
+// gets for real inside App.jsx's BrowserRouter.
+function renderSettingsPage() {
+  return render(
+    <MemoryRouter>
+      <SettingsPage />
+    </MemoryRouter>
+  )
+}
 
 vi.mock('../../auth/AuthContext.jsx')
 vi.mock('../../api/theme.js')
@@ -43,14 +55,14 @@ describe('SettingsPage - Branding section', () => {
 
   it('is hidden from non-owner staff', () => {
     useAuth.mockReturnValue({ user: { role: 'staff', email: 'staff@example.com' } })
-    render(<SettingsPage />)
+    renderSettingsPage()
     expect(screen.getByText('Only the business owner can view settings.')).toBeInTheDocument()
     expect(screen.queryByText('Branding')).not.toBeInTheDocument()
   })
 
   it('loads and displays the current branding', async () => {
     themeApi.getTheme.mockResolvedValue(baseTheme)
-    render(<SettingsPage />)
+    renderSettingsPage()
 
     await waitFor(() => expect(screen.getByLabelText('Business name')).toHaveValue('Verify Test Salon'))
     // The "primary"/"secondary"/"accent" labels are visually capitalized via
@@ -65,7 +77,7 @@ describe('SettingsPage - Branding section', () => {
     themeApi.getTheme.mockResolvedValue(baseTheme)
     themeApi.updateTheme.mockResolvedValue({ ...baseTheme, tagline: 'Nails, hair, beauty.' })
     const user = userEvent.setup()
-    render(<SettingsPage />)
+    renderSettingsPage()
     await waitFor(() => expect(screen.getByLabelText('Business name')).toHaveValue('Verify Test Salon'))
 
     await user.type(screen.getByLabelText('Tagline'), 'Nails, hair, beauty.')
@@ -83,7 +95,7 @@ describe('SettingsPage - Branding section', () => {
     themeApi.getTheme.mockResolvedValue(baseTheme)
     themeApi.updateTheme.mockRejectedValue(new Error('network down'))
     const user = userEvent.setup()
-    render(<SettingsPage />)
+    renderSettingsPage()
     await waitFor(() => expect(screen.getByLabelText('Business name')).toHaveValue('Verify Test Salon'))
 
     await user.type(screen.getByLabelText('Tagline'), 'Draft tagline')
@@ -97,7 +109,7 @@ describe('SettingsPage - Branding section', () => {
     themeApi.getTheme.mockResolvedValue(baseTheme)
     themeApi.uploadLogo.mockResolvedValue({ ...baseTheme, logoUrl: 'https://res.cloudinary.com/demo/logo.png' })
     const user = userEvent.setup()
-    render(<SettingsPage />)
+    renderSettingsPage()
     await waitFor(() => expect(screen.getByLabelText('Business name')).toHaveValue('Verify Test Salon'))
 
     const file = new File(['fake-bytes'], 'logo.png', { type: 'image/png' })
@@ -115,7 +127,7 @@ describe('SettingsPage - Branding section', () => {
     // same-mimetype file that the server still rejects (e.g. too large).
     themeApi.uploadLogo.mockRejectedValue(new Error('Image must be smaller than 5MB'))
     const user = userEvent.setup()
-    render(<SettingsPage />)
+    renderSettingsPage()
     await waitFor(() => expect(screen.getByLabelText('Business name')).toHaveValue('Verify Test Salon'))
 
     const file = new File(['fake-bytes'], 'huge.png', { type: 'image/png' })

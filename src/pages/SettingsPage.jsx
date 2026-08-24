@@ -7,6 +7,7 @@ import * as tenantSettingsApi from '../api/tenantSettings.js';
 import * as themeApi from '../api/theme.js';
 import { getTenantSlug } from '../api/tenant.js';
 import { ApiError } from '../api/client.js';
+import { LandingPreview } from '../components/LandingPreview.jsx';
 
 export function SettingsPage() {
   const { user } = useAuth();
@@ -191,7 +192,11 @@ function BrandingSection() {
       {loading ? (
         <p className="muted">Loading…</p>
       ) : (
-        <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'flex-start' }}>
+        <form
+          onSubmit={handleSave}
+          style={{ display: 'flex', flexDirection: 'column', gap: 20, flex: '1 1 380px', minWidth: 320 }}
+        >
           <div className="form-grid">
             <div className="field">
               <label htmlFor="theme-business-name">Business name</label>
@@ -490,6 +495,29 @@ function BrandingSection() {
             {saved && <span className="muted">Saved.</span>}
           </div>
         </form>
+
+        <div style={{ position: 'sticky', top: 20, flex: '0 0 auto' }}>
+          <p className="muted" style={{ fontSize: 13, marginBottom: 8 }}>
+            Live preview
+          </p>
+          <div
+            style={{
+              width: 320,
+              height: 560,
+              overflow: 'hidden',
+              border: '8px solid #1a1a1e',
+              borderRadius: 24,
+              position: 'relative',
+              pointerEvents: 'none',
+              background: '#fff',
+            }}
+          >
+            <div style={{ width: 1280, transform: `scale(${(320 / 1280).toFixed(4)})`, transformOrigin: 'top left' }}>
+              <LandingPreview theme={form} />
+            </div>
+          </div>
+        </div>
+        </div>
       )}
     </section>
   );
