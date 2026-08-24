@@ -31,6 +31,7 @@ export function SettingsPage() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
         <BrandingSection />
         <IntegrationsSection />
+        <BookingAccessSection />
         <DepositSection />
         <BillingSection />
         <DomainsSection />
@@ -54,6 +55,7 @@ const emptyThemeForm = {
   bannerUrl: '',
   heroMediaType: 'image',
   heroVideoUrl: '',
+  heroVideoUrls: [],
   heroEnabled: true,
   heroBadgeText: '',
   colors: { primary: '#111827', secondary: '#6B7280', accent: '#D946EF' },
@@ -87,6 +89,7 @@ function BrandingSection() {
         bannerUrl: theme.bannerUrl || '',
         heroMediaType: theme.heroMediaType || 'image',
         heroVideoUrl: theme.heroVideoUrl || '',
+        heroVideoUrls: theme.heroVideoUrls || [],
         heroEnabled: theme.heroEnabled !== false,
         heroBadgeText: theme.heroBadgeText || '',
         colors: { ...emptyThemeForm.colors, ...theme.colors },
@@ -170,13 +173,20 @@ function BrandingSection() {
     setHeroVideoUploading(true);
     setHeroVideoUploadError(null);
     try {
+      // Uploads take effect immediately (server appends and persists), same
+      // as the logo/banner uploads above - unlike a removal below, which is
+      // just a local form edit applied when "Save branding" is clicked.
       const theme = await themeApi.uploadHeroVideo(file);
-      setForm((f) => ({ ...f, heroVideoUrl: theme.heroVideoUrl || '' }));
+      setForm((f) => ({ ...f, heroVideoUrls: theme.heroVideoUrls || [] }));
     } catch (err) {
       setHeroVideoUploadError(err instanceof ApiError ? err.message : 'Failed to upload video.');
     } finally {
       setHeroVideoUploading(false);
     }
+  }
+
+  function removeHeroVideo(index) {
+    setForm((f) => ({ ...f, heroVideoUrls: f.heroVideoUrls.filter((_, i) => i !== index) }));
   }
 
   return (
@@ -337,27 +347,42 @@ function BrandingSection() {
                   </p>
                 ) : (
                   <div className="field" style={{ maxWidth: 420 }}>
-                    <label htmlFor="theme-hero-video">Hero video URL</label>
-                    <input
-                      id="theme-hero-video"
-                      className="input"
-                      placeholder="https://…"
-                      value={form.heroVideoUrl}
-                      onChange={(e) => setForm({ ...form, heroVideoUrl: e.target.value })}
-                    />
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 6 }}>
+                    <label htmlFor="theme-hero-video-file">Hero videos ({form.heroVideoUrls.length}/6)</label>
+                    <p className="muted" style={{ fontSize: 12, marginTop: -2, marginBottom: 8 }}>
+                      Short clips of your services - they rotate in the hero banner. Upload one at a time.
+                    </p>
+                    {form.heroVideoUrls.length > 0 && (
+                      <ul style={{ listStyle: 'none', margin: '0 0 10px', padding: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                        {form.heroVideoUrls.map((url, i) => (
+                          <li key={url + i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <video
+                              src={url}
+                              muted
+                              style={{ width: 56, height: 36, objectFit: 'cover', borderRadius: 4, border: '1px solid var(--color-border)', background: '#000' }}
+                            />
+                            <span style={{ fontSize: 12, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              {url}
+                            </span>
+                            <button type="button" className="btn" style={{ padding: '4px 10px', fontSize: 12 }} onClick={() => removeHeroVideo(i)}>
+                              Remove
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                       <input
                         id="theme-hero-video-file"
                         type="file"
                         accept="video/mp4,video/webm,video/quicktime"
                         onChange={handleHeroVideoFile}
-                        disabled={heroVideoUploading}
+                        disabled={heroVideoUploading || form.heroVideoUrls.length >= 6}
                         style={{ fontSize: 13 }}
                       />
                       {heroVideoUploading && <span className="muted" style={{ fontSize: 13 }}>Uploading…</span>}
                     </div>
                     <p className="muted" style={{ fontSize: 12, marginTop: 4 }}>
-                      MP4, WebM or MOV, up to 50MB.
+                      MP4, WebM or MOV, up to 50MB each, up to 6 videos. Removals apply when you save.
                     </p>
                     {heroVideoUploadError && (
                       <p className="error-text" style={{ fontSize: 13 }}>
@@ -758,6 +783,87 @@ function providerLabel(provider) {
 function yocoWebhookUrl() {
   const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000';
   return `${apiBase}/api/t/${getTenantSlug()}/public/deposit-webhook`;
+}
+
+function BookingAccessSection() {
+  const [rules, setRules] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [requireCustomerAccount, setRequireCustomerAccount] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState(null);
+  const [saved, setSaved] = useState(false);
+
+  async function load() {
+    setLoading(true);
+    try {
+      const data = await tenantSettingsApi.getBookingRules();
+      setRules(data);
+      setRequireCustomerAccount(data.requireCustomerAccount !== false);
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Failed to load booking access settings.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  async function handleSave(e) {
+    e.preventDefault();
+    setSaving(true);
+    setSaveError(null);
+    setSaved(false);
+    try {
+      const updated = await tenantSettingsApi.updateBookingRules({ requireCustomerAccount });
+      setRules(updated);
+      setSaved(true);
+    } catch (err) {
+      setSaveError(err instanceof ApiError ? err.message : 'Failed to save.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <section className="card">
+      <h2 style={{ marginTop: 0 }}>Booking access</h2>
+      <p className="muted" style={{ marginTop: -8 }}>
+        Controls whether a customer needs a PackStack account to book with you, or can book anonymously by just
+        typing their name and phone number.
+      </p>
+
+      {error && <p className="error-text">{error}</p>}
+      {loading ? (
+        <p className="muted">Loading…</p>
+      ) : (
+        <form onSubmit={handleSave} style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14 }}>
+            <input
+              type="checkbox"
+              checked={requireCustomerAccount}
+              onChange={(e) => setRequireCustomerAccount(e.target.checked)}
+            />
+            Require an account to book
+          </label>
+          <button type="submit" className="btn btn-primary" disabled={saving}>
+            {saving ? 'Saving…' : 'Save'}
+          </button>
+          {saved && <span className="muted">Saved.</span>}
+        </form>
+      )}
+      {saveError && <p className="error-text">{saveError}</p>}
+      {rules && !loading && (
+        <p className="muted" style={{ marginTop: 12, marginBottom: 0 }}>
+          {rules.requireCustomerAccount !== false
+            ? 'Customers must sign up or log in before they can book.'
+            : 'Customers can book without an account (the classic name/phone/email flow).'}
+        </p>
+      )}
+    </section>
+  );
 }
 
 function DepositSection() {

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useLocation } from 'react-router-dom';
 import * as bookingApi from '../api/publicBooking.js';
+import * as accountApi from '../api/customerAccount.js';
 import { ApiError } from '../api/client.js';
 import { useCustomerAuth } from '../auth/CustomerAuthContext.jsx';
 import { AccountHeader } from '../components/AccountHeader.jsx';
@@ -17,10 +18,11 @@ const RETURN_STATUS = new URLSearchParams(window.location.search).get('depositSu
 
 export function BookingPage() {
   const { customer, booting: customerAuthBooting } = useCustomerAuth();
+  const location = useLocation();
   const [theme, setTheme] = useState(null);
   const [services, setServices] = useState([]);
   const [staff, setStaff] = useState([]);
-  const [depositConfig, setDepositConfig] = useState({ required: false, amountZAR: 0 });
+  const [depositConfig, setDepositConfig] = useState({ required: false, amountZAR: 0, requireCustomerAccount: true });
   const [loadError, setLoadError] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -118,20 +120,29 @@ export function BookingPage() {
     e.preventDefault();
     setSubmitting(true);
     setSubmitError(null);
-    const bookingData = {
-      staffMemberId: selectedStaffId,
-      serviceIds: selectedServiceIds,
-      startTime: selectedSlot,
-      customerDetails: { name: details.name, phone: details.phone, email: details.email || undefined },
-      notes: details.notes || undefined,
-    };
+
+    // Logged-in customers book through the authenticated endpoint (identity
+    // comes from their token, no form fields needed); anonymous booking -
+    // only reachable at all when the tenant allows it - still submits the
+    // typed name/phone/email like before.
+    const bookingData = customer
+      ? { staffMemberId: selectedStaffId, serviceIds: selectedServiceIds, startTime: selectedSlot, notes: details.notes || undefined }
+      : {
+          staffMemberId: selectedStaffId,
+          serviceIds: selectedServiceIds,
+          startTime: selectedSlot,
+          customerDetails: { name: details.name, phone: details.phone, email: details.email || undefined },
+          notes: details.notes || undefined,
+        };
+    const api = customer ? accountApi : bookingApi;
+
     try {
       if (depositConfig.required) {
-        const { checkoutUrl } = await bookingApi.createDepositCheckout(bookingData);
+        const { checkoutUrl } = await api.createDepositCheckout(bookingData);
         window.location.href = checkoutUrl;
         return;
       }
-      const appointment = await bookingApi.createAppointment(bookingData);
+      const appointment = await api.createAppointment(bookingData);
       setConfirmedAppointment(appointment);
       setStep('confirmation');
     } catch (err) {
@@ -145,7 +156,7 @@ export function BookingPage() {
   const accentColor = theme?.colors?.accent || primaryColor;
   const today = new Date().toISOString().slice(0, 10);
 
-  if (loading) {
+  if (loading || customerAuthBooting) {
     return (
       <div className={styles.wrap}>
         <div className={styles.inner}>
@@ -165,6 +176,15 @@ export function BookingPage() {
     );
   }
 
+  // Whether an account is required to book is a per-tenant setting
+  // (Tenant.bookingRules.requireCustomerAccount) - not a hardcoded route
+  // gate, so it's checked here once the setting has actually loaded. Skips
+  // this for the post-Yoco-redirect screens (RETURN_STATUS below), since
+  // reaching those already implies the customer got through checkout once.
+  if (!RETURN_STATUS && depositConfig.requireCustomerAccount !== false && !customer) {
+    return <Navigate to="/account/login" replace state={{ from: location }} />;
+  }
+
   if (RETURN_STATUS) {
     return (
       <div className={styles.wrap}>
@@ -182,7 +202,7 @@ export function BookingPage() {
                   Your payment {RETURN_STATUS === 'cancelled' ? 'was cancelled' : 'did not go through'}, so your slot
                   was not reserved. Please try booking again.
                 </p>
-                <a className="btn btn-primary" style={{ marginTop: 8 }} href="/">
+                <a className="btn btn-primary" style={{ marginTop: 8 }} href="/book">
                   Book again
                 </a>
               </>
@@ -314,7 +334,7 @@ export function BookingPage() {
 
         {step === 'details' && (
           <form onSubmit={handleSubmit}>
-            <h2 style={{ marginTop: 0 }}>Your details</h2>
+            <h2 style={{ marginTop: 0 }}>{customer ? 'Confirm your booking' : 'Your details'}</h2>
 
             <div className={styles.summary}>
               <div>{selectedServices.map((s) => s.name).join(', ')}</div>
@@ -324,6 +344,11 @@ export function BookingPage() {
               <div className="muted">
                 {totalDuration} min · R{totalPrice.toFixed(2)}
               </div>
+              {customer && (
+                <div className="muted" style={{ marginTop: 6 }}>
+                  Booking as {customer.name} · {customer.phone}
+                </div>
+              )}
               {depositConfig.required && (
                 <div className="muted" style={{ marginTop: 6 }}>
                   A R{depositConfig.amountZAR.toFixed(2)} deposit is required to secure this booking - you'll be
@@ -332,18 +357,22 @@ export function BookingPage() {
               )}
             </div>
 
-            <div className="field">
-              <label htmlFor="booking-name">Name</label>
-              <input id="booking-name" className="input" value={details.name} onChange={(e) => setDetails({ ...details, name: e.target.value })} required />
-            </div>
-            <div className="field">
-              <label htmlFor="booking-phone">Phone</label>
-              <input id="booking-phone" className="input" value={details.phone} onChange={(e) => setDetails({ ...details, phone: e.target.value })} required />
-            </div>
-            <div className="field">
-              <label htmlFor="booking-email">Email (optional)</label>
-              <input id="booking-email" type="email" className="input" value={details.email} onChange={(e) => setDetails({ ...details, email: e.target.value })} />
-            </div>
+            {!customer && (
+              <>
+                <div className="field">
+                  <label htmlFor="booking-name">Name</label>
+                  <input id="booking-name" className="input" value={details.name} onChange={(e) => setDetails({ ...details, name: e.target.value })} required />
+                </div>
+                <div className="field">
+                  <label htmlFor="booking-phone">Phone</label>
+                  <input id="booking-phone" className="input" value={details.phone} onChange={(e) => setDetails({ ...details, phone: e.target.value })} required />
+                </div>
+                <div className="field">
+                  <label htmlFor="booking-email">Email (optional)</label>
+                  <input id="booking-email" type="email" className="input" value={details.email} onChange={(e) => setDetails({ ...details, email: e.target.value })} />
+                </div>
+              </>
+            )}
             <div className="field">
               <label htmlFor="booking-notes">Notes (optional)</label>
               <textarea id="booking-notes" className="textarea" rows={3} value={details.notes} onChange={(e) => setDetails({ ...details, notes: e.target.value })} />
@@ -376,8 +405,15 @@ export function BookingPage() {
               {new Date(confirmedAppointment.startTime).toLocaleDateString()} at {formatTime(confirmedAppointment.startTime)}
             </p>
             <p className="muted">
-              We've sent a confirmation to {details.phone}
-              {details.email ? ` and ${details.email}` : ''} with a link to reschedule or cancel if you need to.
+              We've sent a confirmation to {customer ? customer.phone : details.phone}
+              {(customer ? customer.email : details.email) ? ` and ${customer ? customer.email : details.email}` : ''}
+              {customer ? ' - view or manage it anytime from ' : ' with a link to reschedule or cancel if you need to.'}
+              {customer && (
+                <Link to="/account" style={{ color: 'var(--brand, var(--color-accent))' }}>
+                  My Account
+                </Link>
+              )}
+              {customer && '.'}
             </p>
             <a
               className="btn"

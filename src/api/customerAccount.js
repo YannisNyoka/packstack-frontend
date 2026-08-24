@@ -4,6 +4,18 @@ export function listAppointments(status) {
   return customerFetch(`/appointments?status=${status}`);
 }
 
+// The authenticated counterpart to api/publicBooking.js's createAppointment/
+// createDepositCheckout - no customerDetails needed, identity comes from the
+// logged-in customer's token. Used by BookingPage.jsx once a tenant requires
+// an account to book (or a customer is simply already logged in).
+export function createAppointment(data) {
+  return customerFetch('/appointments', { method: 'POST', body: data });
+}
+
+export function createDepositCheckout(data) {
+  return customerFetch('/appointments/checkout', { method: 'POST', body: data });
+}
+
 export function getAppointment(id) {
   return customerFetch(`/appointments/${id}`);
 }
