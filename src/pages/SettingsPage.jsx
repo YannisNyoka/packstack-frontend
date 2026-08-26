@@ -8,7 +8,7 @@ import * as themeApi from '../api/theme.js';
 import { getTenantSlug } from '../api/tenant.js';
 import { ApiError } from '../api/client.js';
 import { useSlowLoad } from '../hooks/useSlowLoad.js';
-import { LandingPreview } from '../components/LandingPreview.jsx';
+import { DevicePreview } from '../components/DevicePreview.jsx';
 
 export function SettingsPage() {
   const { user } = useAuth();
@@ -523,26 +523,12 @@ function BrandingSection() {
           </div>
         </form>
 
-        <div style={{ position: 'sticky', top: 20, flex: '0 0 auto' }}>
-          <p className="muted" style={{ fontSize: 13, marginBottom: 8 }}>
-            Live preview
+        <div style={{ position: 'sticky', top: 20, flex: '0 0 auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <p className="muted" style={{ fontSize: 13, margin: 0 }}>
+            Live preview - scroll each frame like you would the real page.
           </p>
-          <div
-            style={{
-              width: 320,
-              height: 560,
-              overflow: 'hidden',
-              border: '8px solid #1a1a1e',
-              borderRadius: 24,
-              position: 'relative',
-              pointerEvents: 'none',
-              background: '#fff',
-            }}
-          >
-            <div style={{ width: 1280, transform: `scale(${(320 / 1280).toFixed(4)})`, transformOrigin: 'top left' }}>
-              <LandingPreview theme={form} />
-            </div>
-          </div>
+          <DevicePreview theme={form} deviceWidth={1440} deviceHeight={900} boxWidth={340} label="Desktop" />
+          <DevicePreview theme={form} deviceWidth={390} deviceHeight={844} boxWidth={190} label="Mobile" rounded />
         </div>
         </div>
       )}

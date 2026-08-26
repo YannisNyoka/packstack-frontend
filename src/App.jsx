@@ -13,6 +13,7 @@ import { SettingsPage } from './pages/SettingsPage.jsx';
 import { BookingPage } from './pages/BookingPage.jsx';
 import { LandingPage } from './pages/LandingPage.jsx';
 import { ManagePage } from './pages/ManagePage.jsx';
+import { PreviewFramePage } from './pages/PreviewFramePage.jsx';
 import { SuperAdminAuthProvider } from './superadmin/SuperAdminAuthContext.jsx';
 import { RequireSuperAdmin } from './superadmin/RequireSuperAdmin.jsx';
 import { SuperAdminLayout } from './layout/SuperAdminLayout.jsx';
@@ -43,6 +44,12 @@ export default function App() {
                 checks it itself and self-redirects to login when needed. */}
             <Route path="/book" element={<BookingPage />} />
             <Route path="/manage" element={<ManagePage />} />
+            {/* Loaded only inside an <iframe> by SettingsPage.jsx's live
+                preview (see DevicePreview / PreviewFramePage.jsx) - a real
+                browsing context is what makes the phone preview actually
+                simulate a phone's viewport instead of just a scaled-down
+                desktop render. */}
+            <Route path="/preview" element={<PreviewFramePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/billing/success" element={<BillingSuccessPage />} />
             <Route path="/billing/cancelled" element={<BillingCancelledPage />} />
