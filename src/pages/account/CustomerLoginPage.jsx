@@ -11,7 +11,7 @@ export function CustomerLoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [theme, setTheme] = useState(null);
-  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -25,7 +25,7 @@ export function CustomerLoginPage() {
     setSubmitting(true);
     setError(null);
     try {
-      await login(phone, password);
+      await login(email, password);
       navigate(location.state?.from?.pathname || '/book', { replace: true });
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Something went wrong. Please try again.');
@@ -51,20 +51,25 @@ export function CustomerLoginPage() {
           <h2 className={styles.title}>Log in</h2>
 
           <div className="field">
-            <label htmlFor="phone">Phone number</label>
+            <label htmlFor="email">Email</label>
             <input
-              id="phone"
-              type="tel"
+              id="email"
+              type="email"
               className="input"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               autoComplete="username"
               required
             />
           </div>
 
           <div className="field">
-            <label htmlFor="password">Password</label>
+            <div className={styles.labelRow}>
+              <label htmlFor="password">Password</label>
+              <Link to="/account/forgot-password" className={styles.forgotLink}>
+                Forgot password?
+              </Link>
+            </div>
             <input
               id="password"
               type="password"

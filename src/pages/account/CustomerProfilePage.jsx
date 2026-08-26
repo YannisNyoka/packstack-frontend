@@ -286,7 +286,7 @@ function ProfileTab() {
       </div>
       <div className="field">
         <label htmlFor="profile-email">Email</label>
-        <input id="profile-email" type="email" className="input" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input id="profile-email" type="email" className="input" value={email} onChange={(e) => setEmail(e.target.value)} required />
       </div>
       {error && <p className="error-text">{error}</p>}
       {success && <p className="muted">Profile updated.</p>}

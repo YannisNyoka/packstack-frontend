@@ -32,7 +32,7 @@ export function CustomerSignupPage() {
     setSubmitting(true);
     setError(null);
     try {
-      await signup({ name, phone, email: email || undefined, password });
+      await signup({ name, phone, email, password });
       navigate('/book', { replace: true });
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Something went wrong. Please try again.');
@@ -63,6 +63,19 @@ export function CustomerSignupPage() {
         </div>
 
         <div className="field">
+          <label htmlFor="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            className="input"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="username"
+            required
+          />
+        </div>
+
+        <div className="field">
           <label htmlFor="phone">Phone number</label>
           <input
             id="phone"
@@ -70,14 +83,10 @@ export function CustomerSignupPage() {
             className="input"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            autoComplete="username"
+            autoComplete="tel"
             required
           />
-        </div>
-
-        <div className="field">
-          <label htmlFor="email">Email (optional)</label>
-          <input id="email" type="email" className="input" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <span className={styles.fieldHint}>For WhatsApp booking updates and reminders.</span>
         </div>
 
         <div className="field">

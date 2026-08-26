@@ -41,8 +41,8 @@ export function CustomerAuthProvider({ children }) {
     return signedUpCustomer;
   }, []);
 
-  const login = useCallback(async (phone, password) => {
-    const loggedInCustomer = await customerAuthApi.login(phone, password);
+  const login = useCallback(async (email, password) => {
+    const loggedInCustomer = await customerAuthApi.login(email, password);
     setCustomer(loggedInCustomer);
     return loggedInCustomer;
   }, []);
@@ -52,8 +52,16 @@ export function CustomerAuthProvider({ children }) {
     setCustomer(null);
   }, []);
 
+  const resetPassword = useCallback(async (token, password) => {
+    const loggedInCustomer = await customerAuthApi.resetPassword(token, password);
+    setCustomer(loggedInCustomer);
+    return loggedInCustomer;
+  }, []);
+
   return (
-    <CustomerAuthContext.Provider value={{ customer, setCustomer, booting, signup, login, logout }}>
+    <CustomerAuthContext.Provider
+      value={{ customer, setCustomer, booting, signup, login, logout, resetPassword, forgotPassword: customerAuthApi.forgotPassword }}
+    >
       {children}
     </CustomerAuthContext.Provider>
   );

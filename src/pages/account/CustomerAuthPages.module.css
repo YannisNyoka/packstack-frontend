@@ -38,3 +38,26 @@
   margin-top: 16px;
   font-size: 13px;
 }
+
+.labelRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.forgotLink {
+  font-size: 12.5px;
+}
+
+.formNote {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: -8px 0 14px;
+}
+
+.fieldHint {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}

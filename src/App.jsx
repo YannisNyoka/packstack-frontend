@@ -24,6 +24,8 @@ import { RequireCustomerAuth } from './auth/RequireCustomerAuth.jsx';
 import { CustomerLoginPage } from './pages/account/CustomerLoginPage.jsx';
 import { CustomerSignupPage } from './pages/account/CustomerSignupPage.jsx';
 import { CustomerProfilePage } from './pages/account/CustomerProfilePage.jsx';
+import { ForgotPasswordPage } from './pages/account/ForgotPasswordPage.jsx';
+import { ResetPasswordPage } from './pages/account/ResetPasswordPage.jsx';
 
 export default function App() {
   return (
@@ -82,6 +84,8 @@ export default function App() {
 
             <Route path="/account/login" element={<CustomerLoginPage />} />
             <Route path="/account/signup" element={<CustomerSignupPage />} />
+            <Route path="/account/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/account/reset-password" element={<ResetPasswordPage />} />
             <Route
               path="/account"
               element={
