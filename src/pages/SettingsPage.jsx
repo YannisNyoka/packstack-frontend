@@ -79,6 +79,7 @@ function BrandingSection() {
   const [bannerUploadError, setBannerUploadError] = useState(null);
   const [heroVideoUploading, setHeroVideoUploading] = useState(false);
   const [heroVideoUploadError, setHeroVideoUploadError] = useState(null);
+  const [previewDevice, setPreviewDevice] = useState('desktop');
 
   async function load() {
     setLoading(true);
@@ -523,12 +524,33 @@ function BrandingSection() {
           </div>
         </form>
 
-        <div style={{ position: 'sticky', top: 20, flex: '0 0 auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
-          <p className="muted" style={{ fontSize: 13, margin: 0 }}>
-            Live preview - scroll each frame like you would the real page.
-          </p>
-          <DevicePreview theme={form} deviceWidth={1440} deviceHeight={900} boxWidth={340} label="Desktop" />
-          <DevicePreview theme={form} deviceWidth={390} deviceHeight={844} boxWidth={190} label="Mobile" rounded />
+        <div style={{ position: 'sticky', top: 20, flex: '0 0 auto', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+            <p className="muted" style={{ fontSize: 13, margin: 0 }}>
+              Live preview
+            </p>
+            <div style={{ display: 'flex', gap: 6 }}>
+              <button
+                type="button"
+                className={`btn btn-sm ${previewDevice === 'desktop' ? 'btn-primary' : ''}`}
+                onClick={() => setPreviewDevice('desktop')}
+              >
+                Desktop
+              </button>
+              <button
+                type="button"
+                className={`btn btn-sm ${previewDevice === 'mobile' ? 'btn-primary' : ''}`}
+                onClick={() => setPreviewDevice('mobile')}
+              >
+                Mobile
+              </button>
+            </div>
+          </div>
+          {previewDevice === 'desktop' ? (
+            <DevicePreview theme={form} deviceWidth={1440} deviceHeight={900} boxWidth={420} label="Desktop" />
+          ) : (
+            <DevicePreview theme={form} deviceWidth={390} deviceHeight={844} boxWidth={260} label="Mobile" rounded />
+          )}
         </div>
         </div>
       )}

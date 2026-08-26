@@ -38,9 +38,6 @@ export function DevicePreview({ theme, customer, deviceWidth, deviceHeight, boxW
 
   return (
     <div>
-      <p className="muted" style={{ fontSize: 12, marginBottom: 6 }}>
-        {label}
-      </p>
       <div
         style={{
           width: boxWidth,
