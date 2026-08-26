@@ -19,10 +19,15 @@ describe('api/client.js', () => {
   beforeEach(() => {
     fetchMock = vi.fn()
     global.fetch = fetchMock
+    // client.js reads import.meta.env.VITE_API_BASE_URL once at module load -
+    // stub it explicitly so these assertions don't depend on whatever
+    // .env.local happens to be pointed at on whoever's machine runs this.
+    vi.stubEnv('VITE_API_BASE_URL', 'http://localhost:4000')
   })
 
   afterEach(() => {
     vi.restoreAllMocks()
+    vi.unstubAllEnvs()
   })
 
   it('apiFetch calls the tenant-scoped URL with no Authorization header when logged out', async () => {

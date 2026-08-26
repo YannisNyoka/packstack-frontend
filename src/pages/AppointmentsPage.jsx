@@ -4,6 +4,8 @@ import * as staffApi from '../api/staff.js';
 import * as servicesApi from '../api/services.js';
 import * as paymentsApi from '../api/payments.js';
 import { ApiError } from '../api/client.js';
+import { useSlowLoad } from '../hooks/useSlowLoad.js';
+import styles from './AppointmentsPage.module.css';
 
 const STATUS_FILTERS = ['all', 'booked', 'confirmed', 'completed', 'cancelled', 'no_show'];
 const STATUS_LABEL = { booked: 'Booked', confirmed: 'Confirmed', completed: 'Completed', cancelled: 'Cancelled', no_show: 'No-show' };
@@ -37,6 +39,7 @@ export function AppointmentsPage() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const slowLoad = useSlowLoad(loading);
 
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(emptyForm);
@@ -294,7 +297,7 @@ export function AppointmentsPage() {
 
       <div className="card">
         {loading ? (
-          <p className="muted">Loading…</p>
+          <p className="muted">{slowLoad ? 'Waking up the server — this can take a few seconds…' : 'Loading…'}</p>
         ) : appointments.length === 0 ? (
           <p className="empty-state">No appointments found.</p>
         ) : (
@@ -354,18 +357,25 @@ export function AppointmentsPage() {
                               Confirm
                             </button>
                           )}
-                          <button type="button" className="btn btn-sm" onClick={() => handleStatus(appointment, 'completed')}>
-                            Complete
-                          </button>
-                          <button type="button" className="btn btn-sm" onClick={() => handleStatus(appointment, 'no_show')}>
-                            No-show
-                          </button>
-                          <button type="button" className="btn btn-sm" onClick={() => startReschedule(appointment)}>
-                            Reschedule
-                          </button>
                           <button type="button" className="btn btn-sm btn-danger" onClick={() => handleCancel(appointment)}>
                             Cancel
                           </button>
+                          <select
+                            className={`select ${styles.moreSelect}`}
+                            value=""
+                            onChange={(e) => {
+                              const action = e.target.value;
+                              if (action === 'completed' || action === 'no_show') handleStatus(appointment, action);
+                              else if (action === 'reschedule') startReschedule(appointment);
+                            }}
+                          >
+                            <option value="" disabled>
+                              More…
+                            </option>
+                            <option value="completed">Complete</option>
+                            <option value="no_show">No-show</option>
+                            <option value="reschedule">Reschedule</option>
+                          </select>
                         </>
                       )}
                       <button type="button" className="btn btn-sm" onClick={() => togglePayments(appointment)}>

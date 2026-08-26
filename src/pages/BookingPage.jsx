@@ -182,7 +182,16 @@ export function BookingPage() {
   // this for the post-Yoco-redirect screens (RETURN_STATUS below), since
   // reaching those already implies the customer got through checkout once.
   if (!RETURN_STATUS && depositConfig.requireCustomerAccount !== false && !customer) {
-    return <Navigate to="/account/login" replace state={{ from: location }} />;
+    return (
+      <Navigate
+        to="/account/login"
+        replace
+        state={{
+          from: location,
+          message: `Create an account to book with ${theme?.businessName || 'us'}.`,
+        }}
+      />
+    );
   }
 
   if (RETURN_STATUS) {

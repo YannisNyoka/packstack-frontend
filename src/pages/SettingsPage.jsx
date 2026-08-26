@@ -7,6 +7,7 @@ import * as tenantSettingsApi from '../api/tenantSettings.js';
 import * as themeApi from '../api/theme.js';
 import { getTenantSlug } from '../api/tenant.js';
 import { ApiError } from '../api/client.js';
+import { useSlowLoad } from '../hooks/useSlowLoad.js';
 import { LandingPreview } from '../components/LandingPreview.jsx';
 
 export function SettingsPage() {
@@ -66,6 +67,7 @@ const emptyThemeForm = {
 function BrandingSection() {
   const [form, setForm] = useState(emptyThemeForm);
   const [loading, setLoading] = useState(true);
+  const slowLoad = useSlowLoad(loading);
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState(null);
@@ -200,7 +202,7 @@ function BrandingSection() {
 
       {error && <p className="error-text">{error}</p>}
       {loading ? (
-        <p className="muted">Loading…</p>
+        <p className="muted">{slowLoad ? 'Waking up the server — this can take a few seconds…' : 'Loading…'}</p>
       ) : (
         <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'flex-start' }}>
         <form
@@ -551,6 +553,7 @@ function BrandingSection() {
 function IntegrationsSection() {
   const [credentials, setCredentials] = useState([]);
   const [loading, setLoading] = useState(true);
+  const slowLoad = useSlowLoad(loading);
   const [error, setError] = useState(null);
   const [openForm, setOpenForm] = useState(null); // 'wati' | 'resend' | 'yoco' | null
   const [watiForm, setWatiForm] = useState({ accessToken: '', apiEndpoint: '' });
@@ -620,7 +623,7 @@ function IntegrationsSection() {
 
       {error && <p className="error-text">{error}</p>}
       {loading ? (
-        <p className="muted">Loading…</p>
+        <p className="muted">{slowLoad ? 'Waking up the server — this can take a few seconds…' : 'Loading…'}</p>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {['wati', 'resend', 'yoco'].map((provider) => {
@@ -788,6 +791,7 @@ function yocoWebhookUrl() {
 function BookingAccessSection() {
   const [rules, setRules] = useState(null);
   const [loading, setLoading] = useState(true);
+  const slowLoad = useSlowLoad(loading);
   const [error, setError] = useState(null);
   const [requireCustomerAccount, setRequireCustomerAccount] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -837,7 +841,7 @@ function BookingAccessSection() {
 
       {error && <p className="error-text">{error}</p>}
       {loading ? (
-        <p className="muted">Loading…</p>
+        <p className="muted">{slowLoad ? 'Waking up the server — this can take a few seconds…' : 'Loading…'}</p>
       ) : (
         <form onSubmit={handleSave} style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
           <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14 }}>
@@ -869,6 +873,7 @@ function BookingAccessSection() {
 function DepositSection() {
   const [rules, setRules] = useState(null);
   const [loading, setLoading] = useState(true);
+  const slowLoad = useSlowLoad(loading);
   const [error, setError] = useState(null);
   const [form, setForm] = useState({ depositRequired: false, depositAmountZAR: '0' });
   const [saving, setSaving] = useState(false);
@@ -921,7 +926,7 @@ function DepositSection() {
 
       {error && <p className="error-text">{error}</p>}
       {loading ? (
-        <p className="muted">Loading…</p>
+        <p className="muted">{slowLoad ? 'Waking up the server — this can take a few seconds…' : 'Loading…'}</p>
       ) : (
         <form onSubmit={handleSave} style={{ display: 'flex', alignItems: 'flex-end', gap: 16, flexWrap: 'wrap' }}>
           <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, paddingBottom: 8 }}>
@@ -969,6 +974,7 @@ function BillingSection() {
   const [subscription, setSubscription] = useState(null);
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
+  const slowLoad = useSlowLoad(loading);
   const [error, setError] = useState(null);
   const [checkoutError, setCheckoutError] = useState(null);
   const [checkingOutPlanId, setCheckingOutPlanId] = useState(null);
@@ -1025,7 +1031,7 @@ function BillingSection() {
 
       {error && <p className="error-text">{error}</p>}
       {loading ? (
-        <p className="muted">Loading…</p>
+        <p className="muted">{slowLoad ? 'Waking up the server — this can take a few seconds…' : 'Loading…'}</p>
       ) : (
         <>
           {subscription && (
@@ -1109,6 +1115,7 @@ function redirectToPayfast(checkoutUrl, fields) {
 function DomainsSection() {
   const [domains, setDomains] = useState([]);
   const [loading, setLoading] = useState(true);
+  const slowLoad = useSlowLoad(loading);
   const [error, setError] = useState(null);
   const [newDomain, setNewDomain] = useState('');
   const [addError, setAddError] = useState(null);
@@ -1231,7 +1238,7 @@ function DomainsSection() {
       {error && <p className="error-text">{error}</p>}
 
       {loading ? (
-        <p className="muted">Loading…</p>
+        <p className="muted">{slowLoad ? 'Waking up the server — this can take a few seconds…' : 'Loading…'}</p>
       ) : domains.length === 0 ? (
         <p className="empty-state">No custom domains yet.</p>
       ) : (

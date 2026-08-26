@@ -45,6 +45,8 @@ export function CustomerLoginPage() {
       <div className={styles.inner}>
         <AccountHeader theme={theme} />
 
+        {location.state?.message && <p className={styles.contextMessage}>{location.state.message}</p>}
+
         <form className="card" onSubmit={handleSubmit}>
           <h2 className={styles.title}>Log in</h2>
 
@@ -81,7 +83,7 @@ export function CustomerLoginPage() {
           </button>
 
           <p className={styles.footer}>
-            Don't have an account? <Link to="/account/signup">Sign up</Link>
+            Don't have an account? <Link to="/account/signup" state={location.state}>Sign up</Link>
           </p>
         </form>
       </div>

@@ -47,13 +47,13 @@ export function ManagePage() {
   }
 
   useEffect(() => {
+    bookingApi.getTheme().then(setTheme).catch(() => {});
     if (!token) {
       setLoadError('This link is missing its appointment token.');
       setLoading(false);
       return;
     }
     load();
-    bookingApi.getTheme().then(setTheme).catch(() => {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
@@ -106,6 +106,9 @@ export function ManagePage() {
     }
   }
 
+  const errorPrimaryColor = theme?.colors?.primary || '#111827';
+  const errorAccentColor = theme?.colors?.accent || errorPrimaryColor;
+
   if (loading) {
     return (
       <div className={styles.wrap}>
@@ -118,9 +121,18 @@ export function ManagePage() {
 
   if (loadError) {
     return (
-      <div className={styles.wrap}>
+      <div
+        className={styles.wrap}
+        style={{ '--brand': errorPrimaryColor, '--color-primary': errorPrimaryColor, '--color-accent': errorAccentColor }}
+      >
         <div className={styles.inner}>
-          <p className="error-text">{loadError}</p>
+          <AccountHeader theme={theme} />
+          <div className="card">
+            <p className="error-text">{loadError}</p>
+            <a href="/" className="btn" style={{ marginTop: 4 }}>
+              Back to {theme?.businessName || 'booking page'}
+            </a>
+          </div>
         </div>
       </div>
     );

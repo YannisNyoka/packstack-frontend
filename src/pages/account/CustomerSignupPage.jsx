@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useCustomerAuth } from '../../auth/CustomerAuthContext.jsx';
 import * as bookingApi from '../../api/publicBooking.js';
 import { ApiError } from '../../api/client.js';
@@ -9,6 +9,7 @@ import styles from './CustomerAuthPages.module.css';
 export function CustomerSignupPage() {
   const { signup } = useCustomerAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [theme, setTheme] = useState(null);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -50,6 +51,8 @@ export function CustomerSignupPage() {
     >
       <div className={styles.inner}>
         <AccountHeader theme={theme} />
+
+        {location.state?.message && <p className={styles.contextMessage}>{location.state.message}</p>}
 
         <form className="card" onSubmit={handleSubmit}>
         <h2 className={styles.title}>Sign up</h2>
@@ -112,7 +115,7 @@ export function CustomerSignupPage() {
         </button>
 
         <p className={styles.footer}>
-          Already have an account? <Link to="/account/login">Log in</Link>
+          Already have an account? <Link to="/account/login" state={location.state}>Log in</Link>
         </p>
         </form>
       </div>

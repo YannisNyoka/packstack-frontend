@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import * as servicesApi from '../api/services.js';
 import * as staffApi from '../api/staff.js';
+import * as integrationsApi from '../api/integrations.js';
 import { getTenantSlug } from '../api/tenant.js';
 import styles from './OnboardingChecklist.module.css';
 
@@ -24,10 +25,15 @@ export function OnboardingChecklist() {
   useEffect(() => {
     setDismissed(localStorage.getItem(dismissKey) === '1');
     let cancelled = false;
-    Promise.all([servicesApi.listServices(), staffApi.listStaff()])
-      .then(([services, staff]) => {
+    Promise.all([servicesApi.listServices(), staffApi.listStaff(), integrationsApi.listIntegrations()])
+      .then(([services, staff, integrations]) => {
         if (cancelled) return;
-        setStatus({ hasService: services.length > 0, hasStaff: staff.length > 0 });
+        const connectedProviders = new Set(integrations.map((i) => i.provider));
+        setStatus({
+          hasService: services.length > 0,
+          hasStaff: staff.length > 0,
+          hasConfirmationChannel: connectedProviders.has('wati') || connectedProviders.has('resend'),
+        });
       })
       .catch(() => {
         // Can't tell what's set up - fail open rather than nag on an error.
@@ -48,6 +54,22 @@ export function OnboardingChecklist() {
 
   const baseDomain = import.meta.env.VITE_BASE_DOMAIN || 'packstack.co.za';
   const bookingUrl = `https://${slug}.${baseDomain}/`;
+
+  if (status.hasService && status.hasStaff && !status.hasConfirmationChannel) {
+    return (
+      <div className={`${styles.card} ${styles.warning}`}>
+        <p className={styles.text}>
+          <strong>Bookings won't be confirmed to customers yet.</strong> You're set up to take
+          bookings, but no WhatsApp or Email is connected - customers currently get no
+          confirmation message.{' '}
+          <Link to="/dashboard/settings">Connect one in Settings →</Link>
+        </p>
+        <button type="button" className="btn btn-sm" onClick={dismiss}>
+          Dismiss
+        </button>
+      </div>
+    );
+  }
 
   if (status.hasService && status.hasStaff) {
     return (

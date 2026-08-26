@@ -29,6 +29,7 @@ export function LoginPage() {
 
   return (
     <div className={styles.wrap}>
+      <div className={styles.brand}>PackStack</div>
       <form className={`card ${styles.card}`} onSubmit={handleSubmit}>
         <h1 className={styles.title}>Log in</h1>
 
