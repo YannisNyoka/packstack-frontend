@@ -27,7 +27,9 @@ export function trialBanner(tenantStatus, trialEndsAt) {
 }
 
 const NAV_ITEMS = [
-  { to: '/dashboard', label: 'Appointments', end: true },
+  { to: '/dashboard', label: 'Overview', end: true },
+  { to: '/dashboard/appointments', label: 'Appointments' },
+  { to: '/dashboard/analytics', label: 'Analytics' },
   { to: '/dashboard/customers', label: 'Customers' },
   { to: '/dashboard/staff', label: 'Staff' },
   { to: '/dashboard/services', label: 'Services' },

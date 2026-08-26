@@ -3,17 +3,19 @@ import { Link } from 'react-router-dom';
 import * as servicesApi from '../api/services.js';
 import * as staffApi from '../api/staff.js';
 import * as integrationsApi from '../api/integrations.js';
+import * as themeApi from '../api/theme.js';
 import { getTenantSlug } from '../api/tenant.js';
 import styles from './OnboardingChecklist.module.css';
 
 const DISMISS_KEY_PREFIX = 'packstack_onboarding_dismissed_';
 
 /**
- * Shown above the dashboard until a tenant has at least one service and one
- * staff member (the minimum for the public booking page to show anything) -
- * then flips to a one-time "share your booking link" card. Dismissal is
- * per-tenant, stored in localStorage rather than the backend since it's
- * purely a "don't nag me" preference, not data anyone else needs to see.
+ * Shown above the dashboard until a tenant has a service, a staff member,
+ * a logo, and a connected WhatsApp/Email channel - the minimum for the
+ * public booking page to work AND actually notify customers - then flips to
+ * a one-time "share your booking link" card. Dismissal is per-tenant, stored
+ * in localStorage rather than the backend since it's purely a "don't nag me"
+ * preference, not data anyone else needs to see.
  */
 export function OnboardingChecklist() {
   const [status, setStatus] = useState(null);
@@ -25,13 +27,14 @@ export function OnboardingChecklist() {
   useEffect(() => {
     setDismissed(localStorage.getItem(dismissKey) === '1');
     let cancelled = false;
-    Promise.all([servicesApi.listServices(), staffApi.listStaff(), integrationsApi.listIntegrations()])
-      .then(([services, staff, integrations]) => {
+    Promise.all([servicesApi.listServices(), staffApi.listStaff(), integrationsApi.listIntegrations(), themeApi.getTheme()])
+      .then(([services, staff, integrations, theme]) => {
         if (cancelled) return;
         const connectedProviders = new Set(integrations.map((i) => i.provider));
         setStatus({
           hasService: services.length > 0,
           hasStaff: staff.length > 0,
+          hasBranding: Boolean(theme?.logoUrl),
           hasConfirmationChannel: connectedProviders.has('wati') || connectedProviders.has('resend'),
         });
       })
@@ -54,24 +57,9 @@ export function OnboardingChecklist() {
 
   const baseDomain = import.meta.env.VITE_BASE_DOMAIN || 'packstack.co.za';
   const bookingUrl = `https://${slug}.${baseDomain}/`;
+  const allDone = status.hasService && status.hasStaff && status.hasBranding && status.hasConfirmationChannel;
 
-  if (status.hasService && status.hasStaff && !status.hasConfirmationChannel) {
-    return (
-      <div className={`${styles.card} ${styles.warning}`}>
-        <p className={styles.text}>
-          <strong>Bookings won't be confirmed to customers yet.</strong> You're set up to take
-          bookings, but no WhatsApp or Email is connected - customers currently get no
-          confirmation message.{' '}
-          <Link to="/dashboard/settings">Connect one in Settings →</Link>
-        </p>
-        <button type="button" className="btn btn-sm" onClick={dismiss}>
-          Dismiss
-        </button>
-      </div>
-    );
-  }
-
-  if (status.hasService && status.hasStaff) {
+  if (allDone) {
     return (
       <div className={styles.card}>
         <p className={styles.text}>
@@ -105,6 +93,16 @@ export function OnboardingChecklist() {
           <span className={styles.check}>{status.hasStaff ? '✓' : ''}</span>
           <span className={styles.itemLabel}>Add a staff member</span>
           {!status.hasStaff && <Link to="/dashboard/staff">Add now →</Link>}
+        </li>
+        <li className={status.hasBranding ? styles.done : ''}>
+          <span className={styles.check}>{status.hasBranding ? '✓' : ''}</span>
+          <span className={styles.itemLabel}>Add your logo</span>
+          {!status.hasBranding && <Link to="/dashboard/settings">Add now →</Link>}
+        </li>
+        <li className={status.hasConfirmationChannel ? styles.done : ''}>
+          <span className={styles.check}>{status.hasConfirmationChannel ? '✓' : ''}</span>
+          <span className={styles.itemLabel}>Connect WhatsApp or Email</span>
+          {!status.hasConfirmationChannel && <Link to="/dashboard/settings">Connect now →</Link>}
         </li>
       </ul>
     </div>

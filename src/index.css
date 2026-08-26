@@ -14,6 +14,20 @@
   --color-warning: #d97706;
   --color-warning-bg: #fffbeb;
 
+  /* Categorical palette for stat cards + chart series (dataviz skill's
+     validated default - CVD-checked, see the skill's references/palette.md).
+     Assign in this fixed slot order, never cycled per-render. On the light
+     surface, aqua/yellow/magenta fall under 3:1 contrast - those three need
+     dark text on their card, not the white used on the other five. */
+  --stat-blue: #2a78d6;
+  --stat-orange: #eb6834;
+  --stat-aqua: #1baf7a;
+  --stat-yellow: #eda100;
+  --stat-magenta: #e87ba4;
+  --stat-green: #008300;
+  --stat-violet: #4a3aa7;
+  --stat-red: #e34948;
+
   --radius: 10px;
   --shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
 
@@ -37,6 +51,15 @@
     --color-success-bg: #123321;
     --color-warning: #fbbf24;
     --color-warning-bg: #3a2a0d;
+
+    --stat-blue: #3987e5;
+    --stat-orange: #d95926;
+    --stat-aqua: #199e70;
+    --stat-yellow: #c98500;
+    --stat-magenta: #d55181;
+    --stat-green: #008300;
+    --stat-violet: #9085e9;
+    --stat-red: #e66767;
   }
 }
 

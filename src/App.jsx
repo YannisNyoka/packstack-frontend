@@ -6,6 +6,8 @@ import { LoginPage } from './pages/LoginPage.jsx';
 import { BillingSuccessPage } from './pages/BillingSuccessPage.jsx';
 import { BillingCancelledPage } from './pages/BillingCancelledPage.jsx';
 import { AppointmentsPage } from './pages/AppointmentsPage.jsx';
+import { OverviewPage } from './pages/OverviewPage.jsx';
+import { AnalyticsPage } from './pages/AnalyticsPage.jsx';
 import { StaffPage } from './pages/StaffPage.jsx';
 import { ServicesPage } from './pages/ServicesPage.jsx';
 import { CustomersPage } from './pages/CustomersPage.jsx';
@@ -61,7 +63,9 @@ export default function App() {
                 </RequireAuth>
               }
             >
-              <Route index element={<AppointmentsPage />} />
+              <Route index element={<OverviewPage />} />
+              <Route path="appointments" element={<AppointmentsPage />} />
+              <Route path="analytics" element={<AnalyticsPage />} />
               <Route path="staff" element={<StaffPage />} />
               <Route path="services" element={<ServicesPage />} />
               <Route path="customers" element={<CustomersPage />} />
