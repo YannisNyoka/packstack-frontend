@@ -191,11 +191,13 @@
   }
 
   .navLinks {
-    gap: 12px;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
 
   .navLink {
-    display: none;
+    font-size: 13px;
   }
 
   .hero {
