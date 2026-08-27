@@ -17,7 +17,7 @@ const prefersReducedMotion =
  * pages/LandingPage.jsx so it can be reused two ways: the real public route
  * (fetches theme from the API, knows the logged-in customer) and the live
  * preview in Settings > Branding (fed the in-progress, unsaved form state
- * instead, no logged-in customer to speak of) - see SettingsPage.jsx.
+ * instead, no logged-in customer to speak of) - see BrandingSettingsPage.jsx.
  * Takes `theme`/`customer` as plain props rather than reading them from
  * context itself, so it has no provider dependencies of its own.
  */

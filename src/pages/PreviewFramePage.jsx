@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { LandingPreview } from '../components/LandingPreview.jsx';
 
 /**
- * Rendered inside an <iframe> by SettingsPage.jsx's live preview (see
+ * Rendered inside an <iframe> by BrandingSettingsPage.jsx's live preview (see
  * DevicePreview there) - a real, separate browsing context is the only way
  * to preview accurately, since vh units and @media queries resolve against
  * the actual window they're in. A transform-scaled <div> inside the same

@@ -11,7 +11,13 @@ import { AnalyticsPage } from './pages/AnalyticsPage.jsx';
 import { StaffPage } from './pages/StaffPage.jsx';
 import { ServicesPage } from './pages/ServicesPage.jsx';
 import { CustomersPage } from './pages/CustomersPage.jsx';
-import { SettingsPage } from './pages/SettingsPage.jsx';
+import { SettingsLayout } from './pages/settings/SettingsLayout.jsx';
+import { BrandingSettingsPage } from './pages/settings/BrandingSettingsPage.jsx';
+import { IntegrationsSettingsPage } from './pages/settings/IntegrationsSettingsPage.jsx';
+import { BookingAccessSettingsPage } from './pages/settings/BookingAccessSettingsPage.jsx';
+import { DepositSettingsPage } from './pages/settings/DepositSettingsPage.jsx';
+import { BillingSettingsPage } from './pages/settings/BillingSettingsPage.jsx';
+import { DomainsSettingsPage } from './pages/settings/DomainsSettingsPage.jsx';
 import { BookingPage } from './pages/BookingPage.jsx';
 import { LandingPage } from './pages/LandingPage.jsx';
 import { ManagePage } from './pages/ManagePage.jsx';
@@ -46,11 +52,11 @@ export default function App() {
                 checks it itself and self-redirects to login when needed. */}
             <Route path="/book" element={<BookingPage />} />
             <Route path="/manage" element={<ManagePage />} />
-            {/* Loaded only inside an <iframe> by SettingsPage.jsx's live
-                preview (see DevicePreview / PreviewFramePage.jsx) - a real
-                browsing context is what makes the phone preview actually
-                simulate a phone's viewport instead of just a scaled-down
-                desktop render. */}
+            {/* Loaded only inside an <iframe> by BrandingSettingsPage.jsx's
+                live preview (see DevicePreview / PreviewFramePage.jsx) - a
+                real browsing context is what makes the phone preview
+                actually simulate a phone's viewport instead of just a
+                scaled-down desktop render. */}
             <Route path="/preview" element={<PreviewFramePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/billing/success" element={<BillingSuccessPage />} />
@@ -69,7 +75,22 @@ export default function App() {
               <Route path="staff" element={<StaffPage />} />
               <Route path="services" element={<ServicesPage />} />
               <Route path="customers" element={<CustomersPage />} />
-              <Route path="settings" element={<SettingsPage />} />
+              <Route
+                path="settings"
+                element={
+                  <RequireAuth ownerOnly>
+                    <SettingsLayout />
+                  </RequireAuth>
+                }
+              >
+                <Route index element={<Navigate to="branding" replace />} />
+                <Route path="branding" element={<BrandingSettingsPage />} />
+                <Route path="integrations" element={<IntegrationsSettingsPage />} />
+                <Route path="booking-access" element={<BookingAccessSettingsPage />} />
+                <Route path="deposits" element={<DepositSettingsPage />} />
+                <Route path="billing" element={<BillingSettingsPage />} />
+                <Route path="domains" element={<DomainsSettingsPage />} />
+              </Route>
             </Route>
 
             <Route
