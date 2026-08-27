@@ -12,6 +12,9 @@ vi.mock('../../auth/AuthContext.jsx')
 vi.mock('../../api/tenant.js', () => ({ getTenantSlug: () => 'test-salon' }))
 vi.mock('../../api/services.js', () => ({ listServices: () => Promise.resolve([]) }))
 vi.mock('../../api/staff.js', () => ({ listStaff: () => Promise.resolve([]) }))
+// DashboardLayout itself now also fetches the theme (business name/logo for
+// the sidebar header) - stub it too, same reasoning as the mocks above.
+vi.mock('../../api/theme.js', () => ({ getTheme: () => Promise.resolve({ businessName: 'Test Salon', logoUrl: null }) }))
 
 const DAY_MS = 24 * 60 * 60 * 1000
 
