@@ -25,17 +25,24 @@ export function CustomerLoginPage() {
   // This is the only login form shown on the public site - there's no
   // separate, discoverable "owner/staff login" URL, since a labeled admin
   // entry point just invites credential-guessing attempts against it. A
-  // tenant's own staff/owner sign in here exactly like a customer would;
-  // only after the customer login fails do we try the same credentials
-  // against the dashboard account, then route by whichever succeeded.
+  // tenant's own staff/owner sign in here exactly like a customer would.
+  //
+  // Dashboard credentials are tried FIRST, customer credentials as the
+  // fallback - not the other way round. An owner can easily also hold a
+  // customer account on their own site (e.g. from testing the booking
+  // flow themselves); if that customer account happens to validate with
+  // the same email/password, trying it first would silently strand the
+  // owner on /book with no way to reach /dashboard from this form. Valid
+  // owner/staff credentials should always win regardless of what else
+  // that email/password also happens to satisfy.
   async function handleSubmit(e) {
     e.preventDefault();
     setSubmitting(true);
     setError(null);
 
     try {
-      await login(email, password);
-      navigate(location.state?.from?.pathname || '/book', { replace: true });
+      await dashboardLogin(email, password);
+      navigate('/dashboard', { replace: true });
       return;
     } catch (err) {
       if (!(err instanceof ApiError)) {
@@ -46,8 +53,8 @@ export function CustomerLoginPage() {
     }
 
     try {
-      await dashboardLogin(email, password);
-      navigate('/dashboard', { replace: true });
+      await login(email, password);
+      navigate(location.state?.from?.pathname || '/book', { replace: true });
     } catch {
       // Never surface which system rejected the credentials or why (e.g.
       // "account locked") - that would let a stranger tell which emails
