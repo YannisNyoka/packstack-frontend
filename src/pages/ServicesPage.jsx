@@ -3,7 +3,7 @@ import { useAuth } from '../auth/AuthContext.jsx';
 import * as servicesApi from '../api/services.js';
 import { ApiError } from '../api/client.js';
 
-const emptyForm = { name: '', durationMinutes: '', price: '', category: '' };
+const emptyForm = { name: '', durationMinutes: '', price: '', category: '', imageUrl: '' };
 
 export function ServicesPage() {
   const { user } = useAuth();
@@ -18,6 +18,8 @@ export function ServicesPage() {
   const [formError, setFormError] = useState(null);
   const [saving, setSaving] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [imageUploading, setImageUploading] = useState(false);
+  const [imageUploadError, setImageUploadError] = useState(null);
 
   async function load() {
     setLoading(true);
@@ -49,8 +51,10 @@ export function ServicesPage() {
       durationMinutes: String(service.durationMinutes),
       price: String(service.price),
       category: service.category || '',
+      imageUrl: service.imageUrl || '',
     });
     setFormError(null);
+    setImageUploadError(null);
     setShowForm(true);
   }
 
@@ -64,6 +68,7 @@ export function ServicesPage() {
         durationMinutes: Number(form.durationMinutes),
         price: Number(form.price),
         category: form.category,
+        imageUrl: form.imageUrl,
       };
       if (editingId) {
         await servicesApi.updateService(editingId, payload);
@@ -76,6 +81,22 @@ export function ServicesPage() {
       setFormError(err instanceof ApiError ? err.message : 'Failed to save service.');
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleImageFile(e) {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file || !editingId) return;
+    setImageUploading(true);
+    setImageUploadError(null);
+    try {
+      const service = await servicesApi.uploadServiceImage(editingId, file);
+      setForm((f) => ({ ...f, imageUrl: service.imageUrl || '' }));
+    } catch (err) {
+      setImageUploadError(err instanceof ApiError ? err.message : 'Failed to upload image.');
+    } finally {
+      setImageUploading(false);
     }
   }
 
@@ -144,6 +165,41 @@ export function ServicesPage() {
               />
             </div>
           </div>
+
+          <div className="field">
+            <label htmlFor="svc-image">Photo (optional)</label>
+            {editingId ? (
+              <>
+                <input
+                  id="svc-image"
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  onChange={handleImageFile}
+                  disabled={imageUploading}
+                  style={{ fontSize: 13 }}
+                />
+                {imageUploading && <span className="muted" style={{ fontSize: 13, marginLeft: 8 }}>Uploading…</span>}
+                {imageUploadError && <p className="error-text" style={{ fontSize: 13 }}>{imageUploadError}</p>}
+                {form.imageUrl && (
+                  <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <img
+                      src={form.imageUrl}
+                      alt="Service preview"
+                      style={{ width: 56, height: 56, borderRadius: 6, objectFit: 'cover', border: '1px solid var(--color-border)' }}
+                    />
+                    <button type="button" className="btn btn-sm" onClick={() => setForm((f) => ({ ...f, imageUrl: '' }))}>
+                      Remove
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <p className="muted" style={{ fontSize: 13, margin: 0 }}>
+                Save the service first, then edit it to add a photo.
+              </p>
+            )}
+          </div>
+
           {formError && <p className="error-text">{formError}</p>}
           <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
             <button type="submit" className="btn btn-primary" disabled={saving}>
@@ -176,7 +232,18 @@ export function ServicesPage() {
             <tbody>
               {services.map((service) => (
                 <tr key={service._id}>
-                  <td>{service.name}</td>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      {service.imageUrl && (
+                        <img
+                          src={service.imageUrl}
+                          alt=""
+                          style={{ width: 32, height: 32, borderRadius: 6, objectFit: 'cover', flexShrink: 0 }}
+                        />
+                      )}
+                      <span>{service.name}</span>
+                    </div>
+                  </td>
                   <td className="muted">{service.category || '—'}</td>
                   <td>{service.durationMinutes} min</td>
                   <td>{service.price}</td>

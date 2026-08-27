@@ -260,6 +260,13 @@ export function BookingPage() {
                 {services.map((service) => (
                   <label key={service._id} className={styles.optionRow}>
                     <input type="checkbox" checked={selectedServiceIds.includes(service._id)} onChange={() => toggleService(service._id)} />
+                    {service.imageUrl && (
+                      <img
+                        src={service.imageUrl}
+                        alt=""
+                        style={{ width: 40, height: 40, borderRadius: 6, objectFit: 'cover', flexShrink: 0 }}
+                      />
+                    )}
                     <span style={{ flex: 1 }}>{service.name}</span>
                     <span className="muted">
                       {service.durationMinutes} min · R{service.price.toFixed(2)}
