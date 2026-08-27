@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useCustomerAuth } from '../../auth/CustomerAuthContext.jsx';
+import { useAuth } from '../../auth/AuthContext.jsx';
 import * as bookingApi from '../../api/publicBooking.js';
 import { ApiError } from '../../api/client.js';
 import { AccountHeader } from '../../components/AccountHeader.jsx';
@@ -8,6 +9,7 @@ import styles from './CustomerAuthPages.module.css';
 
 export function CustomerLoginPage() {
   const { login } = useCustomerAuth();
+  const { login: dashboardLogin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [theme, setTheme] = useState(null);
@@ -20,15 +22,38 @@ export function CustomerLoginPage() {
     bookingApi.getTheme().then(setTheme).catch(() => {});
   }, []);
 
+  // This is the only login form shown on the public site - there's no
+  // separate, discoverable "owner/staff login" URL, since a labeled admin
+  // entry point just invites credential-guessing attempts against it. A
+  // tenant's own staff/owner sign in here exactly like a customer would;
+  // only after the customer login fails do we try the same credentials
+  // against the dashboard account, then route by whichever succeeded.
   async function handleSubmit(e) {
     e.preventDefault();
     setSubmitting(true);
     setError(null);
+
     try {
       await login(email, password);
       navigate(location.state?.from?.pathname || '/book', { replace: true });
+      return;
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Something went wrong. Please try again.');
+      if (!(err instanceof ApiError)) {
+        setError('Something went wrong. Please try again.');
+        setSubmitting(false);
+        return;
+      }
+    }
+
+    try {
+      await dashboardLogin(email, password);
+      navigate('/dashboard', { replace: true });
+    } catch {
+      // Never surface which system rejected the credentials or why (e.g.
+      // "account locked") - that would let a stranger tell which emails
+      // belong to owner/staff accounts just by watching for a different
+      // message than a wrong customer password gets.
+      setError('Invalid email or password.');
     } finally {
       setSubmitting(false);
     }

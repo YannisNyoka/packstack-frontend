@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import styles from './Footer.module.css';
 
 // Small inline outline icons - this app has no icon library dependency
@@ -98,10 +97,7 @@ export function Footer({ theme }) {
       </div>
 
       <div className={styles.copyright}>
-        © {new Date().getFullYear()} {theme?.businessName}. Powered by PackStack.{' '}
-        <Link to="/login" className={styles.businessLoginLink}>
-          Business login
-        </Link>
+        © {new Date().getFullYear()} {theme?.businessName}. Powered by PackStack.
       </div>
     </footer>
   );
