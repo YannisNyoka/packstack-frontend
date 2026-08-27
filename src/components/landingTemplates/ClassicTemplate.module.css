@@ -1,0 +1,203 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px;
+}
+
+.navBrand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 17px;
+}
+
+.navLogo {
+  height: 32px;
+  border-radius: 6px;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.navLink {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.9;
+  text-decoration: none;
+}
+
+.navLink:hover {
+  opacity: 1;
+}
+
+.navCta {
+  background: var(--brand, #111827);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.hero {
+  position: relative;
+  min-height: 88vh;
+  display: flex;
+  align-items: center;
+  padding: 9rem 6% 5rem;
+  overflow: hidden;
+  background: linear-gradient(160deg, var(--brand, #111827), #000);
+}
+
+.heroMedia {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heroVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.heroVideoReady {
+  opacity: 1;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.55) 40%,
+    rgba(0, 0, 0, 0.25) 70%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  color: #fff;
+  max-width: 620px;
+}
+
+.heroBadge {
+  display: inline-block;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  padding: 6px 18px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  opacity: 0.9;
+}
+
+.heroTitle {
+  font-size: clamp(2rem, 4.6vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin: 0 0 12px;
+  letter-spacing: -0.02em;
+}
+
+.heroTagline {
+  font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+  opacity: 0.85;
+  margin: 0 0 28px;
+  letter-spacing: 0.03em;
+}
+
+.primaryCta {
+  background: var(--brand, #111827);
+  color: #fff;
+  border: none;
+  padding: 16px 36px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s, opacity 0.15s;
+}
+
+.primaryCta:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.simpleHeader {
+  text-align: center;
+  padding: 80px 24px 64px;
+}
+
+.simpleHeader h1 {
+  font-size: 28px;
+  margin: 12px 0 6px;
+}
+
+.simpleLogo {
+  height: 56px;
+  margin: 0 auto;
+}
+
+.simpleHeader .primaryCta {
+  margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+  .nav {
+    padding: 16px 20px;
+  }
+
+  .navLinks {
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .navLink {
+    font-size: 13px;
+  }
+
+  .hero {
+    min-height: 78vh;
+    padding: 8rem 6% 4rem;
+  }
+
+  .heroOverlay {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.5) 55%, rgba(0, 0, 0, 0.75) 100%);
+  }
+}

@@ -93,6 +93,19 @@ describe('BrandingSettingsPage', () => {
     await waitFor(() => expect(screen.getByLabelText('Logo URL')).toHaveValue('https://res.cloudinary.com/demo/logo.png'))
   })
 
+  it('includes the selected template when saving', async () => {
+    themeApi.getTheme.mockResolvedValue({ ...baseTheme, template: 'classic' })
+    themeApi.updateTheme.mockResolvedValue({ ...baseTheme, template: 'bold' })
+    const user = userEvent.setup()
+    renderPage()
+    await waitFor(() => expect(screen.getByLabelText('Business name')).toHaveValue('Verify Test Salon'))
+
+    await user.click(screen.getByRole('radio', { name: /Bold/ }))
+    await user.click(screen.getByRole('button', { name: 'Save branding' }))
+
+    await waitFor(() => expect(themeApi.updateTheme).toHaveBeenCalledWith(expect.objectContaining({ template: 'bold' })))
+  })
+
   it('shows an error if the upload fails server-side, without touching the Logo URL field', async () => {
     themeApi.getTheme.mockResolvedValue(baseTheme)
     // The <input accept="image/*"> only hints the OS file picker - real

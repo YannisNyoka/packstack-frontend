@@ -1,0 +1,224 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+
+.card:hover {
+  border-color: var(--mock-primary, var(--color-primary));
+}
+
+.cardSelected {
+  border-color: var(--mock-primary, var(--color-primary));
+  box-shadow: 0 0 0 1px var(--mock-primary, var(--color-primary));
+}
+
+.mockup {
+  height: 90px;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #f3f4f6;
+}
+
+.mockNav {
+  height: 12px;
+  flex-shrink: 0;
+  background: #e5e7eb;
+}
+
+.mockBody {
+  flex: 1;
+  display: flex;
+  position: relative;
+}
+
+.mockPanel {
+  flex: 1;
+  background: linear-gradient(135deg, var(--mock-primary, #111827), var(--mock-accent, #d946ef));
+}
+
+.mockLines {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.mockLine,
+.mockLineShort {
+  display: block;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 2px;
+}
+
+.mockLine {
+  width: 34px;
+}
+
+.mockLineShort {
+  width: 20px;
+}
+
+.cardName {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+.cardDescription {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+/* --- per-template mockup shape --- */
+
+/* Classic: nav overlaps the hero (no separate nav bar), lines bottom-left. */
+.mockup[data-template='classic'] .mockNav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.mockup[data-template='classic'] .mockLines {
+  left: 8px;
+  bottom: 10px;
+}
+
+/* Modern: solid nav, split hero (text panel + image panel side by side). */
+.mockup[data-template='modern'] .mockNav {
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.mockup[data-template='modern'] .mockBody {
+  background: #fff;
+}
+
+.mockup[data-template='modern'] .mockPanel {
+  flex: 0 0 55%;
+  opacity: 0.18;
+}
+
+.mockup[data-template='modern'] .mockLines {
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.mockup[data-template='modern'] .mockLine,
+.mockup[data-template='modern'] .mockLineShort {
+  background: var(--mock-primary, #111827);
+}
+
+/* Elegant: centered content on a full dark-tinted panel. */
+.mockup[data-template='elegant'] .mockNav {
+  background: transparent;
+}
+
+.mockup[data-template='elegant'] .mockPanel {
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), linear-gradient(135deg, var(--mock-primary, #111827), var(--mock-accent, #d946ef));
+}
+
+.mockup[data-template='elegant'] .mockLines {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  align-items: center;
+}
+
+/* Bold: solid saturated block, thick chunky "type" bar. */
+.mockup[data-template='bold'] .mockNav {
+  background: #0b0b0b;
+}
+
+.mockup[data-template='bold'] .mockPanel {
+  background: var(--mock-accent, #d946ef);
+}
+
+.mockup[data-template='bold'] .mockLines {
+  left: 8px;
+  bottom: 10px;
+}
+
+.mockup[data-template='bold'] .mockLine {
+  height: 7px;
+  background: #111;
+  width: 38px;
+}
+
+.mockup[data-template='bold'] .mockLineShort {
+  display: none;
+}
+
+/* Minimal: mostly empty white space, a couple of thin short lines only. */
+.mockup[data-template='minimal'] {
+  background: #fff;
+}
+
+.mockup[data-template='minimal'] .mockNav {
+  background: #fff;
+}
+
+.mockup[data-template='minimal'] .mockPanel {
+  background: none;
+}
+
+.mockup[data-template='minimal'] .mockLines {
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.mockup[data-template='minimal'] .mockLine,
+.mockup[data-template='minimal'] .mockLineShort {
+  background: var(--mock-primary, #111827);
+  opacity: 0.7;
+}
+
+/* Editorial: asymmetric split, image column wider than the text column. */
+.mockup[data-template='editorial'] .mockNav {
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.mockup[data-template='editorial'] .mockBody {
+  background: #fff;
+}
+
+.mockup[data-template='editorial'] .mockPanel {
+  flex: 0 0 65%;
+  opacity: 0.85;
+}
+
+.mockup[data-template='editorial'] .mockLines {
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  align-items: flex-end;
+}
+
+.mockup[data-template='editorial'] .mockLine,
+.mockup[data-template='editorial'] .mockLineShort {
+  background: var(--mock-primary, #111827);
+}

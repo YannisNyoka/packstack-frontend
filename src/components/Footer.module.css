@@ -1,7 +1,33 @@
 .footer {
-  background: var(--color-primary);
+  /* --brand is the tenant's own primary color, set inline by whichever
+     landing template renders this (see landingTemplates/) - falls back to
+     the app's own default primary only if rendered with no themed
+     ancestor. Text stays a fixed light color, same assumption the primary
+     buttons elsewhere already make about --color-primary-contrast: a
+     tenant's chosen primary is expected to be dark enough for light text -
+     the Branding color picker doesn't validate contrast today. */
+  background: var(--brand, var(--color-primary));
   color: var(--color-primary-contrast);
   margin-top: auto;
+}
+
+.footerDense {
+  padding-top: 4px;
+}
+
+.denseInner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px 24px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.footerDense .copyright {
+  padding: 0 24px 20px;
+  border-top: none;
 }
 
 .inner {

@@ -1,0 +1,215 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 6%;
+  background: #0b0b0b;
+}
+
+.navBrand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.navLogo {
+  height: 32px;
+  border-radius: 6px;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.navLink {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.navLink:hover {
+  color: #fff;
+}
+
+.navCta {
+  background: var(--brand, #d946ef);
+  color: #111;
+  padding: 10px 22px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  align-items: center;
+  background: var(--brand, #d946ef);
+  min-height: 560px;
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 4rem 6% 4rem 8%;
+}
+
+.heroBadge {
+  display: inline-block;
+  background: rgba(0, 0, 0, 0.15);
+  color: #111;
+  border-radius: 4px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.heroTitle {
+  font-family: 'Anton', 'Arial Black', sans-serif;
+  font-size: clamp(2.8rem, 7vw, 5.2rem);
+  line-height: 0.95;
+  color: #111;
+  margin: 0 0 20px;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+.heroTagline {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.72);
+  margin: 0 0 32px;
+  max-width: 420px;
+}
+
+.primaryCta {
+  background: #111;
+  color: #fff;
+  border: none;
+  padding: 17px 38px;
+  border-radius: 4px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.primaryCta:hover {
+  transform: translateY(-2px);
+}
+
+.heroImagePanel {
+  height: 100%;
+  min-height: 560px;
+  overflow: hidden;
+  clip-path: polygon(12% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.heroImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.divider {
+  height: 10px;
+  background: repeating-linear-gradient(-45deg, var(--primary, #111827), var(--primary, #111827) 14px, #111 14px, #111 28px);
+}
+
+.services {
+  padding: 5rem 8%;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  background: #0b0b0b;
+}
+
+.servicesHeading {
+  font-family: 'Anton', 'Arial Black', sans-serif;
+  font-size: 2.4rem;
+  color: #fff;
+  text-transform: uppercase;
+  margin: 0 0 32px;
+}
+
+.serviceGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.serviceCard {
+  background: var(--brand, #d946ef);
+  border-radius: 6px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.serviceCard[data-alt='true'] {
+  background: var(--primary, #111827);
+}
+
+.serviceCard[data-alt='true'] .serviceName,
+.serviceCard[data-alt='true'] .serviceMeta {
+  color: #fff;
+}
+
+.serviceImage {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+
+.serviceName {
+  font-weight: 800;
+  color: #111;
+  font-size: 16px;
+}
+
+.serviceMeta {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+@media (max-width: 820px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .heroContent {
+    padding: 3rem 7% 2.5rem;
+  }
+
+  .heroImagePanel {
+    min-height: 260px;
+    clip-path: none;
+  }
+
+  .services {
+    padding: 3rem 7%;
+  }
+}

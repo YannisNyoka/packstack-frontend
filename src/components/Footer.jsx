@@ -52,11 +52,54 @@ function socialHref(key, value) {
   return value;
 }
 
-export function Footer({ theme }) {
+/**
+ * `variant` only tweaks layout weight per landing-page template (see
+ * components/landingTemplates/) - the social-icon set, labels and href
+ * building above stay centralized here rather than duplicated per template.
+ * 'minimal' drops the contact block and collapses to a single slim bar;
+ * every other variant gets the full brand/contact/socials row + copyright.
+ */
+export function Footer({ theme, variant = 'classic' }) {
   const socialLinks = theme?.socialLinks || {};
   const activeSocials = Object.entries(socialLinks).filter(([, value]) => value && value.trim());
   const contact = theme?.contactInfo || {};
   const hasContact = contact.phone || contact.email || contact.address;
+  const dense = variant === 'minimal';
+
+  const socialsRow = activeSocials.length > 0 && (
+    <div className={styles.socials}>
+      {activeSocials.map(([key, value]) => {
+        const href = socialHref(key, value);
+        if (!href) return null;
+        return (
+          <a
+            key={key}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={SOCIAL_LABELS[key] || key}
+            className={styles.socialLink}
+          >
+            {ICONS[key]}
+          </a>
+        );
+      })}
+    </div>
+  );
+
+  if (dense) {
+    return (
+      <footer className={`${styles.footer} ${styles.footerDense}`}>
+        <div className={styles.denseInner}>
+          <span className={styles.businessName}>{theme?.businessName}</span>
+          {socialsRow}
+        </div>
+        <div className={styles.copyright}>
+          © {new Date().getFullYear()} {theme?.businessName}
+        </div>
+      </footer>
+    );
+  }
 
   return (
     <footer className={styles.footer}>
@@ -74,26 +117,7 @@ export function Footer({ theme }) {
           </div>
         )}
 
-        {activeSocials.length > 0 && (
-          <div className={styles.socials}>
-            {activeSocials.map(([key, value]) => {
-              const href = socialHref(key, value);
-              if (!href) return null;
-              return (
-                <a
-                  key={key}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={SOCIAL_LABELS[key] || key}
-                  className={styles.socialLink}
-                >
-                  {ICONS[key]}
-                </a>
-              );
-            })}
-          </div>
-        )}
+        {socialsRow}
       </div>
 
       <div className={styles.copyright}>

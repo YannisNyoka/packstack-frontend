@@ -3,6 +3,7 @@ import * as themeApi from '../../api/theme.js';
 import { ApiError } from '../../api/client.js';
 import { useSlowLoad } from '../../hooks/useSlowLoad.js';
 import { DevicePreview } from '../../components/DevicePreview.jsx';
+import { TemplatePicker } from '../../components/TemplatePicker.jsx';
 
 const emptyThemeForm = {
   businessName: '',
@@ -14,6 +15,7 @@ const emptyThemeForm = {
   heroVideoUrls: [],
   heroEnabled: true,
   heroBadgeText: '',
+  template: 'classic',
   colors: { primary: '#111827', secondary: '#6B7280', accent: '#D946EF' },
   contactInfo: { phone: '', email: '', address: '' },
   socialLinks: { instagram: '', facebook: '', whatsapp: '', tiktok: '', website: '' },
@@ -50,6 +52,7 @@ export function BrandingSettingsPage() {
         heroVideoUrls: theme.heroVideoUrls || [],
         heroEnabled: theme.heroEnabled !== false,
         heroBadgeText: theme.heroBadgeText || '',
+        template: theme.template || 'classic',
         colors: { ...emptyThemeForm.colors, ...theme.colors },
         contactInfo: { ...emptyThemeForm.contactInfo, ...theme.contactInfo },
         socialLinks: { ...emptyThemeForm.socialLinks, ...theme.socialLinks },
@@ -352,6 +355,15 @@ export function BrandingSettingsPage() {
                 )}
               </>
             )}
+          </div>
+
+          <div>
+            <label style={{ display: 'block', marginBottom: 8, fontSize: 14, fontWeight: 600 }}>Template</label>
+            <p className="muted" style={{ marginTop: -4, marginBottom: 12, fontSize: 13 }}>
+              Picks your landing page's overall layout - nav, hero and section structure. The live preview on the
+              right updates instantly; nothing here is saved until you click "Save branding" below.
+            </p>
+            <TemplatePicker value={form.template} colors={form.colors} onChange={(template) => setForm({ ...form, template })} />
           </div>
 
           <div>
