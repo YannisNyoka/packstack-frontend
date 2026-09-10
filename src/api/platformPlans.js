@@ -7,3 +7,7 @@ export function listPlans() {
 export function createPlan(data) {
   return platformFetch('/plans', { method: 'POST', body: data });
 }
+
+export function updatePlan(id, data) {
+  return platformFetch(`/plans/${id}`, { method: 'PATCH', body: data });
+}

@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as tenantsApi from '../../api/platformTenants.js';
 import { ApiError } from '../../api/client.js';
 
@@ -12,9 +13,13 @@ const STATUS_BADGE = {
 };
 
 export function TenantsPage() {
+  const navigate = useNavigate();
   const [tenants, setTenants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
 
   const [form, setForm] = useState(emptyForm);
   const [formError, setFormError] = useState(null);
@@ -35,6 +40,15 @@ export function TenantsPage() {
   useEffect(() => {
     load();
   }, []);
+
+  const visibleTenants = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return tenants.filter((tenant) => {
+      if (statusFilter !== 'all' && tenant.status !== statusFilter) return false;
+      if (!q) return true;
+      return tenant.slug.toLowerCase().includes(q) || tenant.displayName.toLowerCase().includes(q);
+    });
+  }, [tenants, search, statusFilter]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -121,10 +135,27 @@ export function TenantsPage() {
       )}
 
       <div className="card">
+        <div style={{ display: 'flex', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
+          <input
+            className="input"
+            style={{ flex: '1 1 220px' }}
+            placeholder="Search by slug or business name…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <select className="select" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+            <option value="all">All statuses</option>
+            <option value="trial">Trial</option>
+            <option value="active">Active</option>
+            <option value="past_due">Past due</option>
+            <option value="suspended">Suspended</option>
+          </select>
+        </div>
+
         {loading ? (
           <p className="muted">Loading…</p>
-        ) : tenants.length === 0 ? (
-          <p className="empty-state">No tenants yet.</p>
+        ) : visibleTenants.length === 0 ? (
+          <p className="empty-state">{tenants.length === 0 ? 'No tenants yet.' : 'No tenants match your search.'}</p>
         ) : (
           <table className="table">
             <thead>
@@ -136,8 +167,12 @@ export function TenantsPage() {
               </tr>
             </thead>
             <tbody>
-              {tenants.map((tenant) => (
-                <tr key={tenant._id}>
+              {visibleTenants.map((tenant) => (
+                <tr
+                  key={tenant._id}
+                  onClick={() => navigate(`/superadmin/tenants/${tenant._id}`)}
+                  style={{ cursor: 'pointer' }}
+                >
                   <td>{tenant.slug}</td>
                   <td>{tenant.displayName}</td>
                   <td>

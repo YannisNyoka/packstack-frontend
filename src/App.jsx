@@ -27,6 +27,7 @@ import { RequireSuperAdmin } from './superadmin/RequireSuperAdmin.jsx';
 import { SuperAdminLayout } from './layout/SuperAdminLayout.jsx';
 import { SuperAdminLoginPage } from './pages/SuperAdminLoginPage.jsx';
 import { TenantsPage } from './pages/superadmin/TenantsPage.jsx';
+import { TenantDetailPage } from './pages/superadmin/TenantDetailPage.jsx';
 import { PlansPage } from './pages/superadmin/PlansPage.jsx';
 import { CustomerAuthProvider } from './auth/CustomerAuthContext.jsx';
 import { RequireCustomerAuth } from './auth/RequireCustomerAuth.jsx';
@@ -110,6 +111,7 @@ export default function App() {
                 }
               >
                 <Route index element={<TenantsPage />} />
+                <Route path="tenants/:id" element={<TenantDetailPage />} />
                 <Route path="plans" element={<PlansPage />} />
               </Route>
             </Route>
