@@ -178,6 +178,14 @@
 }
 
 @media (max-width: 600px) {
+  /* The logo alone is enough to identify the business at this width - the
+     name text next to it (independent of businessNamePosition, which this
+     tenant may have deliberately left at "both") just crowds a phone-width
+     nav alongside the auth links and CTA. */
+  .navBrand .navLogo + span {
+    display: none;
+  }
+
   .nav {
     padding: 16px 20px;
   }

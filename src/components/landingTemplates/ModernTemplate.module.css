@@ -210,6 +210,11 @@
 }
 
 @media (max-width: 820px) {
+  /* See ClassicTemplate.module.css's own comment on this rule. */
+  .navBrand .navLogo + span {
+    display: none;
+  }
+
   .hero {
     grid-template-columns: 1fr;
   }

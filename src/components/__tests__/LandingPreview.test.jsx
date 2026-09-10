@@ -6,6 +6,30 @@ import * as bookingApi from '../../api/publicBooking.js'
 
 vi.mock('../../api/publicBooking.js')
 
+const ALL_TEMPLATES = [
+  'classic',
+  'modern',
+  'elegant',
+  'bold',
+  'minimal',
+  'editorial',
+  'luxe',
+  'boutique',
+  'studio',
+  'glow',
+  'heritage',
+  'loft',
+  'petal',
+  'noir',
+  'horizon',
+  'aura',
+  'marble',
+  'canvas',
+  'velvet',
+  'pulse',
+  'linen',
+]
+
 const baseTheme = {
   businessName: 'Test Salon',
   tagline: 'Look good, feel good.',
@@ -34,7 +58,7 @@ describe('LandingPreview', () => {
     bookingApi.listStaff.mockResolvedValue([])
   })
 
-  it.each(['classic', 'modern', 'elegant', 'bold', 'minimal', 'editorial', 'luxe', 'boutique', 'studio', 'glow', 'heritage', 'loft', 'petal', 'noir'])(
+  it.each(ALL_TEMPLATES)(
     'renders the %s template without throwing',
     async (template) => {
       renderPreview({ ...baseTheme, template })
@@ -45,7 +69,7 @@ describe('LandingPreview', () => {
     }
   )
 
-  it.each(['classic', 'modern', 'elegant', 'bold', 'minimal', 'editorial', 'luxe', 'boutique', 'studio', 'glow', 'heritage', 'loft', 'petal', 'noir'])(
+  it.each(ALL_TEMPLATES)(
     'hides the business name from the hero (keeps it in the nav) for %s when businessNamePosition is "nav"',
     async (template) => {
       renderPreview({ ...baseTheme, template, businessNamePosition: 'nav' })
@@ -55,7 +79,7 @@ describe('LandingPreview', () => {
     }
   )
 
-  it.each(['classic', 'modern', 'elegant', 'bold', 'minimal', 'editorial', 'luxe', 'boutique', 'studio', 'glow', 'heritage', 'loft', 'petal', 'noir'])(
+  it.each(ALL_TEMPLATES)(
     'hides the business name from the nav (keeps it in the hero) for %s when businessNamePosition is "hero"',
     async (template) => {
       renderPreview({ ...baseTheme, template, businessNamePosition: 'hero' })

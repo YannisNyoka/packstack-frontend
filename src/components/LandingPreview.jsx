@@ -14,6 +14,13 @@ import { HeritageTemplate } from './landingTemplates/HeritageTemplate.jsx';
 import { LoftTemplate } from './landingTemplates/LoftTemplate.jsx';
 import { PetalTemplate } from './landingTemplates/PetalTemplate.jsx';
 import { NoirTemplate } from './landingTemplates/NoirTemplate.jsx';
+import { HorizonTemplate } from './landingTemplates/HorizonTemplate.jsx';
+import { AuraTemplate } from './landingTemplates/AuraTemplate.jsx';
+import { MarbleTemplate } from './landingTemplates/MarbleTemplate.jsx';
+import { CanvasTemplate } from './landingTemplates/CanvasTemplate.jsx';
+import { VelvetTemplate } from './landingTemplates/VelvetTemplate.jsx';
+import { PulseTemplate } from './landingTemplates/PulseTemplate.jsx';
+import { LinenTemplate } from './landingTemplates/LinenTemplate.jsx';
 
 const TEMPLATES = {
   classic: ClassicTemplate,
@@ -30,6 +37,13 @@ const TEMPLATES = {
   loft: LoftTemplate,
   petal: PetalTemplate,
   noir: NoirTemplate,
+  horizon: HorizonTemplate,
+  aura: AuraTemplate,
+  marble: MarbleTemplate,
+  canvas: CanvasTemplate,
+  velvet: VelvetTemplate,
+  pulse: PulseTemplate,
+  linen: LinenTemplate,
 };
 
 /**

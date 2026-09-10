@@ -195,6 +195,11 @@
 }
 
 @media (max-width: 600px) {
+  /* See ClassicTemplate.module.css's own comment on this rule. */
+  .navBrand .navLogo + span {
+    display: none;
+  }
+
   .hero {
     padding: 2rem 6% 3.5rem;
   }

@@ -1,0 +1,195 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: #fdfcfb;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 6%;
+}
+
+.navBrand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #1c1917;
+  font-weight: 300;
+  font-size: 17px;
+  letter-spacing: 0.02em;
+}
+
+.navLogo {
+  height: 28px;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.navLink {
+  color: #78716c;
+  font-size: 13px;
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.navCta {
+  color: #1c1917;
+  padding: 9px 0;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 2rem 6% 5rem;
+}
+
+.heroTile {
+  position: absolute;
+  top: 6%;
+  right: 8%;
+  width: 220px;
+  height: 220px;
+  overflow: hidden;
+}
+
+.heroTile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 620px;
+  width: 100%;
+}
+
+.heroBadge {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #a8a29e;
+  margin-bottom: 20px;
+}
+
+.heroTitle {
+  font-weight: 200;
+  font-size: clamp(2.6rem, 6vw, 5rem);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  margin: 0 0 18px;
+  color: #1c1917;
+}
+
+.heroTagline {
+  font-size: 16px;
+  font-weight: 300;
+  color: #78716c;
+  margin: 0 0 30px;
+  max-width: 420px;
+}
+
+.primaryCta {
+  background: transparent;
+  border: 1px solid #1c1917;
+  color: #1c1917;
+  padding: 15px 32px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.primaryCta:hover {
+  background: #1c1917;
+  color: #fdfcfb;
+}
+
+.services {
+  padding: 2rem 0 5rem;
+}
+
+.servicesHeading {
+  font-weight: 300;
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  color: #1c1917;
+  margin: 0 0 24px;
+  padding: 0 6%;
+}
+
+.serviceScroll {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 0 6% 8px;
+  scroll-snap-type: x proximity;
+}
+
+.serviceCard {
+  scroll-snap-align: start;
+  flex: 0 0 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.serviceImage,
+.serviceImagePlaceholder {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  background: linear-gradient(135deg, var(--brand, #111827), var(--accent, #6b7280));
+  opacity: 0.85;
+}
+
+.serviceName {
+  font-weight: 500;
+  color: #1c1917;
+  font-size: 15px;
+}
+
+.serviceMeta {
+  font-size: 13px;
+  color: #78716c;
+}
+
+@media (max-width: 600px) {
+  .navBrand .navLogo + span {
+    display: none;
+  }
+
+  .navLink {
+    display: none;
+  }
+
+  .heroTile {
+    position: static;
+    width: 140px;
+    height: 140px;
+    margin-bottom: 24px;
+  }
+
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.5rem 6% 3.5rem;
+    min-height: auto;
+  }
+}

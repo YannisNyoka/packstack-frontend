@@ -456,6 +456,218 @@
   background: var(--mock-primary, #111827);
 }
 
+/* Horizon: full-width image band across the top, lines centered below it. */
+.mockup[data-template='horizon'] {
+  background: #fff;
+}
+
+.mockup[data-template='horizon'] .mockNav {
+  background: #fff;
+}
+
+.mockup[data-template='horizon'] .mockBody {
+  flex-direction: column;
+}
+
+.mockup[data-template='horizon'] .mockPanel {
+  flex: 0 0 60%;
+}
+
+.mockup[data-template='horizon'] .mockLines {
+  position: static;
+  align-items: center;
+  padding-top: 8px;
+}
+
+.mockup[data-template='horizon'] .mockLine,
+.mockup[data-template='horizon'] .mockLineShort {
+  background: var(--mock-primary, #111827);
+}
+
+/* Aura: dark bg, a small floating pill nav instead of a full-width bar. */
+.mockup[data-template='aura'] {
+  background: #0f0f14;
+}
+
+.mockup[data-template='aura'] .mockNav {
+  background: transparent;
+  position: relative;
+}
+
+.mockup[data-template='aura'] .mockNav::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 46%;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.mockup[data-template='aura'] .mockPanel {
+  background: radial-gradient(circle at 50% 30%, var(--mock-accent, #818cf8), #0f0f14 70%);
+}
+
+.mockup[data-template='aura'] .mockLines {
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  align-items: center;
+}
+
+.mockup[data-template='aura'] .mockLine,
+.mockup[data-template='aura'] .mockLineShort {
+  background: #fff;
+}
+
+/* Marble: pale wash, centered thin lines, no strong color panel. */
+.mockup[data-template='marble'] {
+  background: #f7f6f4;
+}
+
+.mockup[data-template='marble'] .mockNav {
+  background: #f7f6f4;
+}
+
+.mockup[data-template='marble'] .mockPanel {
+  background: radial-gradient(ellipse at 50% 0%, #fff, #eeece8 70%);
+}
+
+.mockup[data-template='marble'] .mockLines {
+  left: 50%;
+  top: 55%;
+  transform: translate(-50%, -50%);
+  align-items: center;
+}
+
+.mockup[data-template='marble'] .mockLine,
+.mockup[data-template='marble'] .mockLineShort {
+  background: #1c1917;
+  opacity: 0.6;
+}
+
+/* Canvas: mostly empty, a small square tile pinned top-right. */
+.mockup[data-template='canvas'] {
+  background: #fdfcfb;
+}
+
+.mockup[data-template='canvas'] .mockNav {
+  background: #fdfcfb;
+}
+
+.mockup[data-template='canvas'] .mockPanel {
+  background: transparent;
+  position: relative;
+}
+
+.mockup[data-template='canvas'] .mockPanel::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 26px;
+  height: 26px;
+  background: var(--mock-accent, #6b7280);
+  opacity: 0.5;
+}
+
+.mockup[data-template='canvas'] .mockLines {
+  left: 10px;
+  bottom: 10px;
+}
+
+.mockup[data-template='canvas'] .mockLine,
+.mockup[data-template='canvas'] .mockLineShort {
+  background: #1c1917;
+}
+
+/* Velvet: deep jewel background, a thin inset frame around the lines. */
+.mockup[data-template='velvet'] {
+  background: var(--mock-primary, #4c0519);
+}
+
+.mockup[data-template='velvet'] .mockNav {
+  background: transparent;
+}
+
+.mockup[data-template='velvet'] .mockPanel {
+  background: transparent;
+  position: relative;
+}
+
+.mockup[data-template='velvet'] .mockPanel::before {
+  content: '';
+  position: absolute;
+  inset: 14px;
+  border: 1px solid var(--mock-accent, #eab308);
+}
+
+.mockup[data-template='velvet'] .mockLines {
+  left: 50%;
+  top: 55%;
+  transform: translate(-50%, -50%);
+  align-items: center;
+}
+
+.mockup[data-template='velvet'] .mockLine,
+.mockup[data-template='velvet'] .mockLineShort {
+  background: #fff;
+}
+
+/* Pulse: diagonal cut between a color panel and the image panel. */
+.mockup[data-template='pulse'] .mockNav {
+  background: #fff;
+}
+
+.mockup[data-template='pulse'] .mockBody {
+  background: #fff;
+}
+
+.mockup[data-template='pulse'] .mockPanel {
+  flex: 0 0 60%;
+  clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
+  background: var(--mock-primary, #111827);
+}
+
+.mockup[data-template='pulse'] .mockLines {
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.mockup[data-template='pulse'] .mockLine,
+.mockup[data-template='pulse'] .mockLineShort {
+  background: #fff;
+}
+
+/* Linen: warm neutral, centered lines, a thin divider below. */
+.mockup[data-template='linen'] {
+  background: #f5f2ed;
+}
+
+.mockup[data-template='linen'] .mockNav {
+  background: #f5f2ed;
+}
+
+.mockup[data-template='linen'] .mockPanel {
+  background: #f5f2ed;
+  border-bottom: 1px solid #e7e2d8;
+}
+
+.mockup[data-template='linen'] .mockLines {
+  left: 50%;
+  top: 45%;
+  transform: translate(-50%, -50%);
+  align-items: center;
+}
+
+.mockup[data-template='linen'] .mockLine,
+.mockup[data-template='linen'] .mockLineShort {
+  background: #57534e;
+}
+
 /* Noir: pure black, thin vertical strip on the right, left-aligned lines. */
 .mockup[data-template='noir'] {
   background: #000;

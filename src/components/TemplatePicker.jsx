@@ -15,6 +15,13 @@ const TEMPLATE_OPTIONS = [
   { key: 'loft', name: 'Loft', description: 'Industrial dark nav, offset tilted photo frame.' },
   { key: 'petal', name: 'Petal', description: 'Airy, stacked centered nav, scattered soft blobs.' },
   { key: 'noir', name: 'Noir', description: 'Pure black, oversized left-aligned type, photo strip.' },
+  { key: 'horizon', name: 'Horizon', description: 'Full-width photo strip, content band below it.' },
+  { key: 'aura', name: 'Aura', description: 'Floating pill nav, spotlight glow behind a portrait.' },
+  { key: 'marble', name: 'Marble', description: 'Pale marble wash, roman-numeral service grid.' },
+  { key: 'canvas', name: 'Canvas', description: 'Gallery negative space, horizontal-scroll services.' },
+  { key: 'velvet', name: 'Velvet', description: 'Jewel-tone, framed hero, table-style service list.' },
+  { key: 'pulse', name: 'Pulse', description: 'Diagonal color-block hero, angled service accents.' },
+  { key: 'linen', name: 'Linen', description: 'Warm neutral, centered hero, a feature-strip band.' },
 ];
 
 /**

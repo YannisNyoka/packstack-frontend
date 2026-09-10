@@ -1,0 +1,232 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: #0f0f14;
+  color: #fff;
+}
+
+.navWrap {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  padding: 0 5%;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  padding: 10px 12px 10px 20px;
+  max-width: 100%;
+}
+
+.navBrand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.navLogo {
+  height: 24px;
+  border-radius: 50%;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.navLink {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.navCta {
+  background: var(--accent, #818cf8);
+  color: #0f0f14;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 88vh;
+  padding: 8rem 6% 4rem;
+  overflow: hidden;
+}
+
+.heroGlow {
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 700px;
+  height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent, #818cf8) 45%, transparent), transparent 70%);
+  filter: blur(20px);
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 560px;
+}
+
+.heroPortrait {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 0 8px color-mix(in srgb, var(--accent, #818cf8) 20%, transparent);
+  margin-bottom: 26px;
+}
+
+.heroPortrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heroBadge {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent, #818cf8);
+  margin-bottom: 18px;
+}
+
+.heroTitle {
+  font-size: clamp(2.2rem, 4.8vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1.12;
+  margin: 0 0 14px;
+  color: #fff;
+}
+
+.heroTagline {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 30px;
+}
+
+.primaryCta {
+  background: var(--accent, #818cf8);
+  color: #0f0f14;
+  border: none;
+  padding: 16px 38px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.services {
+  padding: 1rem 6% 5rem;
+  max-width: 920px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.servicesHeading {
+  text-align: center;
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  font-weight: 700;
+  margin: 0 0 28px;
+}
+
+.serviceGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.serviceCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.serviceRing {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--accent, #818cf8);
+  border: 1px solid var(--accent, #818cf8);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent, #818cf8) 50%, transparent);
+}
+
+.serviceCardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.serviceName {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.serviceMeta {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+@media (max-width: 600px) {
+  .navBrand .navLogo + span {
+    display: none;
+  }
+
+  .nav {
+    gap: 14px;
+    padding: 8px 8px 8px 14px;
+  }
+
+  .navLink {
+    display: none;
+  }
+
+  .hero {
+    min-height: 76vh;
+    padding: 7rem 6% 3rem;
+  }
+}

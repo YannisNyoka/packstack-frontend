@@ -1,0 +1,195 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: #f7f6f4;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 6%;
+}
+
+.navBrand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #1c1917;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+}
+
+.navLogo {
+  height: 30px;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.navLink {
+  color: #78716c;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.navCta {
+  border: 1px solid #1c1917;
+  color: #1c1917;
+  padding: 9px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 70vh;
+  padding: 3rem 6%;
+  overflow: hidden;
+  background: radial-gradient(ellipse 120% 80% at 50% -10%, #ffffff, #eeece8 55%, #e5e2dc 100%);
+}
+
+.heroMedia {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.16;
+}
+
+.heroVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.heroVideoReady {
+  opacity: 0.16;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+}
+
+.heroBadge {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #a8a29e;
+  margin-bottom: 22px;
+}
+
+.heroTitle {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  line-height: 1.1;
+  margin: 0 0 16px;
+  color: #1c1917;
+}
+
+.heroTagline {
+  font-size: 16px;
+  color: #78716c;
+  margin: 0 0 32px;
+  letter-spacing: 0.01em;
+}
+
+.primaryCta {
+  background: #1c1917;
+  color: #f7f6f4;
+  border: none;
+  padding: 16px 38px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.services {
+  padding: 4rem 6% 5rem;
+  max-width: 1080px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.servicesHeading {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 400;
+  text-align: center;
+  font-size: clamp(1.7rem, 3vw, 2.2rem);
+  color: #1c1917;
+  margin: 0 0 32px;
+}
+
+.serviceGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1px;
+  background: #e5e2dc;
+  border: 1px solid #e5e2dc;
+}
+
+.serviceCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #f7f6f4;
+  padding: 28px 24px;
+}
+
+.serviceNumeral {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 13px;
+  color: #a8a29e;
+  letter-spacing: 0.1em;
+}
+
+.serviceName {
+  font-size: 17px;
+  font-weight: 500;
+  color: #1c1917;
+}
+
+.serviceMeta {
+  font-size: 13px;
+  color: #78716c;
+}
+
+@media (max-width: 600px) {
+  .navBrand .navLogo + span {
+    display: none;
+  }
+
+  .navLink {
+    display: none;
+  }
+
+  .hero {
+    min-height: 60vh;
+    padding: 2.5rem 6%;
+  }
+}

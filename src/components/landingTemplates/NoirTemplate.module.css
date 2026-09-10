@@ -172,6 +172,11 @@
 }
 
 @media (max-width: 760px) {
+  /* See ClassicTemplate.module.css's own comment on this rule. */
+  .navBrand .navLogo + span {
+    display: none;
+  }
+
   .hero {
     flex-direction: column;
   }
