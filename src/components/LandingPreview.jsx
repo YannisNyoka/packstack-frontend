@@ -6,6 +6,14 @@ import { ElegantTemplate } from './landingTemplates/ElegantTemplate.jsx';
 import { BoldTemplate } from './landingTemplates/BoldTemplate.jsx';
 import { MinimalTemplate } from './landingTemplates/MinimalTemplate.jsx';
 import { EditorialTemplate } from './landingTemplates/EditorialTemplate.jsx';
+import { LuxeTemplate } from './landingTemplates/LuxeTemplate.jsx';
+import { BoutiqueTemplate } from './landingTemplates/BoutiqueTemplate.jsx';
+import { StudioTemplate } from './landingTemplates/StudioTemplate.jsx';
+import { GlowTemplate } from './landingTemplates/GlowTemplate.jsx';
+import { HeritageTemplate } from './landingTemplates/HeritageTemplate.jsx';
+import { LoftTemplate } from './landingTemplates/LoftTemplate.jsx';
+import { PetalTemplate } from './landingTemplates/PetalTemplate.jsx';
+import { NoirTemplate } from './landingTemplates/NoirTemplate.jsx';
 
 const TEMPLATES = {
   classic: ClassicTemplate,
@@ -14,6 +22,14 @@ const TEMPLATES = {
   bold: BoldTemplate,
   minimal: MinimalTemplate,
   editorial: EditorialTemplate,
+  luxe: LuxeTemplate,
+  boutique: BoutiqueTemplate,
+  studio: StudioTemplate,
+  glow: GlowTemplate,
+  heritage: HeritageTemplate,
+  loft: LoftTemplate,
+  petal: PetalTemplate,
+  noir: NoirTemplate,
 };
 
 /**

@@ -222,3 +222,268 @@
 .mockup[data-template='editorial'] .mockLineShort {
   background: var(--mock-primary, #111827);
 }
+
+/* Luxe: near-black throughout, thin nav, centered lines. */
+.mockup[data-template='luxe'] {
+  background: #0b0a08;
+}
+
+.mockup[data-template='luxe'] .mockNav {
+  background: transparent;
+}
+
+.mockup[data-template='luxe'] .mockPanel {
+  background: radial-gradient(ellipse at 50% 30%, #1a1712, #0b0a08 75%);
+}
+
+.mockup[data-template='luxe'] .mockLines {
+  left: 50%;
+  top: 55%;
+  transform: translate(-50%, -50%);
+  align-items: center;
+}
+
+.mockup[data-template='luxe'] .mockLine,
+.mockup[data-template='luxe'] .mockLineShort {
+  background: var(--mock-accent, #c9a86a);
+}
+
+/* Boutique: pastel background, tilted offset framed panel on the right. */
+.mockup[data-template='boutique'] {
+  background: #fff9f7;
+}
+
+.mockup[data-template='boutique'] .mockNav {
+  background: #fff9f7;
+}
+
+.mockup[data-template='boutique'] .mockPanel {
+  flex: 0 0 42%;
+  margin: 12px 10px 12px auto;
+  border-radius: 10px;
+  transform: rotate(-3deg);
+  opacity: 0.85;
+}
+
+.mockup[data-template='boutique'] .mockLines {
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.mockup[data-template='boutique'] .mockLine,
+.mockup[data-template='boutique'] .mockLineShort {
+  background: var(--mock-primary, #111827);
+}
+
+/* Studio: two even tiles side by side, hairline nav. */
+.mockup[data-template='studio'] {
+  background: #fff;
+}
+
+.mockup[data-template='studio'] .mockNav {
+  background: #fff;
+  border-bottom: 1px solid #e7e5e4;
+}
+
+.mockup[data-template='studio'] .mockBody {
+  gap: 2px;
+  background: #e7e5e4;
+}
+
+.mockup[data-template='studio'] .mockPanel {
+  flex: 0 0 55%;
+  opacity: 1;
+}
+
+.mockup[data-template='studio'] .mockLines {
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  align-items: flex-start;
+}
+
+.mockup[data-template='studio'] .mockLine,
+.mockup[data-template='studio'] .mockLineShort {
+  background: var(--mock-primary, #111827);
+}
+
+/* Glow: full soft gradient panel, centered lines, no separate nav bar. */
+.mockup[data-template='glow'] .mockNav {
+  background: transparent;
+}
+
+.mockup[data-template='glow'] .mockPanel {
+  background: linear-gradient(160deg, color-mix(in srgb, var(--mock-primary, #111827) 15%, #fff), color-mix(in srgb, var(--mock-accent, #a78bfa) 45%, #fff));
+}
+
+.mockup[data-template='glow'] .mockLines {
+  left: 50%;
+  top: 55%;
+  transform: translate(-50%, -50%);
+  align-items: center;
+}
+
+.mockup[data-template='glow'] .mockLine,
+.mockup[data-template='glow'] .mockLineShort {
+  background: var(--mock-primary, #111827);
+}
+
+/* Heritage: warm cream panel with a circular emblem dot, centered lines. */
+.mockup[data-template='heritage'] {
+  background: #fbf3e7;
+}
+
+.mockup[data-template='heritage'] .mockNav {
+  background: #fbf3e7;
+  border-bottom: 2px solid var(--mock-primary, #7c2d12);
+}
+
+.mockup[data-template='heritage'] .mockPanel {
+  background: #fbf3e7;
+  position: relative;
+}
+
+.mockup[data-template='heritage'] .mockPanel::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--mock-accent, #b45309);
+}
+
+.mockup[data-template='heritage'] .mockLines {
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  align-items: center;
+}
+
+.mockup[data-template='heritage'] .mockLine,
+.mockup[data-template='heritage'] .mockLineShort {
+  background: var(--mock-primary, #7c2d12);
+}
+
+/* Loft: dark nav bar, offset tilted frame bottom-right. */
+.mockup[data-template='loft'] {
+  background: #f5f5f4;
+}
+
+.mockup[data-template='loft'] .mockNav {
+  background: #18181b;
+}
+
+.mockup[data-template='loft'] .mockPanel {
+  background: transparent;
+  position: relative;
+}
+
+.mockup[data-template='loft'] .mockPanel::after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 34px;
+  height: 26px;
+  background: var(--mock-accent, #3f3f46);
+  border: 2px solid #fff;
+  transform: rotate(3deg);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+.mockup[data-template='loft'] .mockLines {
+  left: 10px;
+  top: 40%;
+}
+
+.mockup[data-template='loft'] .mockLine,
+.mockup[data-template='loft'] .mockLineShort {
+  background: var(--mock-primary, #111827);
+}
+
+/* Petal: taller stacked nav (two rows), scattered dot blobs instead of one panel wash. */
+.mockup[data-template='petal'] {
+  background: #fffbf9;
+}
+
+.mockup[data-template='petal'] .mockNav {
+  height: 20px;
+  background: #fffbf9;
+}
+
+.mockup[data-template='petal'] .mockPanel {
+  background: #fffbf9;
+  position: relative;
+}
+
+.mockup[data-template='petal'] .mockPanel::before,
+.mockup[data-template='petal'] .mockPanel::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.35;
+}
+
+.mockup[data-template='petal'] .mockPanel::before {
+  width: 30px;
+  height: 30px;
+  top: 4px;
+  left: 10%;
+  background: var(--mock-accent, #fb7185);
+}
+
+.mockup[data-template='petal'] .mockPanel::after {
+  width: 22px;
+  height: 22px;
+  bottom: 8px;
+  right: 14%;
+  background: var(--mock-accent, #fb7185);
+}
+
+.mockup[data-template='petal'] .mockLines {
+  left: 50%;
+  top: 55%;
+  transform: translate(-50%, -50%);
+  align-items: center;
+}
+
+.mockup[data-template='petal'] .mockLine,
+.mockup[data-template='petal'] .mockLineShort {
+  background: var(--mock-primary, #111827);
+}
+
+/* Noir: pure black, thin vertical strip on the right, left-aligned lines. */
+.mockup[data-template='noir'] {
+  background: #000;
+}
+
+.mockup[data-template='noir'] .mockNav {
+  background: #000;
+  border-bottom: 1px solid #262626;
+}
+
+.mockup[data-template='noir'] .mockBody {
+  background: #000;
+}
+
+.mockup[data-template='noir'] .mockPanel {
+  flex: 0 0 24%;
+  margin-left: auto;
+  background: var(--mock-accent, #3f3f46);
+  opacity: 0.6;
+}
+
+.mockup[data-template='noir'] .mockLines {
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.mockup[data-template='noir'] .mockLine,
+.mockup[data-template='noir'] .mockLineShort {
+  background: #fff;
+}

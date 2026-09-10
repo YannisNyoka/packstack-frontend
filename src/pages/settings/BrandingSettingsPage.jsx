@@ -16,6 +16,7 @@ const emptyThemeForm = {
   heroEnabled: true,
   heroBadgeText: '',
   template: 'classic',
+  businessNamePosition: 'both',
   colors: { primary: '#111827', secondary: '#6B7280', accent: '#D946EF' },
   contactInfo: { phone: '', email: '', address: '' },
   socialLinks: { instagram: '', facebook: '', whatsapp: '', tiktok: '', website: '' },
@@ -53,6 +54,7 @@ export function BrandingSettingsPage() {
         heroEnabled: theme.heroEnabled !== false,
         heroBadgeText: theme.heroBadgeText || '',
         template: theme.template || 'classic',
+        businessNamePosition: theme.businessNamePosition || 'both',
         colors: { ...emptyThemeForm.colors, ...theme.colors },
         contactInfo: { ...emptyThemeForm.contactInfo, ...theme.contactInfo },
         socialLinks: { ...emptyThemeForm.socialLinks, ...theme.socialLinks },
@@ -364,6 +366,27 @@ export function BrandingSettingsPage() {
               right updates instantly; nothing here is saved until you click "Save branding" below.
             </p>
             <TemplatePicker value={form.template} colors={form.colors} onChange={(template) => setForm({ ...form, template })} />
+          </div>
+
+          <div>
+            <label htmlFor="theme-name-position" style={{ display: 'block', marginBottom: 8, fontSize: 14, fontWeight: 600 }}>
+              Business name placement
+            </label>
+            <p className="muted" style={{ marginTop: -4, marginBottom: 12, fontSize: 13 }}>
+              Where your business name text shows on the landing page. Your logo (if set) always shows regardless of
+              this - useful if it already contains your name and repeating it feels redundant.
+            </p>
+            <select
+              id="theme-name-position"
+              className="select"
+              style={{ maxWidth: 280 }}
+              value={form.businessNamePosition}
+              onChange={(e) => setForm({ ...form, businessNamePosition: e.target.value })}
+            >
+              <option value="both">Nav bar and hero</option>
+              <option value="nav">Nav bar only</option>
+              <option value="hero">Hero only</option>
+            </select>
           </div>
 
           <div>

@@ -1,0 +1,200 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: #fafaf9;
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 6%;
+  border-bottom: 1px solid #e7e5e4;
+}
+
+.navBrand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #1c1917;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.navLogo {
+  height: 30px;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.navLink {
+  color: #57534e;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+}
+
+.navLink:hover {
+  border-color: var(--brand, #111827);
+}
+
+.navCta {
+  background: var(--brand, #111827);
+  color: #fff;
+  padding: 9px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 1px;
+  background: #e7e5e4;
+}
+
+.heroImageTile {
+  position: relative;
+  min-height: 520px;
+  background: #1c1917;
+}
+
+.heroImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heroPlaceholder {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--brand, #111827), var(--accent, #57534e));
+}
+
+.heroCopyTile {
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4rem 3rem;
+}
+
+.heroBadge {
+  display: inline-block;
+  border: 1px solid #d6d3d1;
+  border-radius: 4px;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #57534e;
+  margin-bottom: 20px;
+  width: fit-content;
+}
+
+.heroTitle {
+  font-size: clamp(1.9rem, 3.4vw, 2.8rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  margin: 0 0 14px;
+  color: #1c1917;
+}
+
+.heroTagline {
+  font-size: 15px;
+  color: #57534e;
+  margin: 0 0 28px;
+}
+
+.primaryCta {
+  background: var(--brand, #111827);
+  color: #fff;
+  border: none;
+  padding: 15px 30px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  width: fit-content;
+  font-family: inherit;
+}
+
+.services {
+  padding: 4.5rem 6% 5rem;
+  max-width: 760px;
+}
+
+.servicesHeading {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #57534e;
+  margin: 0 0 8px;
+}
+
+.serviceList {
+  display: flex;
+  flex-direction: column;
+}
+
+.serviceRow {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  align-items: baseline;
+  gap: 16px;
+  padding: 20px 0;
+  border-top: 1px solid #e7e5e4;
+}
+
+.serviceIndex {
+  font-size: 13px;
+  color: var(--accent, #a8a29e);
+  font-weight: 600;
+}
+
+.serviceName {
+  font-size: 19px;
+  font-weight: 500;
+  color: #1c1917;
+}
+
+.serviceMeta {
+  font-size: 13px;
+  color: #78716c;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .heroImageTile {
+    min-height: 320px;
+  }
+
+  .heroCopyTile {
+    padding: 2.5rem 6%;
+  }
+
+  .serviceRow {
+    grid-template-columns: 28px 1fr;
+  }
+
+  .serviceMeta {
+    grid-column: 2;
+  }
+}

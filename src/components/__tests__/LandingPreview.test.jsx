@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { LandingPreview } from '../LandingPreview.jsx'
 import * as bookingApi from '../../api/publicBooking.js'
@@ -34,7 +34,7 @@ describe('LandingPreview', () => {
     bookingApi.listStaff.mockResolvedValue([])
   })
 
-  it.each(['classic', 'modern', 'elegant', 'bold', 'minimal', 'editorial'])(
+  it.each(['classic', 'modern', 'elegant', 'bold', 'minimal', 'editorial', 'luxe', 'boutique', 'studio', 'glow', 'heritage', 'loft', 'petal', 'noir'])(
     'renders the %s template without throwing',
     async (template) => {
       renderPreview({ ...baseTheme, template })
@@ -42,6 +42,26 @@ describe('LandingPreview', () => {
       // Every template shows the business name at least once (nav and/or
       // hero) - getAllByText since most show it in both.
       expect(screen.getAllByText('Test Salon').length).toBeGreaterThan(0)
+    }
+  )
+
+  it.each(['classic', 'modern', 'elegant', 'bold', 'minimal', 'editorial', 'luxe', 'boutique', 'studio', 'glow', 'heritage', 'loft', 'petal', 'noir'])(
+    'hides the business name from the hero (keeps it in the nav) for %s when businessNamePosition is "nav"',
+    async (template) => {
+      renderPreview({ ...baseTheme, template, businessNamePosition: 'nav' })
+      await waitFor(() => expect(screen.getByTestId(`landing-template-${template}`)).toBeInTheDocument())
+      expect(within(document.querySelector('nav')).getByText('Test Salon')).toBeInTheDocument()
+      expect(within(document.querySelector('header')).queryByText('Test Salon')).toBeNull()
+    }
+  )
+
+  it.each(['classic', 'modern', 'elegant', 'bold', 'minimal', 'editorial', 'luxe', 'boutique', 'studio', 'glow', 'heritage', 'loft', 'petal', 'noir'])(
+    'hides the business name from the nav (keeps it in the hero) for %s when businessNamePosition is "hero"',
+    async (template) => {
+      renderPreview({ ...baseTheme, template, businessNamePosition: 'hero' })
+      await waitFor(() => expect(screen.getByTestId(`landing-template-${template}`)).toBeInTheDocument())
+      expect(within(document.querySelector('nav')).queryByText('Test Salon')).toBeNull()
+      expect(within(document.querySelector('header')).getByText('Test Salon')).toBeInTheDocument()
     }
   )
 

@@ -1,5 +1,6 @@
 import { useNavigate, Link } from 'react-router-dom';
 import { Footer } from '../Footer.jsx';
+import { businessNameVisibility } from './businessNameVisibility.js';
 import styles from './EditorialTemplate.module.css';
 
 /**
@@ -15,13 +16,14 @@ export function EditorialTemplate({ theme, customer, services, staff }) {
   const accentColor = theme?.colors?.accent || primaryColor;
   const activeServices = (services || []).filter((s) => s.active !== false);
   const activeStaff = (staff || []).filter((s) => s.active !== false && s.photoUrl);
+  const { showInNav, showInHero } = businessNameVisibility(theme);
 
   return (
     <div data-testid="landing-template-editorial" className={styles.page} style={{ '--brand': primaryColor, '--accent': accentColor }}>
       <nav className={styles.nav}>
         <div className={styles.navBrand}>
           {theme?.logoUrl && <img src={theme.logoUrl} alt="" className={styles.navLogo} />}
-          <span>{theme?.businessName}</span>
+          {showInNav && <span>{theme?.businessName}</span>}
         </div>
         <div className={styles.navLinks}>
           {customer ? (
@@ -44,7 +46,7 @@ export function EditorialTemplate({ theme, customer, services, staff }) {
           <div className={styles.heroImageCol}>{theme?.bannerUrl && <img src={theme.bannerUrl} alt="" className={styles.heroImage} />}</div>
           <div className={styles.heroTextCol}>
             {theme?.heroBadgeText && <div className={styles.heroBadge}>{theme.heroBadgeText}</div>}
-            <h1 className={styles.heroTitle}>{theme?.businessName}</h1>
+            {showInHero && <h1 className={styles.heroTitle}>{theme?.businessName}</h1>}
             {theme?.tagline && <p className={styles.heroTagline}>{theme.tagline}</p>}
             <button type="button" className={styles.primaryCta} onClick={() => navigate('/book')}>
               Book Appointment

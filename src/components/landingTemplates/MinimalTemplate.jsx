@@ -1,5 +1,6 @@
 import { useNavigate, Link } from 'react-router-dom';
 import { Footer } from '../Footer.jsx';
+import { businessNameVisibility } from './businessNameVisibility.js';
 import styles from './MinimalTemplate.module.css';
 
 /**
@@ -14,15 +15,13 @@ export function MinimalTemplate({ theme, customer, services }) {
   const heroEnabled = theme?.heroEnabled !== false;
   const primaryColor = theme?.colors?.primary || '#111827';
   const activeServices = (services || []).filter((s) => s.active !== false);
+  const { showInNav, showInHero } = businessNameVisibility(theme);
 
   return (
     <div data-testid="landing-template-minimal" className={styles.page} style={{ '--brand': primaryColor }}>
       <nav className={styles.nav}>
-        {theme?.logoUrl ? (
-          <img src={theme.logoUrl} alt={theme?.businessName} className={styles.navLogo} />
-        ) : (
-          <span className={styles.navBrand}>{theme?.businessName}</span>
-        )}
+        {theme?.logoUrl && <img src={theme.logoUrl} alt={theme?.businessName} className={styles.navLogo} />}
+        {!theme?.logoUrl && showInNav && <span className={styles.navBrand}>{theme?.businessName}</span>}
         <div className={styles.navLinks}>
           {customer ? (
             <Link to="/account" className={styles.navLink}>
@@ -42,7 +41,7 @@ export function MinimalTemplate({ theme, customer, services }) {
       {heroEnabled && (
         <header className={styles.hero}>
           {theme?.heroBadgeText && <div className={styles.heroBadge}>{theme.heroBadgeText}</div>}
-          <h1 className={styles.heroTitle}>{theme?.businessName}</h1>
+          {showInHero && <h1 className={styles.heroTitle}>{theme?.businessName}</h1>}
           {theme?.tagline && <p className={styles.heroTagline}>{theme.tagline}</p>}
           <button type="button" className={styles.primaryCta} onClick={() => navigate('/book')}>
             Book an appointment

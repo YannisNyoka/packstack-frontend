@@ -2,24 +2,26 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Footer } from '../Footer.jsx';
 import { useHeroMedia } from './useHeroMedia.js';
 import { businessNameVisibility } from './businessNameVisibility.js';
-import styles from './ElegantTemplate.module.css';
+import styles from './LuxeTemplate.module.css';
 
 /**
- * Full-bleed hero with a centered serif headline, a minimal centered nav,
- * and a "Meet the team" section - StaffMember only has name + photoUrl (no
- * bio field exists), so this shows a photo grid with names, not write-ups.
+ * Dark, restrained, high-end-spa register: near-black background throughout
+ * (not just the hero), a centered minimal nav, italic serif hero headline,
+ * an outlined (not filled) CTA, and services presented as a thin-rule price
+ * list rather than cards - the opposite instinct of Modern/Bold's imagery-
+ * forward grids.
  */
-export function ElegantTemplate({ theme, customer, staff }) {
+export function LuxeTemplate({ theme, customer, services }) {
   const navigate = useNavigate();
   const { heroMedia, videoReady, setVideoReady } = useHeroMedia(theme);
   const heroEnabled = theme?.heroEnabled !== false;
   const primaryColor = theme?.colors?.primary || '#111827';
-  const accentColor = theme?.colors?.accent || primaryColor;
-  const activeStaff = (staff || []).filter((s) => s.active !== false && s.photoUrl);
+  const accentColor = theme?.colors?.accent || '#c9a86a';
   const { showInNav, showInHero } = businessNameVisibility(theme);
+  const activeServices = (services || []).filter((s) => s.active !== false);
 
   return (
-    <div data-testid="landing-template-elegant" className={styles.page} style={{ '--brand': primaryColor, '--accent': accentColor }}>
+    <div data-testid="landing-template-luxe" className={styles.page} style={{ '--brand': primaryColor, '--accent': accentColor }}>
       <nav className={styles.nav}>
         <Link to="/account/login" className={styles.navLink}>
           {customer ? 'My Account' : 'Sign in'}
@@ -33,7 +35,7 @@ export function ElegantTemplate({ theme, customer, staff }) {
         </Link>
       </nav>
 
-      {heroEnabled ? (
+      {heroEnabled && (
         <header className={styles.hero}>
           {heroMedia?.type === 'video' && (
             <video
@@ -52,39 +54,32 @@ export function ElegantTemplate({ theme, customer, staff }) {
           <div className={styles.heroContent}>
             {theme?.heroBadgeText && <div className={styles.heroBadge}>{theme.heroBadgeText}</div>}
             {showInHero && <h1 className={styles.heroTitle}>{theme?.businessName}</h1>}
-            <div className={styles.heroDivider} />
+            <div className={styles.heroRule} />
             {theme?.tagline && <p className={styles.heroTagline}>{theme.tagline}</p>}
             <button type="button" className={styles.primaryCta} onClick={() => navigate('/book')}>
-              Reserve Your Visit
+              Reserve an Appointment
             </button>
           </div>
         </header>
-      ) : (
-        <header className={styles.simpleHeader}>
-          {theme?.logoUrl && <img src={theme.logoUrl} alt="" className={styles.simpleLogo} />}
-          {showInHero && <h1 className={styles.simpleTitle}>{theme?.businessName}</h1>}
-          {theme?.tagline && <p className={styles.simpleTagline}>{theme.tagline}</p>}
-          <button type="button" className={styles.primaryCta} onClick={() => navigate('/book')}>
-            Reserve Your Visit
-          </button>
-        </header>
       )}
 
-      {activeStaff.length > 0 && (
-        <section className={styles.team}>
-          <h2 className={styles.teamHeading}>Meet the Team</h2>
-          <div className={styles.teamGrid}>
-            {activeStaff.map((member) => (
-              <div key={member._id} className={styles.teamMember}>
-                <img src={member.photoUrl} alt="" className={styles.teamPhoto} />
-                <span className={styles.teamName}>{member.name}</span>
+      {activeServices.length > 0 && (
+        <section className={styles.services}>
+          <h2 className={styles.servicesHeading}>Treatments</h2>
+          <div className={styles.serviceList}>
+            {activeServices.map((service) => (
+              <div key={service._id} className={styles.serviceRow}>
+                <span className={styles.serviceName}>{service.name}</span>
+                <span className={styles.serviceMeta}>
+                  {service.durationMinutes} min · R{service.price.toFixed(2)}
+                </span>
               </div>
             ))}
           </div>
         </section>
       )}
 
-      <Footer theme={theme} variant="elegant" />
+      <Footer theme={theme} variant="luxe" />
     </div>
   );
 }

@@ -7,6 +7,14 @@ const TEMPLATE_OPTIONS = [
   { key: 'bold', name: 'Bold', description: 'Saturated color-block hero, oversized display type.' },
   { key: 'minimal', name: 'Minimal', description: 'Maximum whitespace, a plain text service list.' },
   { key: 'editorial', name: 'Editorial', description: 'Magazine-style asymmetric hero and service rows.' },
+  { key: 'luxe', name: 'Luxe', description: 'Dark, centered, italic serif - high-end spa register.' },
+  { key: 'boutique', name: 'Boutique', description: 'Pastel wash, tilted framed hero image, chip services.' },
+  { key: 'studio', name: 'Studio', description: 'Bento-grid hero, numbered service index.' },
+  { key: 'glow', name: 'Glow', description: 'Soft gradient hero with blobs, circular portrait.' },
+  { key: 'heritage', name: 'Heritage', description: 'Warm cream, crest emblem, framed menu-card services.' },
+  { key: 'loft', name: 'Loft', description: 'Industrial dark nav, offset tilted photo frame.' },
+  { key: 'petal', name: 'Petal', description: 'Airy, stacked centered nav, scattered soft blobs.' },
+  { key: 'noir', name: 'Noir', description: 'Pure black, oversized left-aligned type, photo strip.' },
 ];
 
 /**

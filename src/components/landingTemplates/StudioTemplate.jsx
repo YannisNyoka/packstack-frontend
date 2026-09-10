@@ -1,29 +1,26 @@
 import { useNavigate, Link } from 'react-router-dom';
 import { Footer } from '../Footer.jsx';
 import { businessNameVisibility } from './businessNameVisibility.js';
-import styles from './BoldTemplate.module.css';
+import styles from './StudioTemplate.module.css';
 
 /**
- * High-energy color-block hero using the tenant's own accent color as a
- * solid background (not just a photo overlay) - deliberately doesn't use
- * useHeroMedia's rotating video carousel, since a hero video would compete
- * with the point of this template (the color itself is the statement).
- * A banner image, if set, still shows as a smaller accent panel.
+ * Architectural/grid-first register for a barbershop or design-led studio:
+ * an asymmetric two-tile hero (large image tile + a stacked copy tile) laid
+ * out like a bento grid instead of one full-bleed panel, and services as a
+ * numbered index list (01, 02, 03…) rather than cards or a price table.
+ * Skips useHeroMedia's video carousel - the grid tile is a fixed aspect box
+ * a rotating video wouldn't sit well in.
  */
-export function BoldTemplate({ theme, customer, services }) {
+export function StudioTemplate({ theme, customer, services }) {
   const navigate = useNavigate();
   const heroEnabled = theme?.heroEnabled !== false;
   const primaryColor = theme?.colors?.primary || '#111827';
-  const accentColor = theme?.colors?.accent || '#d946ef';
-  const activeServices = (services || []).filter((s) => s.active !== false);
+  const accentColor = theme?.colors?.accent || primaryColor;
   const { showInNav, showInHero } = businessNameVisibility(theme);
+  const activeServices = (services || []).filter((s) => s.active !== false);
 
   return (
-    // --brand drives both the nav CTA and the Footer background here - for
-    // this template that's deliberately the loud accent color, not the
-    // (usually darker/neutral) primary, so the footer matches the hero's
-    // color-block energy rather than reverting to a muted tone.
-    <div data-testid="landing-template-bold" className={styles.page} style={{ '--brand': accentColor, '--primary': primaryColor }}>
+    <div data-testid="landing-template-studio" className={styles.page} style={{ '--brand': primaryColor, '--accent': accentColor }}>
       <nav className={styles.nav}>
         <div className={styles.navBrand}>
           {theme?.logoUrl && <img src={theme.logoUrl} alt="" className={styles.navLogo} />}
@@ -32,7 +29,7 @@ export function BoldTemplate({ theme, customer, services }) {
         <div className={styles.navLinks}>
           {customer ? (
             <Link to="/account" className={styles.navLink}>
-              My Account
+              Account
             </Link>
           ) : (
             <Link to="/account/login" className={styles.navLink}>
@@ -40,38 +37,34 @@ export function BoldTemplate({ theme, customer, services }) {
             </Link>
           )}
           <Link to="/book" className={styles.navCta}>
-            Book Now
+            Book
           </Link>
         </div>
       </nav>
 
       {heroEnabled && (
         <header className={styles.hero}>
-          <div className={styles.heroContent}>
+          <div className={styles.heroImageTile}>
+            {theme?.bannerUrl ? <img src={theme.bannerUrl} alt="" className={styles.heroImage} /> : <div className={styles.heroPlaceholder} />}
+          </div>
+          <div className={styles.heroCopyTile}>
             {theme?.heroBadgeText && <div className={styles.heroBadge}>{theme.heroBadgeText}</div>}
             {showInHero && <h1 className={styles.heroTitle}>{theme?.businessName}</h1>}
             {theme?.tagline && <p className={styles.heroTagline}>{theme.tagline}</p>}
             <button type="button" className={styles.primaryCta} onClick={() => navigate('/book')}>
-              Book Appointment →
+              Book Appointment
             </button>
           </div>
-          {theme?.bannerUrl && (
-            <div className={styles.heroImagePanel}>
-              <img src={theme.bannerUrl} alt="" className={styles.heroImage} />
-            </div>
-          )}
         </header>
       )}
 
-      <div className={styles.divider} />
-
       {activeServices.length > 0 && (
         <section className={styles.services}>
-          <h2 className={styles.servicesHeading}>What We Do</h2>
-          <div className={styles.serviceGrid}>
+          <h2 className={styles.servicesHeading}>Services</h2>
+          <div className={styles.serviceList}>
             {activeServices.map((service, i) => (
-              <div key={service._id} className={styles.serviceCard} data-alt={i % 2 === 1}>
-                {service.imageUrl && <img src={service.imageUrl} alt="" className={styles.serviceImage} />}
+              <div key={service._id} className={styles.serviceRow}>
+                <span className={styles.serviceIndex}>{String(i + 1).padStart(2, '0')}</span>
                 <span className={styles.serviceName}>{service.name}</span>
                 <span className={styles.serviceMeta}>
                   {service.durationMinutes} min · R{service.price.toFixed(2)}
@@ -82,7 +75,7 @@ export function BoldTemplate({ theme, customer, services }) {
         </section>
       )}
 
-      <Footer theme={theme} variant="bold" />
+      <Footer theme={theme} variant="studio" />
     </div>
   );
 }
