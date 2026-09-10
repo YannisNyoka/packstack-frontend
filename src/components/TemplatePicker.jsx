@@ -22,6 +22,10 @@ const TEMPLATE_OPTIONS = [
   { key: 'velvet', name: 'Velvet', description: 'Jewel-tone, framed hero, table-style service list.' },
   { key: 'pulse', name: 'Pulse', description: 'Diagonal color-block hero, angled service accents.' },
   { key: 'linen', name: 'Linen', description: 'Warm neutral, centered hero, a feature-strip band.' },
+  { key: 'sidebar', name: 'Sidebar', description: 'Persistent vertical sidebar nav, app-like feel.' },
+  { key: 'neon', name: 'Neon', description: 'Dark grid texture, glowing neon outlines.' },
+  { key: 'terrazzo', name: 'Terrazzo', description: 'Confetti pattern, bubbly type, tilted pill services.' },
+  { key: 'neumorphic', name: 'Neumorphic', description: 'Soft-UI raised cards, calm monochrome surface.' },
 ];
 
 /**

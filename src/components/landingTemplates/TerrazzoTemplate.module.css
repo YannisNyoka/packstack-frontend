@@ -1,0 +1,195 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: #fffdf7;
+  font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 6%;
+}
+
+.navBrand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #292524;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.navLogo {
+  height: 34px;
+  border-radius: 999px;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.navLink {
+  color: #57534e;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.navCta {
+  background: var(--accent, #fb923c);
+  color: #fff;
+  padding: 11px 22px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 6% 5rem;
+  overflow: hidden;
+}
+
+.heroConfetti {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background-image: radial-gradient(circle at 10% 20%, var(--accent, #fb923c) 0 14px, transparent 15px),
+    radial-gradient(circle at 85% 15%, var(--brand, #111827) 0 10px, transparent 11px),
+    radial-gradient(circle at 25% 80%, var(--brand, #111827) 0 8px, transparent 9px),
+    radial-gradient(circle at 92% 70%, var(--accent, #fb923c) 0 18px, transparent 19px),
+    radial-gradient(circle at 55% 92%, var(--accent, #fb923c) 0 9px, transparent 10px),
+    radial-gradient(circle at 45% 8%, var(--brand, #111827) 0 6px, transparent 7px);
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 560px;
+}
+
+.heroBadge {
+  display: inline-block;
+  background: #fff;
+  color: color-mix(in srgb, var(--accent, #fb923c) 70%, #292524);
+  border: 2px solid var(--accent, #fb923c);
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+.heroTitle {
+  font-size: clamp(2.3rem, 4.8vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0 0 14px;
+  color: #292524;
+}
+
+.heroTagline {
+  font-size: 16px;
+  color: #57534e;
+  margin: 0 0 28px;
+}
+
+.primaryCta {
+  background: var(--accent, #fb923c);
+  color: #fff;
+  border: none;
+  padding: 16px 38px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--accent, #fb923c) 60%, transparent);
+}
+
+.services {
+  padding: 1rem 6% 5rem;
+  max-width: 960px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.servicesHeading {
+  text-align: center;
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  font-weight: 700;
+  color: #292524;
+  margin: 0 0 32px;
+}
+
+.serviceRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.serviceCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: #fff;
+  border-radius: 999px;
+  padding: 16px 26px;
+  box-shadow: 0 6px 18px -10px rgba(41, 37, 36, 0.25);
+}
+
+.serviceCard[data-tilt='0'] {
+  transform: rotate(-2deg);
+}
+
+.serviceCard[data-tilt='1'] {
+  transform: rotate(1.5deg);
+}
+
+.serviceCard[data-tilt='2'] {
+  transform: rotate(-1deg);
+}
+
+.serviceName {
+  font-weight: 700;
+  color: #292524;
+  font-size: 14px;
+}
+
+.serviceMeta {
+  font-size: 12px;
+  color: #78716c;
+}
+
+@media (max-width: 600px) {
+  .navBrand .navLogo + span {
+    display: none;
+  }
+
+  .navLink {
+    display: none;
+  }
+
+  .hero {
+    padding: 2rem 6% 3.5rem;
+  }
+
+  .serviceCard {
+    transform: none !important;
+  }
+}

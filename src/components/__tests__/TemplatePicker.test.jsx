@@ -6,9 +6,9 @@ import { TemplatePicker } from '../TemplatePicker.jsx'
 const colors = { primary: '#111827', secondary: '#6B7280', accent: '#D946EF' }
 
 describe('TemplatePicker', () => {
-  it('renders all 21 template options', () => {
+  it('renders all 25 template options', () => {
     render(<TemplatePicker value="classic" colors={colors} onChange={() => {}} />)
-    expect(screen.getAllByRole('radio')).toHaveLength(21)
+    expect(screen.getAllByRole('radio')).toHaveLength(25)
     for (const name of [
       'Classic',
       'Modern',
@@ -31,6 +31,10 @@ describe('TemplatePicker', () => {
       'Velvet',
       'Pulse',
       'Linen',
+      'Sidebar',
+      'Neon',
+      'Terrazzo',
+      'Neumorphic',
     ]) {
       expect(screen.getByText(name)).toBeInTheDocument()
     }

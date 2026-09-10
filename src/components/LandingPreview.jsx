@@ -21,6 +21,10 @@ import { CanvasTemplate } from './landingTemplates/CanvasTemplate.jsx';
 import { VelvetTemplate } from './landingTemplates/VelvetTemplate.jsx';
 import { PulseTemplate } from './landingTemplates/PulseTemplate.jsx';
 import { LinenTemplate } from './landingTemplates/LinenTemplate.jsx';
+import { SidebarTemplate } from './landingTemplates/SidebarTemplate.jsx';
+import { NeonTemplate } from './landingTemplates/NeonTemplate.jsx';
+import { TerrazzoTemplate } from './landingTemplates/TerrazzoTemplate.jsx';
+import { NeumorphicTemplate } from './landingTemplates/NeumorphicTemplate.jsx';
 
 const TEMPLATES = {
   classic: ClassicTemplate,
@@ -44,6 +48,10 @@ const TEMPLATES = {
   velvet: VelvetTemplate,
   pulse: PulseTemplate,
   linen: LinenTemplate,
+  sidebar: SidebarTemplate,
+  neon: NeonTemplate,
+  terrazzo: TerrazzoTemplate,
+  neumorphic: NeumorphicTemplate,
 };
 
 /**

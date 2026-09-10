@@ -28,6 +28,10 @@ const ALL_TEMPLATES = [
   'velvet',
   'pulse',
   'linen',
+  'sidebar',
+  'neon',
+  'terrazzo',
+  'neumorphic',
 ]
 
 const baseTheme = {

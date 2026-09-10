@@ -1,0 +1,174 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: #e8eaed;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 6%;
+}
+
+.navBrand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #3f3f46;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.navLogo {
+  height: 30px;
+  border-radius: 10px;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.navLink {
+  color: #71717a;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.navCta {
+  background: #e8eaed;
+  color: var(--brand, #6b7280);
+  padding: 11px 24px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 6px 6px 12px #c7cad0, -6px -6px 12px #ffffff;
+}
+
+.navCta:hover {
+  box-shadow: inset 4px 4px 8px #c7cad0, inset -4px -4px 8px #ffffff;
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 6% 4rem;
+}
+
+.heroCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+  background: #e8eaed;
+  border-radius: 32px;
+  padding: 56px 40px;
+  box-shadow: 14px 14px 28px #c7cad0, -14px -14px 28px #ffffff;
+}
+
+.heroBadge {
+  display: inline-block;
+  background: #e8eaed;
+  color: var(--brand, #6b7280);
+  border-radius: 999px;
+  padding: 7px 18px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 22px;
+  box-shadow: inset 3px 3px 6px #c7cad0, inset -3px -3px 6px #ffffff;
+}
+
+.heroTitle {
+  font-size: clamp(2rem, 4.2vw, 3.1rem);
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0 0 14px;
+  color: #3f3f46;
+}
+
+.heroTagline {
+  font-size: 15px;
+  color: #71717a;
+  margin: 0 0 30px;
+}
+
+.primaryCta {
+  background: #e8eaed;
+  color: var(--brand, #6b7280);
+  border: none;
+  padding: 17px 38px;
+  border-radius: 18px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 8px 8px 16px #c7cad0, -8px -8px 16px #ffffff;
+}
+
+.primaryCta:hover {
+  box-shadow: inset 5px 5px 10px #c7cad0, inset -5px -5px 10px #ffffff;
+}
+
+.services {
+  padding: 1rem 6% 5rem;
+  max-width: 960px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.servicesHeading {
+  text-align: center;
+  font-size: clamp(1.4rem, 2.4vw, 1.8rem);
+  font-weight: 700;
+  color: #3f3f46;
+  margin: 0 0 28px;
+}
+
+.serviceGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+.serviceCard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #e8eaed;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 8px 8px 16px #c7cad0, -8px -8px 16px #ffffff;
+}
+
+.serviceName {
+  font-weight: 700;
+  color: #3f3f46;
+  font-size: 15px;
+}
+
+.serviceMeta {
+  font-size: 13px;
+  color: #71717a;
+}
+
+@media (max-width: 600px) {
+  .navBrand .navLogo + span {
+    display: none;
+  }
+
+  .navLink {
+    display: none;
+  }
+
+  .heroCard {
+    padding: 36px 24px;
+    border-radius: 24px;
+  }
+}
