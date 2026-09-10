@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import * as tenantsApi from '../../api/platformTenants.js';
 import { ApiError } from '../../api/client.js';
 
@@ -22,16 +22,74 @@ function formatDate(value) {
   return value ? new Date(value).toLocaleString() : '—';
 }
 
+/** A field shown as plain text until "Edit" is clicked, then an input + Save/Cancel. */
+function EditableField({ label, value, onSave }) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(value);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(null);
+
+  function startEdit() {
+    setDraft(value);
+    setError(null);
+    setEditing(true);
+  }
+
+  async function save() {
+    setSaving(true);
+    setError(null);
+    try {
+      await onSave(draft);
+      setEditing(false);
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Failed to save.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className="field">
+      <label>{label}</label>
+      {editing ? (
+        <div style={{ display: 'flex', gap: 6 }}>
+          <input className="input" value={draft} onChange={(e) => setDraft(e.target.value)} autoFocus />
+          <button type="button" className="btn btn-sm btn-primary" disabled={saving} onClick={save}>
+            {saving ? 'Saving…' : 'Save'}
+          </button>
+          <button type="button" className="btn btn-sm" disabled={saving} onClick={() => setEditing(false)}>
+            Cancel
+          </button>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <span>{value || '—'}</span>
+          <button type="button" className="btn btn-sm" onClick={startEdit}>
+            Edit
+          </button>
+        </div>
+      )}
+      {error && <p className="error-text">{error}</p>}
+    </div>
+  );
+}
+
 export function TenantDetailPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [tenant, setTenant] = useState(null);
   const [subscription, setSubscription] = useState(null);
+  const [owner, setOwner] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const [statusChoice, setStatusChoice] = useState('trial');
   const [statusSaving, setStatusSaving] = useState(false);
   const [statusError, setStatusError] = useState(null);
+
+  const [deleteConfirm, setDeleteConfirm] = useState('');
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState(null);
 
   async function load() {
     setLoading(true);
@@ -40,6 +98,7 @@ export function TenantDetailPage() {
       const data = await tenantsApi.getTenant(id);
       setTenant(data.tenant);
       setSubscription(data.subscription);
+      setOwner(data.owner);
       setStatusChoice(data.tenant.status);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Failed to load tenant.');
@@ -63,6 +122,18 @@ export function TenantDetailPage() {
       setStatusError(err instanceof ApiError ? err.message : 'Failed to update status.');
     } finally {
       setStatusSaving(false);
+    }
+  }
+
+  async function handleDelete() {
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      await tenantsApi.deleteTenant(id, deleteConfirm);
+      navigate('/superadmin', { replace: true });
+    } catch (err) {
+      setDeleteError(err instanceof ApiError ? err.message : 'Failed to delete tenant.');
+      setDeleting(false);
     }
   }
 
@@ -91,6 +162,16 @@ export function TenantDetailPage() {
             <label>Slug</label>
             <div>{tenant.slug}</div>
           </div>
+          <EditableField
+            label="Business name"
+            value={tenant.displayName}
+            onSave={async (next) => setTenant(await tenantsApi.updateTenantProfile(id, next))}
+          />
+          <EditableField
+            label="Owner email"
+            value={owner?.email || ''}
+            onSave={async (next) => setOwner(await tenantsApi.updateTenantOwnerEmail(id, next))}
+          />
           <div className="field">
             <label>Timezone</label>
             <div>{tenant.timezone}</div>
@@ -138,7 +219,7 @@ export function TenantDetailPage() {
         )}
       </div>
 
-      <div className="card">
+      <div className="card" style={{ marginBottom: 20 }}>
         <h2 style={{ fontSize: 16, marginTop: 0 }}>Manual status override</h2>
         <p className="muted" style={{ marginTop: 0 }}>
           Normally set automatically (trial expiry, PayFast billing events). Use this to reactivate a tenant who paid
@@ -161,6 +242,31 @@ export function TenantDetailPage() {
           </button>
         </div>
         {statusError && <p className="error-text">{statusError}</p>}
+      </div>
+
+      <div className="card" style={{ borderColor: 'var(--color-danger)' }}>
+        <h2 style={{ fontSize: 16, marginTop: 0 }}>Delete tenant</h2>
+        <p className="muted" style={{ marginTop: 0 }}>
+          Permanently deletes this tenant and everything belonging to it - staff, services, customers, appointments,
+          payments, subscription. This cannot be undone. Type <strong>{tenant.slug}</strong> to confirm.
+        </p>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+          <input
+            className="input"
+            placeholder={tenant.slug}
+            value={deleteConfirm}
+            onChange={(e) => setDeleteConfirm(e.target.value)}
+          />
+          <button
+            type="button"
+            className="btn btn-danger"
+            disabled={deleting || deleteConfirm !== tenant.slug}
+            onClick={handleDelete}
+          >
+            {deleting ? 'Deleting…' : 'Delete tenant permanently'}
+          </button>
+        </div>
+        {deleteError && <p className="error-text">{deleteError}</p>}
       </div>
     </div>
   );

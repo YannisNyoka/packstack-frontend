@@ -15,3 +15,15 @@ export function getTenant(id) {
 export function updateTenantStatus(id, status) {
   return platformFetch(`/tenants/${id}/status`, { method: 'PATCH', body: { status } });
 }
+
+export function updateTenantProfile(id, displayName) {
+  return platformFetch(`/tenants/${id}`, { method: 'PATCH', body: { displayName } });
+}
+
+export function updateTenantOwnerEmail(id, email) {
+  return platformFetch(`/tenants/${id}/owner`, { method: 'PATCH', body: { email } });
+}
+
+export function deleteTenant(id, slug) {
+  return platformFetch(`/tenants/${id}`, { method: 'DELETE', body: { slug } });
+}
