@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import * as integrationsApi from '../../api/integrations.js';
-import { getTenantSlug } from '../../api/tenant.js';
 import { ApiError } from '../../api/client.js';
 import { useSlowLoad } from '../../hooks/useSlowLoad.js';
 
@@ -8,11 +7,6 @@ function providerLabel(provider) {
   if (provider === 'wati') return 'WhatsApp (WATI)';
   if (provider === 'resend') return 'Email (Resend)';
   return 'Deposits (Yoco)';
-}
-
-function yocoWebhookUrl() {
-  const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000';
-  return `${apiBase}/api/t/${getTenantSlug()}/public/deposit-webhook`;
 }
 
 export function IntegrationsSettingsPage() {
@@ -23,7 +17,7 @@ export function IntegrationsSettingsPage() {
   const [openForm, setOpenForm] = useState(null); // 'wati' | 'resend' | 'yoco' | null
   const [watiForm, setWatiForm] = useState({ accessToken: '', apiEndpoint: '' });
   const [resendForm, setResendForm] = useState({ apiKey: '', fromEmail: '' });
-  const [yocoForm, setYocoForm] = useState({ secretKey: '', webhookSecret: '' });
+  const [yocoForm, setYocoForm] = useState({ secretKey: '' });
   const [formError, setFormError] = useState(null);
   const [saving, setSaving] = useState(false);
 
@@ -57,7 +51,7 @@ export function IntegrationsSettingsPage() {
         setResendForm({ apiKey: '', fromEmail: '' });
       } else {
         await integrationsApi.connectYoco(yocoForm);
-        setYocoForm({ secretKey: '', webhookSecret: '' });
+        setYocoForm({ secretKey: '' });
       }
       setOpenForm(null);
       await load();
@@ -196,7 +190,7 @@ export function IntegrationsSettingsPage() {
 
                 {openForm === provider && provider === 'yoco' && (
                   <form className="form-grid" style={{ marginTop: 12 }} onSubmit={(e) => handleConnect(e, 'yoco')}>
-                    <div className="field">
+                    <div className="field" style={{ gridColumn: '1 / -1' }}>
                       <label htmlFor="yoco-secret">Secret key</label>
                       <input
                         id="yoco-secret"
@@ -206,21 +200,9 @@ export function IntegrationsSettingsPage() {
                         onChange={(e) => setYocoForm({ ...yocoForm, secretKey: e.target.value })}
                         required
                       />
-                    </div>
-                    <div className="field">
-                      <label htmlFor="yoco-webhook-secret">Webhook secret</label>
-                      <input
-                        id="yoco-webhook-secret"
-                        className="input"
-                        placeholder="whsec_..."
-                        value={yocoForm.webhookSecret}
-                        onChange={(e) => setYocoForm({ ...yocoForm, webhookSecret: e.target.value })}
-                        required
-                      />
-                    </div>
-                    <div className="field" style={{ gridColumn: '1 / -1' }}>
-                      <label>Webhook URL (paste this into your Yoco dashboard)</label>
-                      <input className="input" readOnly value={yocoWebhookUrl()} onFocus={(e) => e.target.select()} />
+                      <p className="muted" style={{ fontSize: 12, marginTop: 4, marginBottom: 0 }}>
+                        That's all we need - we register the deposit webhook with Yoco automatically.
+                      </p>
                     </div>
                     {formError && <p className="error-text">{formError}</p>}
                     <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
