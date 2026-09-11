@@ -3,10 +3,9 @@ import * as integrationsApi from '../../api/integrations.js';
 import { ApiError } from '../../api/client.js';
 import { useSlowLoad } from '../../hooks/useSlowLoad.js';
 
-// Yoco needs two separate credentials (a Checkout API secret key and a
-// Developer Console API key - see integrationCredentialService.js), which
-// isn't self-explanatory, so the connect form links out to a walkthrough
-// rather than trying to explain Yoco's own dashboard inline.
+// Finding the right key on Yoco's own dashboard (Secret vs Public, Test vs
+// Live tabs) isn't obvious the first time, so the connect form links out to
+// a short walkthrough rather than cramming it into inline help text.
 const YOCO_GUIDE_URL = 'https://claude.ai/code/artifact/be949113-ec88-486e-a9eb-1f04f9bb9812';
 
 function providerLabel(provider) {
@@ -23,7 +22,7 @@ export function IntegrationsSettingsPage() {
   const [openForm, setOpenForm] = useState(null); // 'wati' | 'resend' | 'yoco' | null
   const [watiForm, setWatiForm] = useState({ accessToken: '', apiEndpoint: '' });
   const [resendForm, setResendForm] = useState({ apiKey: '', fromEmail: '' });
-  const [yocoForm, setYocoForm] = useState({ secretKey: '', apiKey: '' });
+  const [yocoForm, setYocoForm] = useState({ secretKey: '' });
   const [formError, setFormError] = useState(null);
   const [saving, setSaving] = useState(false);
 
@@ -57,7 +56,7 @@ export function IntegrationsSettingsPage() {
         setResendForm({ apiKey: '', fromEmail: '' });
       } else {
         await integrationsApi.connectYoco(yocoForm);
-        setYocoForm({ secretKey: '', apiKey: '' });
+        setYocoForm({ secretKey: '' });
       }
       setOpenForm(null);
       await load();
@@ -196,14 +195,7 @@ export function IntegrationsSettingsPage() {
 
                 {openForm === provider && provider === 'yoco' && (
                   <form className="form-grid" style={{ marginTop: 12 }} onSubmit={(e) => handleConnect(e, 'yoco')}>
-                    <p className="muted" style={{ gridColumn: '1 / -1', fontSize: 13, marginTop: 0 }}>
-                      Two keys are needed - not sure where to find them?{' '}
-                      <a href={YOCO_GUIDE_URL} target="_blank" rel="noopener noreferrer">
-                        See the step-by-step guide
-                      </a>
-                      .
-                    </p>
-                    <div className="field">
+                    <div className="field" style={{ gridColumn: '1 / -1' }}>
                       <label htmlFor="yoco-secret">Secret key</label>
                       <input
                         id="yoco-secret"
@@ -214,21 +206,11 @@ export function IntegrationsSettingsPage() {
                         required
                       />
                       <p className="muted" style={{ fontSize: 12, marginTop: 4, marginBottom: 0 }}>
-                        From the Checkout API page - takes payments.
-                      </p>
-                    </div>
-                    <div className="field">
-                      <label htmlFor="yoco-api-key">API key</label>
-                      <input
-                        id="yoco-api-key"
-                        className="input"
-                        placeholder="yoco_live_..."
-                        value={yocoForm.apiKey}
-                        onChange={(e) => setYocoForm({ ...yocoForm, apiKey: e.target.value })}
-                        required
-                      />
-                      <p className="muted" style={{ fontSize: 12, marginTop: 4, marginBottom: 0 }}>
-                        From a Developer Console application - registers the deposit webhook.
+                        From Yoco's Checkout API page - not sure where to find it?{' '}
+                        <a href={YOCO_GUIDE_URL} target="_blank" rel="noopener noreferrer">
+                          See the guide
+                        </a>
+                        . That's all we need - we register the deposit webhook with Yoco automatically.
                       </p>
                     </div>
                     {formError && <p className="error-text">{formError}</p>}
