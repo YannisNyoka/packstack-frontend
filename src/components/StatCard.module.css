@@ -7,9 +7,20 @@
   min-width: 0;
 }
 
-.icon {
-  font-size: 20px;
-  line-height: 1;
+.iconWrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.aqua .iconWrap,
+.yellow .iconWrap,
+.magenta .iconWrap {
+  background: rgba(17, 24, 39, 0.1);
 }
 
 .value {

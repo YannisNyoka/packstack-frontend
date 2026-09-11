@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { OverviewPage } from '../OverviewPage.jsx'
+import { renderWithProviders as render } from '../../test/renderWithProviders.jsx'
 import * as analyticsApi from '../../api/analytics.js'
 import * as appointmentsApi from '../../api/appointments.js'
 import * as paymentsApi from '../../api/payments.js'
@@ -63,12 +64,12 @@ describe('OverviewPage', () => {
   it('cancels an unpaid appointment via the existing cancelAppointment API', async () => {
     mockLoadSuccess()
     appointmentsApi.cancelAppointment.mockResolvedValue({})
-    vi.spyOn(window, 'confirm').mockReturnValue(true)
     const user = userEvent.setup()
     render(<OverviewPage />)
     await waitFor(() => expect(screen.getByText('Nomcebo Zulu')).toBeInTheDocument())
 
     await user.click(screen.getByRole('button', { name: 'Cancel' }))
+    await user.click(await screen.findByRole('button', { name: 'Cancel appointment' }))
 
     await waitFor(() => expect(appointmentsApi.cancelAppointment).toHaveBeenCalledWith('apt-1'))
   })

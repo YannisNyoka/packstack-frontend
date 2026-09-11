@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Wallet, CalendarDays, Users, CheckCircle2, Star } from 'lucide-react';
 import * as analyticsApi from '../api/analytics.js';
 import { ApiError } from '../api/client.js';
 import { useSlowLoad } from '../hooks/useSlowLoad.js';
 import { StatCard } from '../components/StatCard.jsx';
+import { Skeleton, SkeletonStatGrid } from '../components/Skeleton.jsx';
 import styles from './AnalyticsPage.module.css';
 
 const RANGE_OPTIONS = [
@@ -103,15 +105,32 @@ export function AnalyticsPage() {
       {error && <p className="error-text">{error}</p>}
 
       {loading || !summary ? (
-        <p className="muted">{slowLoad ? 'Waking up the server — this can take a few seconds…' : 'Loading…'}</p>
+        <div>
+          {slowLoad && <p className="muted">Waking up the server — this can take a few seconds…</p>}
+          <SkeletonStatGrid count={5} />
+          <div className={styles.charts}>
+            <section className="card">
+              <Skeleton width="40%" height={18} />
+              <div style={{ marginTop: 16 }}>
+                <Skeleton width="100%" height={220} radius="8px" />
+              </div>
+            </section>
+            <section className="card">
+              <Skeleton width="40%" height={18} />
+              <div style={{ marginTop: 16 }}>
+                <Skeleton width="100%" height={220} radius="8px" />
+              </div>
+            </section>
+          </div>
+        </div>
       ) : (
         <>
           <div className={styles.grid}>
-            <StatCard label="Combined revenue" value={formatMoney(summary.combinedRevenue)} icon="💰" tone="green" />
-            <StatCard label="Bookings" value={summary.bookingsCount} icon="📅" tone="blue" />
-            <StatCard label="Total clients" value={summary.totalClients} icon="👥" tone="violet" />
-            <StatCard label="Completion rate" value={`${summary.completionRate}%`} icon="✅" tone="aqua" />
-            <StatCard label="Loyalty members" value={summary.loyaltyMembers} icon="⭐" tone="orange" />
+            <StatCard label="Combined revenue" value={formatMoney(summary.combinedRevenue)} icon={Wallet} tone="green" />
+            <StatCard label="Bookings" value={summary.bookingsCount} icon={CalendarDays} tone="blue" />
+            <StatCard label="Total clients" value={summary.totalClients} icon={Users} tone="violet" />
+            <StatCard label="Completion rate" value={`${summary.completionRate}%`} icon={CheckCircle2} tone="aqua" />
+            <StatCard label="Loyalty members" value={summary.loyaltyMembers} icon={Star} tone="orange" />
           </div>
 
           <div className={styles.charts}>

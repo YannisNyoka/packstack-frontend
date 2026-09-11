@@ -1,5 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import {
+  LayoutDashboard,
+  CalendarDays,
+  LineChart,
+  Users,
+  UserRound,
+  Scissors,
+  Settings,
+  ChevronRight,
+  LogOut,
+} from 'lucide-react';
 import { useAuth } from '../auth/AuthContext.jsx';
 import * as themeApi from '../api/theme.js';
 import { getTenantSlug } from '../api/tenant.js';
@@ -29,14 +40,15 @@ export function trialBanner(tenantStatus, trialEndsAt) {
 }
 
 const NAV_ITEMS = [
-  { to: '/dashboard', label: 'Overview', end: true },
-  { to: '/dashboard/appointments', label: 'Appointments' },
-  { to: '/dashboard/analytics', label: 'Analytics' },
-  { to: '/dashboard/customers', label: 'Customers' },
-  { to: '/dashboard/staff', label: 'Staff' },
-  { to: '/dashboard/services', label: 'Services' },
+  { to: '/dashboard', label: 'Overview', end: true, icon: LayoutDashboard },
+  { to: '/dashboard/appointments', label: 'Appointments', icon: CalendarDays },
+  { to: '/dashboard/analytics', label: 'Analytics', icon: LineChart },
+  { to: '/dashboard/customers', label: 'Customers', icon: Users },
+  { to: '/dashboard/staff', label: 'Staff', icon: UserRound },
+  { to: '/dashboard/services', label: 'Services', icon: Scissors },
   {
     label: 'Settings',
+    icon: Settings,
     ownerOnly: true,
     children: [
       { to: '/dashboard/settings/branding', label: 'Branding' },
@@ -100,6 +112,7 @@ function SidebarNav({ isOwner, onNavigate }) {
   return (
     <nav className={styles.nav}>
       {NAV_ITEMS.filter((item) => !item.ownerOnly || isOwner).map((item) => {
+        const Icon = item.icon;
         if (!item.children) {
           return (
             <NavLink
@@ -109,6 +122,7 @@ function SidebarNav({ isOwner, onNavigate }) {
               className={({ isActive }) => `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`}
               onClick={onNavigate}
             >
+              <Icon size={17} className={styles.navIcon} aria-hidden="true" />
               {item.label}
             </NavLink>
           );
@@ -123,10 +137,11 @@ function SidebarNav({ isOwner, onNavigate }) {
               onClick={() => setSettingsOpen((open) => !open)}
               aria-expanded={settingsOpen}
             >
-              {item.label}
-              <span className={`${styles.chevron} ${settingsOpen ? styles.chevronOpen : ''}`} aria-hidden="true">
-                ›
+              <span className={styles.navGroupLabel}>
+                <Icon size={17} className={styles.navIcon} aria-hidden="true" />
+                {item.label}
               </span>
+              <ChevronRight size={15} className={`${styles.chevron} ${settingsOpen ? styles.chevronOpen : ''}`} aria-hidden="true" />
             </button>
             {settingsOpen && (
               <div className={styles.subNav}>
@@ -188,7 +203,13 @@ export function DashboardLayout() {
 
       <aside className={`${styles.sidebar} ${menuOpen ? styles.sidebarOpen : ''}`}>
         <div className={styles.brand}>
-          {theme?.logoUrl && <img src={theme.logoUrl} alt="" className={styles.brandLogo} />}
+          {theme?.logoUrl ? (
+            <img src={theme.logoUrl} alt="" className={styles.brandLogo} />
+          ) : (
+            <span className={styles.brandLogoFallback} aria-hidden="true">
+              {businessName.charAt(0).toUpperCase()}
+            </span>
+          )}
           <div>
             <div className={styles.brandName}>{businessName}</div>
             <div className={styles.brandSubtitle}>Admin panel</div>
@@ -202,6 +223,7 @@ export function DashboardLayout() {
         <div className={styles.account}>
           <span className={styles.accountEmail}>{user?.email}</span>
           <button type="button" className={styles.logoutBtn} onClick={handleLogout}>
+            <LogOut size={13} aria-hidden="true" />
             Log out
           </button>
           <Link to="/" className={styles.poweredBy}>

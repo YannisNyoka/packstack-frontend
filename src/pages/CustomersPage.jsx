@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState } from 'react';
 import { useAuth } from '../auth/AuthContext.jsx';
 import * as customersApi from '../api/customers.js';
 import { ApiError } from '../api/client.js';
+import { SkeletonTable } from '../components/Skeleton.jsx';
 
 const emptyForm = { name: '', phone: '', email: '', notes: '' };
 const emptyAdjustForm = { pointsDelta: '', reasonNote: '' };
@@ -196,7 +197,7 @@ export function CustomersPage() {
 
       <div className="card">
         {loading ? (
-          <p className="muted">Loading…</p>
+          <SkeletonTable rows={5} cols={4} />
         ) : customers.length === 0 ? (
           <p className="empty-state">{search ? 'No customers match your search.' : 'No customers yet.'}</p>
         ) : (

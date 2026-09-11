@@ -2,10 +2,14 @@ import { useEffect, useState } from 'react';
 import * as domainsApi from '../../api/domains.js';
 import { ApiError } from '../../api/client.js';
 import { useSlowLoad } from '../../hooks/useSlowLoad.js';
+import { useConfirm } from '../../components/confirm/ConfirmContext.jsx';
+import { useToast } from '../../components/toast/ToastContext.jsx';
 
 const SSL_BADGE = { pending: 'badge-neutral', issued: 'badge-success', failed: 'badge-danger' };
 
 export function DomainsSettingsPage() {
+  const confirm = useConfirm();
+  const toast = useToast();
   const [domains, setDomains] = useState([]);
   const [loading, setLoading] = useState(true);
   const slowLoad = useSlowLoad(loading);
@@ -64,13 +68,20 @@ export function DomainsSettingsPage() {
   }
 
   async function handleRemove(domain) {
-    if (!window.confirm(`Remove ${domain}? Visitors there will no longer reach your site.`)) return;
+    const ok = await confirm(`Remove ${domain}? Visitors there will no longer reach your site.`, {
+      title: 'Remove domain',
+      tone: 'danger',
+      confirmLabel: 'Remove domain',
+      cancelLabel: 'Keep it',
+    });
+    if (!ok) return;
     try {
       await domainsApi.removeDomain(domain);
       if (pendingInstructions?.domain === domain) setPendingInstructions(null);
+      toast.success(`${domain} removed.`);
       await load();
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Failed to remove domain.');
+      toast.error(err instanceof ApiError ? err.message : 'Failed to remove domain.');
     }
   }
 

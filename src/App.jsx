@@ -1,4 +1,6 @@
 import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom';
+import { ToastProvider } from './components/toast/ToastContext.jsx';
+import { ConfirmProvider } from './components/confirm/ConfirmContext.jsx';
 import { AuthProvider } from './auth/AuthContext.jsx';
 import { RequireAuth } from './auth/RequireAuth.jsx';
 import { DashboardLayout } from './layout/DashboardLayout.jsx';
@@ -40,101 +42,105 @@ import { ResetPasswordPage } from './pages/account/ResetPasswordPage.jsx';
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        {/* Global, like AuthProvider - so any customer-facing page (landing,
-            booking wizard) can tell whether a customer is already logged in,
-            not just the /account/* routes. */}
-        <CustomerAuthProvider>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            {/* Not wrapped in RequireCustomerAuth - whether an account is
-                required to book is a per-tenant setting now
-                (bookingRules.requireCustomerAccount), so BookingPage.jsx
-                checks it itself and self-redirects to login when needed. */}
-            <Route path="/book" element={<BookingPage />} />
-            <Route path="/manage" element={<ManagePage />} />
-            {/* Loaded only inside an <iframe> by BrandingSettingsPage.jsx's
-                live preview (see DevicePreview / PreviewFramePage.jsx) - a
-                real browsing context is what makes the phone preview
-                actually simulate a phone's viewport instead of just a
-                scaled-down desktop render. */}
-            <Route path="/preview" element={<PreviewFramePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/staff/accept-invite" element={<StaffAcceptInvitePage />} />
-            <Route path="/billing/success" element={<BillingSuccessPage />} />
-            <Route path="/billing/cancelled" element={<BillingCancelledPage />} />
-            <Route
-              path="/dashboard"
-              element={
-                <RequireAuth>
-                  <DashboardLayout />
-                </RequireAuth>
-              }
-            >
-              <Route index element={<OverviewPage />} />
-              <Route path="appointments" element={<AppointmentsPage />} />
-              <Route path="analytics" element={<AnalyticsPage />} />
-              <Route path="staff" element={<StaffPage />} />
-              <Route path="services" element={<ServicesPage />} />
-              <Route path="customers" element={<CustomersPage />} />
-              <Route
-                path="settings"
-                element={
-                  <RequireAuth ownerOnly>
-                    <SettingsLayout />
-                  </RequireAuth>
-                }
-              >
-                <Route index element={<Navigate to="branding" replace />} />
-                <Route path="branding" element={<BrandingSettingsPage />} />
-                <Route path="integrations" element={<IntegrationsSettingsPage />} />
-                <Route path="booking-access" element={<BookingAccessSettingsPage />} />
-                <Route path="deposits" element={<DepositSettingsPage />} />
-                <Route path="billing" element={<BillingSettingsPage />} />
-                <Route path="domains" element={<DomainsSettingsPage />} />
-              </Route>
-            </Route>
+    <ToastProvider>
+      <ConfirmProvider>
+        <BrowserRouter>
+          <AuthProvider>
+            {/* Global, like AuthProvider - so any customer-facing page (landing,
+                booking wizard) can tell whether a customer is already logged in,
+                not just the /account/* routes. */}
+            <CustomerAuthProvider>
+              <Routes>
+                <Route path="/" element={<LandingPage />} />
+                {/* Not wrapped in RequireCustomerAuth - whether an account is
+                    required to book is a per-tenant setting now
+                    (bookingRules.requireCustomerAccount), so BookingPage.jsx
+                    checks it itself and self-redirects to login when needed. */}
+                <Route path="/book" element={<BookingPage />} />
+                <Route path="/manage" element={<ManagePage />} />
+                {/* Loaded only inside an <iframe> by BrandingSettingsPage.jsx's
+                    live preview (see DevicePreview / PreviewFramePage.jsx) - a
+                    real browsing context is what makes the phone preview
+                    actually simulate a phone's viewport instead of just a
+                    scaled-down desktop render. */}
+                <Route path="/preview" element={<PreviewFramePage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/staff/accept-invite" element={<StaffAcceptInvitePage />} />
+                <Route path="/billing/success" element={<BillingSuccessPage />} />
+                <Route path="/billing/cancelled" element={<BillingCancelledPage />} />
+                <Route
+                  path="/dashboard"
+                  element={
+                    <RequireAuth>
+                      <DashboardLayout />
+                    </RequireAuth>
+                  }
+                >
+                  <Route index element={<OverviewPage />} />
+                  <Route path="appointments" element={<AppointmentsPage />} />
+                  <Route path="analytics" element={<AnalyticsPage />} />
+                  <Route path="staff" element={<StaffPage />} />
+                  <Route path="services" element={<ServicesPage />} />
+                  <Route path="customers" element={<CustomersPage />} />
+                  <Route
+                    path="settings"
+                    element={
+                      <RequireAuth ownerOnly>
+                        <SettingsLayout />
+                      </RequireAuth>
+                    }
+                  >
+                    <Route index element={<Navigate to="branding" replace />} />
+                    <Route path="branding" element={<BrandingSettingsPage />} />
+                    <Route path="integrations" element={<IntegrationsSettingsPage />} />
+                    <Route path="booking-access" element={<BookingAccessSettingsPage />} />
+                    <Route path="deposits" element={<DepositSettingsPage />} />
+                    <Route path="billing" element={<BillingSettingsPage />} />
+                    <Route path="domains" element={<DomainsSettingsPage />} />
+                  </Route>
+                </Route>
 
-            <Route
-              element={
-                <SuperAdminAuthProvider>
-                  <Outlet />
-                </SuperAdminAuthProvider>
-              }
-            >
-              <Route path="/superadmin/login" element={<SuperAdminLoginPage />} />
-              <Route
-                path="/superadmin"
-                element={
-                  <RequireSuperAdmin>
-                    <SuperAdminLayout />
-                  </RequireSuperAdmin>
-                }
-              >
-                <Route index element={<TenantsPage />} />
-                <Route path="tenants/:id" element={<TenantDetailPage />} />
-                <Route path="plans" element={<PlansPage />} />
-              </Route>
-            </Route>
+                <Route
+                  element={
+                    <SuperAdminAuthProvider>
+                      <Outlet />
+                    </SuperAdminAuthProvider>
+                  }
+                >
+                  <Route path="/superadmin/login" element={<SuperAdminLoginPage />} />
+                  <Route
+                    path="/superadmin"
+                    element={
+                      <RequireSuperAdmin>
+                        <SuperAdminLayout />
+                      </RequireSuperAdmin>
+                    }
+                  >
+                    <Route index element={<TenantsPage />} />
+                    <Route path="tenants/:id" element={<TenantDetailPage />} />
+                    <Route path="plans" element={<PlansPage />} />
+                  </Route>
+                </Route>
 
-            <Route path="/account/login" element={<CustomerLoginPage />} />
-            <Route path="/account/signup" element={<CustomerSignupPage />} />
-            <Route path="/account/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/account/reset-password" element={<ResetPasswordPage />} />
-            <Route
-              path="/account"
-              element={
-                <RequireCustomerAuth>
-                  <CustomerProfilePage />
-                </RequireCustomerAuth>
-              }
-            />
+                <Route path="/account/login" element={<CustomerLoginPage />} />
+                <Route path="/account/signup" element={<CustomerSignupPage />} />
+                <Route path="/account/forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="/account/reset-password" element={<ResetPasswordPage />} />
+                <Route
+                  path="/account"
+                  element={
+                    <RequireCustomerAuth>
+                      <CustomerProfilePage />
+                    </RequireCustomerAuth>
+                  }
+                />
 
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </CustomerAuthProvider>
-      </AuthProvider>
-    </BrowserRouter>
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </CustomerAuthProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </ConfirmProvider>
+    </ToastProvider>
   );
 }

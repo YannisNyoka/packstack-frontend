@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../auth/AuthContext.jsx';
 import * as servicesApi from '../api/services.js';
 import { ApiError } from '../api/client.js';
+import { SkeletonTable } from '../components/Skeleton.jsx';
 
 const emptyForm = { name: '', durationMinutes: '', price: '', category: '', imageUrl: '' };
 
@@ -214,7 +215,7 @@ export function ServicesPage() {
 
       <div className="card">
         {loading ? (
-          <p className="muted">Loading…</p>
+          <SkeletonTable rows={4} cols={isOwner ? 6 : 5} />
         ) : services.length === 0 ? (
           <p className="empty-state">No services yet.</p>
         ) : (

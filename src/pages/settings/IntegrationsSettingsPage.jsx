@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import * as integrationsApi from '../../api/integrations.js';
 import { ApiError } from '../../api/client.js';
 import { useSlowLoad } from '../../hooks/useSlowLoad.js';
+import { useConfirm } from '../../components/confirm/ConfirmContext.jsx';
+import { useToast } from '../../components/toast/ToastContext.jsx';
 
 // Finding the right key on Yoco's own dashboard (Secret vs Public, Test vs
 // Live tabs) isn't obvious the first time, so the connect form links out to
@@ -15,6 +17,8 @@ function providerLabel(provider) {
 }
 
 export function IntegrationsSettingsPage() {
+  const confirm = useConfirm();
+  const toast = useToast();
   const [credentials, setCredentials] = useState([]);
   const [loading, setLoading] = useState(true);
   const slowLoad = useSlowLoad(loading);
@@ -59,6 +63,7 @@ export function IntegrationsSettingsPage() {
         setYocoForm({ secretKey: '' });
       }
       setOpenForm(null);
+      toast.success(`${providerLabel(provider)} connected.`);
       await load();
     } catch (err) {
       setFormError(err instanceof ApiError ? err.message : 'Failed to connect.');
@@ -68,12 +73,19 @@ export function IntegrationsSettingsPage() {
   }
 
   async function handleDisconnect(provider) {
-    if (!window.confirm(`Disconnect ${providerLabel(provider)}? Notifications over this channel will stop.`)) return;
+    const ok = await confirm(`Disconnect ${providerLabel(provider)}? Notifications over this channel will stop.`, {
+      title: 'Disconnect integration',
+      tone: 'danger',
+      confirmLabel: 'Disconnect',
+      cancelLabel: 'Keep connected',
+    });
+    if (!ok) return;
     try {
       await integrationsApi.disconnectIntegration(provider);
+      toast.success(`${providerLabel(provider)} disconnected.`);
       await load();
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Failed to disconnect.');
+      toast.error(err instanceof ApiError ? err.message : 'Failed to disconnect.');
     }
   }
 

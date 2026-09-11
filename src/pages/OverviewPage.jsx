@@ -1,21 +1,25 @@
 import { useEffect, useState } from 'react';
+import { CalendarDays, Clock, Wallet, TrendingUp, BarChart3, XCircle, Ban, AlertTriangle } from 'lucide-react';
 import * as analyticsApi from '../api/analytics.js';
 import * as appointmentsApi from '../api/appointments.js';
 import * as paymentsApi from '../api/payments.js';
 import { ApiError } from '../api/client.js';
 import { useSlowLoad } from '../hooks/useSlowLoad.js';
+import { useConfirm } from '../components/confirm/ConfirmContext.jsx';
+import { useToast } from '../components/toast/ToastContext.jsx';
 import { StatCard } from '../components/StatCard.jsx';
+import { SkeletonStatGrid, SkeletonTable } from '../components/Skeleton.jsx';
 import styles from './OverviewPage.module.css';
 
 const CARDS = [
-  { key: 'bookingsToday', label: 'Bookings today', icon: '📅', tone: 'blue' },
-  { key: 'upcomingCount', label: 'Upcoming', icon: '⏳', tone: 'aqua' },
-  { key: 'revenueToday', label: 'Revenue today', icon: '💰', tone: 'green', money: true },
-  { key: 'revenueWeek', label: 'Revenue (week)', icon: '📈', tone: 'violet', money: true },
-  { key: 'revenueMonth', label: 'Revenue (month)', icon: '📊', tone: 'orange', money: true },
-  { key: 'cancellationsToday', label: 'Cancellations', icon: '❌', tone: 'red' },
-  { key: 'noShowsToday', label: 'No-shows', icon: '🚫', tone: 'magenta' },
-  { key: 'unpaidCount', label: 'Unpaid bookings', icon: '⚠️', tone: 'yellow' },
+  { key: 'bookingsToday', label: 'Bookings today', icon: CalendarDays, tone: 'blue' },
+  { key: 'upcomingCount', label: 'Upcoming', icon: Clock, tone: 'aqua' },
+  { key: 'revenueToday', label: 'Revenue today', icon: Wallet, tone: 'green', money: true },
+  { key: 'revenueWeek', label: 'Revenue (week)', icon: TrendingUp, tone: 'violet', money: true },
+  { key: 'revenueMonth', label: 'Revenue (month)', icon: BarChart3, tone: 'orange', money: true },
+  { key: 'cancellationsToday', label: 'Cancellations', icon: XCircle, tone: 'red' },
+  { key: 'noShowsToday', label: 'No-shows', icon: Ban, tone: 'magenta' },
+  { key: 'unpaidCount', label: 'Unpaid bookings', icon: AlertTriangle, tone: 'yellow' },
 ];
 
 function formatMoney(amount) {
@@ -23,11 +27,12 @@ function formatMoney(amount) {
 }
 
 export function OverviewPage() {
+  const confirm = useConfirm();
+  const toast = useToast();
   const [overview, setOverview] = useState(null);
   const [unpaid, setUnpaid] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [rowError, setRowError] = useState(null);
   const [payingId, setPayingId] = useState(null);
   const [payAmount, setPayAmount] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -52,38 +57,54 @@ export function OverviewPage() {
   }, []);
 
   async function handleCancel(appointment) {
-    if (!window.confirm(`Cancel the appointment for ${appointment.customerId?.name || 'this customer'}?`)) return;
-    setRowError(null);
+    const ok = await confirm(`Cancel the appointment for ${appointment.customerId?.name || 'this customer'}?`, {
+      title: 'Cancel appointment',
+      tone: 'danger',
+      confirmLabel: 'Cancel appointment',
+      cancelLabel: 'Keep it',
+    });
+    if (!ok) return;
     try {
       await appointmentsApi.cancelAppointment(appointment._id);
+      toast.success('Appointment cancelled.');
       await load();
     } catch (err) {
-      setRowError(err instanceof ApiError ? err.message : 'Failed to cancel appointment.');
+      toast.error(err instanceof ApiError ? err.message : 'Failed to cancel appointment.');
     }
   }
 
   function startMarkPaid(appointment) {
     setPayingId(appointment._id);
     setPayAmount(String(appointment.priceSnapshot));
-    setRowError(null);
   }
 
   async function submitMarkPaid(appointment) {
     setSubmitting(true);
-    setRowError(null);
     try {
       await paymentsApi.recordPayment(appointment._id, { amount: Number(payAmount), method: 'cash', provider: 'cash' });
       setPayingId(null);
+      toast.success('Payment recorded.');
       await load();
     } catch (err) {
-      setRowError(err instanceof ApiError ? err.message : 'Failed to record payment.');
+      toast.error(err instanceof ApiError ? err.message : 'Failed to record payment.');
     } finally {
       setSubmitting(false);
     }
   }
 
   if (loading) {
-    return <p className="muted">{slowLoad ? 'Waking up the server — this can take a few seconds…' : 'Loading…'}</p>;
+    return (
+      <div>
+        <div className="page-header">
+          <h1>Overview</h1>
+        </div>
+        {slowLoad && <p className="muted">Waking up the server — this can take a few seconds…</p>}
+        <SkeletonStatGrid count={8} />
+        <div className="card">
+          <SkeletonTable rows={4} cols={5} />
+        </div>
+      </div>
+    );
   }
 
   if (error) {
@@ -113,8 +134,6 @@ export function OverviewPage() {
         <p className="muted" style={{ marginTop: -8 }}>
           These bookings are confirmed or completed, but no payment has been recorded yet.
         </p>
-
-        {rowError && <p className="error-text">{rowError}</p>}
 
         {unpaid.length === 0 ? (
           <p className="empty-state">Nothing to review — every booking is paid up.</p>

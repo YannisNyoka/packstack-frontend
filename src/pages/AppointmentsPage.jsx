@@ -5,6 +5,9 @@ import * as servicesApi from '../api/services.js';
 import * as paymentsApi from '../api/payments.js';
 import { ApiError } from '../api/client.js';
 import { useSlowLoad } from '../hooks/useSlowLoad.js';
+import { useConfirm } from '../components/confirm/ConfirmContext.jsx';
+import { useToast } from '../components/toast/ToastContext.jsx';
+import { SkeletonTable } from '../components/Skeleton.jsx';
 import styles from './AppointmentsPage.module.css';
 
 const STATUS_FILTERS = ['all', 'booked', 'confirmed', 'completed', 'cancelled', 'no_show'];
@@ -33,6 +36,8 @@ function toDatetimeLocal(iso) {
 }
 
 export function AppointmentsPage() {
+  const confirm = useConfirm();
+  const toast = useToast();
   const [appointments, setAppointments] = useState([]);
   const [staff, setStaff] = useState([]);
   const [services, setServices] = useState([]);
@@ -111,10 +116,17 @@ export function AppointmentsPage() {
   }
 
   async function handleCancel(appointment) {
-    if (!window.confirm(`Cancel the appointment for ${appointment.customerId?.name || 'this customer'}?`)) return;
+    const ok = await confirm(`Cancel the appointment for ${appointment.customerId?.name || 'this customer'}?`, {
+      title: 'Cancel appointment',
+      tone: 'danger',
+      confirmLabel: 'Cancel appointment',
+      cancelLabel: 'Keep it',
+    });
+    if (!ok) return;
     setRowError(null);
     try {
       await appointmentsApi.cancelAppointment(appointment._id);
+      toast.success('Appointment cancelled.');
       await load();
     } catch (err) {
       setRowError(err instanceof ApiError ? err.message : 'Failed to cancel appointment.');
@@ -297,7 +309,10 @@ export function AppointmentsPage() {
 
       <div className="card">
         {loading ? (
-          <p className="muted">{slowLoad ? 'Waking up the server — this can take a few seconds…' : 'Loading…'}</p>
+          <>
+            {slowLoad && <p className="muted">Waking up the server — this can take a few seconds…</p>}
+            <SkeletonTable rows={5} cols={6} />
+          </>
         ) : appointments.length === 0 ? (
           <p className="empty-state">No appointments found.</p>
         ) : (

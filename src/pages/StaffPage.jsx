@@ -1,5 +1,8 @@
 import { Fragment, useEffect, useState } from 'react';
 import { useAuth } from '../auth/AuthContext.jsx';
+import { useConfirm } from '../components/confirm/ConfirmContext.jsx';
+import { useToast } from '../components/toast/ToastContext.jsx';
+import { SkeletonTable } from '../components/Skeleton.jsx';
 import * as staffApi from '../api/staff.js';
 import * as servicesApi from '../api/services.js';
 import * as timeOffApi from '../api/staffTimeOff.js';
@@ -22,6 +25,8 @@ const emptyForm = { name: '', servicesOffered: [], workingHours: emptyWorkingHou
 
 export function StaffPage() {
   const { user } = useAuth();
+  const confirm = useConfirm();
+  const toast = useToast();
   const isOwner = user?.role === 'owner';
 
   const [staff, setStaff] = useState([]);
@@ -130,8 +135,10 @@ export function StaffPage() {
       const payload = { name: form.name, servicesOffered: form.servicesOffered, workingHours: form.workingHours };
       if (editingId) {
         await staffApi.updateStaffMember(editingId, payload);
+        toast.success(`${form.name} updated.`);
       } else {
         await staffApi.createStaffMember(payload);
+        toast.success(`${form.name} added to your staff.`);
       }
       setShowForm(false);
       await load();
@@ -145,9 +152,10 @@ export function StaffPage() {
   async function toggleActive(member) {
     try {
       await staffApi.updateStaffMember(member._id, { active: !member.active });
+      toast.success(member.active ? `${member.name} deactivated.` : `${member.name} activated.`);
       await load();
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Failed to update staff member.');
+      toast.error(err instanceof ApiError ? err.message : 'Failed to update staff member.');
     }
   }
 
@@ -216,6 +224,7 @@ export function StaffPage() {
       const result = await staffApi.inviteStaffAccess(member._id, accessEmail);
       setInviteLinkByStaffId((links) => ({ ...links, [member._id]: result.inviteUrl }));
       setAccessFormId(null);
+      toast.success(`Invite sent to ${accessEmail}.`);
       await load();
     } catch (err) {
       setAccessError(err instanceof ApiError ? err.message : 'Failed to send invite.');
@@ -225,46 +234,60 @@ export function StaffPage() {
   }
 
   async function handleResendInvite(member) {
-    setError(null);
     try {
       const result = await staffApi.resendStaffInvite(member._id);
       setInviteLinkByStaffId((links) => ({ ...links, [member._id]: result.inviteUrl }));
+      toast.success(`Invite resent to ${member.name}.`);
       await load();
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Failed to resend invite.');
+      toast.error(err instanceof ApiError ? err.message : 'Failed to resend invite.');
     }
   }
 
   async function handleCancelInvite(member) {
-    if (!window.confirm(`Cancel ${member.name}'s pending invite?`)) return;
+    const ok = await confirm(`Cancel ${member.name}'s pending invite?`, {
+      title: 'Cancel invite',
+      confirmLabel: 'Cancel invite',
+      cancelLabel: 'Keep it',
+    });
+    if (!ok) return;
     try {
       await staffApi.cancelStaffInvite(member._id);
       setInviteLinkByStaffId((links) => {
         const { [member._id]: _removed, ...rest } = links;
         return rest;
       });
+      toast.success('Invite cancelled.');
       await load();
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Failed to cancel invite.');
+      toast.error(err instanceof ApiError ? err.message : 'Failed to cancel invite.');
     }
   }
 
   async function handleRevokeAccess(member) {
-    if (!window.confirm(`Revoke ${member.name}'s dashboard access? They'll be logged out everywhere immediately.`)) return;
+    const ok = await confirm(`Revoke ${member.name}'s dashboard access? They'll be logged out everywhere immediately.`, {
+      title: 'Revoke dashboard access',
+      tone: 'danger',
+      confirmLabel: 'Revoke access',
+      cancelLabel: 'Keep access',
+    });
+    if (!ok) return;
     try {
       await staffApi.revokeStaffAccess(member._id);
+      toast.success(`${member.name}'s dashboard access revoked.`);
       await load();
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Failed to revoke access.');
+      toast.error(err instanceof ApiError ? err.message : 'Failed to revoke access.');
     }
   }
 
   async function handleReactivateAccess(member) {
     try {
       await staffApi.reactivateStaffAccess(member._id);
+      toast.success(`${member.name}'s dashboard access restored.`);
       await load();
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Failed to reactivate access.');
+      toast.error(err instanceof ApiError ? err.message : 'Failed to reactivate access.');
     }
   }
 
@@ -427,7 +450,7 @@ export function StaffPage() {
 
       <div className="card">
         {loading ? (
-          <p className="muted">Loading…</p>
+          <SkeletonTable rows={4} cols={isOwner ? 5 : 3} />
         ) : staff.length === 0 ? (
           <p className="empty-state">No staff members yet.</p>
         ) : (

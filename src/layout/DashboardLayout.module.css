@@ -38,6 +38,20 @@
   flex-shrink: 0;
 }
 
+.brandLogoFallback {
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-accent), #6366f1);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 15px;
+}
+
 .brandName {
   font-weight: 700;
   font-size: 16px;
@@ -133,7 +147,7 @@
 .navLink {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 10px;
   width: 100%;
   padding: 8px 10px;
   border-radius: var(--radius);
@@ -146,6 +160,7 @@
   font-family: inherit;
   text-align: left;
   cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
 }
 
 .navLink:hover {
@@ -158,20 +173,30 @@
   color: var(--sb-text);
 }
 
+.navIcon {
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+
 .navGroup {
   cursor: pointer;
+  justify-content: space-between;
+}
+
+.navGroupLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .chevron {
   display: inline-block;
+  flex-shrink: 0;
   transition: transform 0.15s ease;
-  transform: rotate(90deg);
-  font-size: 16px;
-  line-height: 1;
 }
 
 .chevronOpen {
-  transform: rotate(270deg);
+  transform: rotate(90deg);
 }
 
 .subNav {
@@ -220,6 +245,9 @@
 
 .logoutBtn {
   align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   background: rgba(255, 255, 255, 0.08);
   color: var(--sb-text);
   border: none;
