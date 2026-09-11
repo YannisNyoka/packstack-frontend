@@ -44,7 +44,13 @@ export function AuthProvider({ children }) {
     setUser(null);
   }, []);
 
-  return <AuthContext.Provider value={{ user, booting, login, logout }}>{children}</AuthContext.Provider>;
+  const acceptInvite = useCallback(async (token, password) => {
+    const invitedUser = await authApi.acceptStaffInvite(token, password);
+    setUser(invitedUser);
+    return invitedUser;
+  }, []);
+
+  return <AuthContext.Provider value={{ user, booting, login, logout, acceptInvite }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

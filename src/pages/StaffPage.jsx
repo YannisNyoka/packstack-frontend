@@ -42,6 +42,12 @@ export function StaffPage() {
   const [timeOffForm, setTimeOffForm] = useState(emptyTimeOffForm);
   const [timeOffSaving, setTimeOffSaving] = useState(false);
 
+  const [accessFormId, setAccessFormId] = useState(null);
+  const [accessEmail, setAccessEmail] = useState('');
+  const [accessSaving, setAccessSaving] = useState(false);
+  const [accessError, setAccessError] = useState(null);
+  const [inviteLinkByStaffId, setInviteLinkByStaffId] = useState({});
+
   async function load() {
     setLoading(true);
     try {
@@ -147,6 +153,7 @@ export function StaffPage() {
 
   async function openTimeOff(member) {
     setShowForm(false);
+    setAccessFormId(null);
     if (timeOffStaffId === member._id) {
       setTimeOffStaffId(null);
       return;
@@ -191,6 +198,132 @@ export function StaffPage() {
     } catch (err) {
       setTimeOffError(err instanceof ApiError ? err.message : 'Failed to remove time off.');
     }
+  }
+
+  function startInvite(member) {
+    setShowForm(false);
+    setTimeOffStaffId(null);
+    setAccessFormId(member._id);
+    setAccessEmail('');
+    setAccessError(null);
+  }
+
+  async function submitInvite(e, member) {
+    e.preventDefault();
+    setAccessSaving(true);
+    setAccessError(null);
+    try {
+      const result = await staffApi.inviteStaffAccess(member._id, accessEmail);
+      setInviteLinkByStaffId((links) => ({ ...links, [member._id]: result.inviteUrl }));
+      setAccessFormId(null);
+      await load();
+    } catch (err) {
+      setAccessError(err instanceof ApiError ? err.message : 'Failed to send invite.');
+    } finally {
+      setAccessSaving(false);
+    }
+  }
+
+  async function handleResendInvite(member) {
+    setError(null);
+    try {
+      const result = await staffApi.resendStaffInvite(member._id);
+      setInviteLinkByStaffId((links) => ({ ...links, [member._id]: result.inviteUrl }));
+      await load();
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Failed to resend invite.');
+    }
+  }
+
+  async function handleCancelInvite(member) {
+    if (!window.confirm(`Cancel ${member.name}'s pending invite?`)) return;
+    try {
+      await staffApi.cancelStaffInvite(member._id);
+      setInviteLinkByStaffId((links) => {
+        const { [member._id]: _removed, ...rest } = links;
+        return rest;
+      });
+      await load();
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Failed to cancel invite.');
+    }
+  }
+
+  async function handleRevokeAccess(member) {
+    if (!window.confirm(`Revoke ${member.name}'s dashboard access? They'll be logged out everywhere immediately.`)) return;
+    try {
+      await staffApi.revokeStaffAccess(member._id);
+      await load();
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Failed to revoke access.');
+    }
+  }
+
+  async function handleReactivateAccess(member) {
+    try {
+      await staffApi.reactivateStaffAccess(member._id);
+      await load();
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Failed to reactivate access.');
+    }
+  }
+
+  function dismissInviteLink(memberId) {
+    setInviteLinkByStaffId((links) => {
+      const { [memberId]: _removed, ...rest } = links;
+      return rest;
+    });
+  }
+
+  async function copyInviteLink(url) {
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      // Clipboard access can be denied - the link is still shown to select/copy manually.
+    }
+  }
+
+  function accessBadge(member) {
+    const status = member.userId?.status;
+    if (!status) return <span className="badge badge-neutral">No dashboard access</span>;
+    if (status === 'invited') return <span className="badge badge-warning">Invite sent</span>;
+    if (status === 'active') return <span className="badge badge-success">Has dashboard access</span>;
+    return <span className="badge badge-danger">Access revoked</span>;
+  }
+
+  function accessActions(member) {
+    const status = member.userId?.status;
+    if (!status) {
+      return (
+        <button type="button" className="btn btn-sm" onClick={() => startInvite(member)}>
+          Invite to dashboard
+        </button>
+      );
+    }
+    if (status === 'invited') {
+      return (
+        <>
+          <button type="button" className="btn btn-sm" onClick={() => handleResendInvite(member)}>
+            Resend
+          </button>
+          <button type="button" className="btn btn-sm" onClick={() => handleCancelInvite(member)}>
+            Cancel
+          </button>
+        </>
+      );
+    }
+    if (status === 'active') {
+      return (
+        <button type="button" className="btn btn-sm" onClick={() => handleRevokeAccess(member)}>
+          Revoke
+        </button>
+      );
+    }
+    return (
+      <button type="button" className="btn btn-sm" onClick={() => handleReactivateAccess(member)}>
+        Reactivate
+      </button>
+    );
   }
 
   const serviceNameById = new Map(services.map((s) => [s._id, s.name]));
@@ -304,6 +437,7 @@ export function StaffPage() {
                 <th>Name</th>
                 <th>Services</th>
                 <th>Status</th>
+                {isOwner && <th>Dashboard access</th>}
                 {isOwner && <th />}
               </tr>
             </thead>
@@ -318,8 +452,9 @@ export function StaffPage() {
                         {member.active ? 'Active' : 'Inactive'}
                       </span>
                     </td>
+                    {isOwner && <td>{accessBadge(member)}</td>}
                     {isOwner && (
-                      <td style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }}>
+                      <td style={{ display: 'flex', gap: 6, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
                         <button type="button" className="btn btn-sm" onClick={() => startEdit(member)}>
                           Edit
                         </button>
@@ -329,12 +464,61 @@ export function StaffPage() {
                         <button type="button" className="btn btn-sm" onClick={() => toggleActive(member)}>
                           {member.active ? 'Deactivate' : 'Activate'}
                         </button>
+                        {accessActions(member)}
                       </td>
                     )}
                   </tr>
+                  {isOwner && accessFormId === member._id && (
+                    <tr>
+                      <td colSpan={5}>
+                        <form
+                          onSubmit={(e) => submitInvite(e, member)}
+                          style={{ display: 'flex', alignItems: 'flex-end', gap: 10, flexWrap: 'wrap', padding: '8px 0' }}
+                        >
+                          <div className="field" style={{ marginBottom: 0 }}>
+                            <label htmlFor={`invite-email-${member._id}`}>Email to invite</label>
+                            <input
+                              id={`invite-email-${member._id}`}
+                              type="email"
+                              className="input"
+                              value={accessEmail}
+                              onChange={(e) => setAccessEmail(e.target.value)}
+                              required
+                            />
+                          </div>
+                          <button type="submit" className="btn btn-primary btn-sm" disabled={accessSaving}>
+                            {accessSaving ? 'Sending…' : 'Send invite'}
+                          </button>
+                          <button type="button" className="btn btn-sm" onClick={() => setAccessFormId(null)}>
+                            Cancel
+                          </button>
+                          {accessError && <p className="error-text" style={{ margin: 0 }}>{accessError}</p>}
+                        </form>
+                      </td>
+                    </tr>
+                  )}
+                  {isOwner && inviteLinkByStaffId[member._id] && (
+                    <tr>
+                      <td colSpan={5}>
+                        <div
+                          className="muted"
+                          style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', fontSize: 13, padding: '4px 0 12px' }}
+                        >
+                          <span>Invite link for {member.name} (in case the email doesn&apos;t arrive):</span>
+                          <code style={{ fontSize: 12, wordBreak: 'break-all' }}>{inviteLinkByStaffId[member._id]}</code>
+                          <button type="button" className="btn btn-sm" onClick={() => copyInviteLink(inviteLinkByStaffId[member._id])}>
+                            Copy
+                          </button>
+                          <button type="button" className="btn btn-sm" onClick={() => dismissInviteLink(member._id)}>
+                            Dismiss
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
                   {timeOffStaffId === member._id && (
                     <tr>
-                      <td colSpan={4}>
+                      <td colSpan={5}>
                         <div style={{ padding: '8px 0' }}>
                           {timeOffLoading ? (
                             <p className="muted">Loading…</p>

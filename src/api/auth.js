@@ -15,4 +15,10 @@ export async function getCurrentUser() {
   return apiFetch('/auth/me');
 }
 
+export async function acceptStaffInvite(token, password) {
+  const data = await apiFetch('/auth/accept-invite', { method: 'POST', body: { token, password }, retry: false });
+  setAccessToken(data.accessToken);
+  return data.user;
+}
+
 export { refreshAccessToken };

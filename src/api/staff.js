@@ -11,3 +11,23 @@ export function createStaffMember(data) {
 export function updateStaffMember(id, data) {
   return apiFetch(`/staff/${id}`, { method: 'PATCH', body: data });
 }
+
+export function inviteStaffAccess(id, email) {
+  return apiFetch(`/staff/${id}/invite`, { method: 'POST', body: { email } });
+}
+
+export function resendStaffInvite(id) {
+  return apiFetch(`/staff/${id}/invite/resend`, { method: 'POST' });
+}
+
+export function cancelStaffInvite(id) {
+  return apiFetch(`/staff/${id}/invite`, { method: 'DELETE' });
+}
+
+export function revokeStaffAccess(id) {
+  return apiFetch(`/staff/${id}/access`, { method: 'DELETE' });
+}
+
+export function reactivateStaffAccess(id) {
+  return apiFetch(`/staff/${id}/access/reactivate`, { method: 'POST' });
+}

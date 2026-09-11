@@ -3,6 +3,7 @@ import { AuthProvider } from './auth/AuthContext.jsx';
 import { RequireAuth } from './auth/RequireAuth.jsx';
 import { DashboardLayout } from './layout/DashboardLayout.jsx';
 import { LoginPage } from './pages/LoginPage.jsx';
+import { StaffAcceptInvitePage } from './pages/StaffAcceptInvitePage.jsx';
 import { BillingSuccessPage } from './pages/BillingSuccessPage.jsx';
 import { BillingCancelledPage } from './pages/BillingCancelledPage.jsx';
 import { AppointmentsPage } from './pages/AppointmentsPage.jsx';
@@ -60,6 +61,7 @@ export default function App() {
                 scaled-down desktop render. */}
             <Route path="/preview" element={<PreviewFramePage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/staff/accept-invite" element={<StaffAcceptInvitePage />} />
             <Route path="/billing/success" element={<BillingSuccessPage />} />
             <Route path="/billing/cancelled" element={<BillingCancelledPage />} />
             <Route
