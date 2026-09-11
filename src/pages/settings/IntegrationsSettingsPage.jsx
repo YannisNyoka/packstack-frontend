@@ -122,6 +122,14 @@ export function IntegrationsSettingsPage() {
                   </div>
                 </div>
 
+                {provider === 'resend' && !credential?.active && (
+                  <p className="muted" style={{ fontSize: 12, marginTop: 8, marginBottom: 0 }}>
+                    You don&apos;t have to connect this to get emails working - we&apos;ll send booking confirmations,
+                    password resets, and staff invites from PackStack&apos;s own address in the meantime. Connect
+                    your own domain here only if you want emails to arrive from your own address instead.
+                  </p>
+                )}
+
                 {openForm === provider && provider === 'wati' && (
                   <form className="form-grid" style={{ marginTop: 12 }} onSubmit={(e) => handleConnect(e, 'wati')}>
                     <div className="field">
@@ -176,10 +184,15 @@ export function IntegrationsSettingsPage() {
                         id="resend-from"
                         type="email"
                         className="input"
+                        placeholder="bookings@yourdomain.com"
                         value={resendForm.fromEmail}
                         onChange={(e) => setResendForm({ ...resendForm, fromEmail: e.target.value })}
                         required
                       />
+                      <p className="muted" style={{ fontSize: 12, marginTop: 4, marginBottom: 0 }}>
+                        Must be at a domain you own and have verified on your Resend account (resend.com/domains) -
+                        a gmail.com, outlook.com, or other personal email address will never work here.
+                      </p>
                     </div>
                     {formError && <p className="error-text">{formError}</p>}
                     <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
