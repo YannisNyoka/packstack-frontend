@@ -83,6 +83,15 @@ export function BillingSettingsPage() {
   }
 
   const currentPlanId = subscription?.planId?._id;
+  // A Subscription record starts as 'trialing' the moment checkout is first
+  // created (services/billingService.js), before PayFast has actually
+  // captured a card - billingProviderSubscriptionToken is what confirms a
+  // payment method is really attached. Treating "a record exists" as
+  // "already subscribed" traps a tenant whose checkout was started and
+  // abandoned: Subscribe stays disabled (looks already-subscribed) and
+  // Cancel rejects with "nothing to cancel" (no token to cancel against) -
+  // no way forward. Gating on the token instead lets them just try again.
+  const hasPaymentMethod = Boolean(subscription?.billingProviderSubscriptionToken);
 
   return (
     <section className="card">
@@ -102,7 +111,7 @@ export function BillingSettingsPage() {
               {subscription.currentPeriodEnd && (
                 <span className="muted">renews {new Date(subscription.currentPeriodEnd).toLocaleDateString()}</span>
               )}
-              {subscription.status === 'trialing' && (
+              {hasPaymentMethod && subscription.status !== 'canceled' && (
                 <button type="button" className="btn btn-sm btn-danger" disabled={cancelling} onClick={handleCancel}>
                   {cancelling ? 'Cancelling…' : 'Cancel subscription'}
                 </button>
@@ -140,10 +149,16 @@ export function BillingSettingsPage() {
                   <button
                     type="button"
                     className="btn btn-primary btn-sm"
-                    disabled={checkingOutPlanId === plan._id || currentPlanId === plan._id}
+                    disabled={checkingOutPlanId === plan._id || (hasPaymentMethod && currentPlanId === plan._id)}
                     onClick={() => handleSubscribe(plan._id)}
                   >
-                    {currentPlanId === plan._id ? 'Current plan' : checkingOutPlanId === plan._id ? 'Redirecting…' : 'Subscribe'}
+                    {hasPaymentMethod && currentPlanId === plan._id
+                      ? 'Current plan'
+                      : checkingOutPlanId === plan._id
+                        ? 'Redirecting…'
+                        : currentPlanId === plan._id
+                          ? 'Complete subscription'
+                          : 'Subscribe'}
                   </button>
                 </div>
               ))}
