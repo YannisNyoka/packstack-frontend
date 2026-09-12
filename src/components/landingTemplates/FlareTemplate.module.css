@@ -106,13 +106,6 @@
   text-align: center;
 }
 
-.heroLogo {
-  height: 96px;
-  width: auto;
-  margin-bottom: 20px;
-  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.4));
-}
-
 .heroEyebrow {
   font-size: 12.5px;
   font-weight: 700;
@@ -301,9 +294,5 @@
 
   .hero {
     min-height: 86vh;
-  }
-
-  .heroLogo {
-    height: 72px;
   }
 }

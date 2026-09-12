@@ -58,7 +58,6 @@ export function FlareTemplate({ theme, customer, services }) {
           {theme?.bannerUrl && <img src={theme.bannerUrl} alt="" className={styles.heroImage} />}
           <div className={styles.heroScrim} />
           <div className={styles.heroContent}>
-            {theme?.logoUrl && <img src={theme.logoUrl} alt="" className={styles.heroLogo} />}
             <div className={styles.heroEyebrow}>{theme?.heroBadgeText || 'Welcome'}</div>
             {showInHero && <h1 className={styles.heroTitle}>{theme?.businessName}</h1>}
             {theme?.tagline && <p className={styles.heroTagline}>{theme.tagline}</p>}
