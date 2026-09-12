@@ -25,6 +25,7 @@ import { SidebarTemplate } from './landingTemplates/SidebarTemplate.jsx';
 import { NeonTemplate } from './landingTemplates/NeonTemplate.jsx';
 import { TerrazzoTemplate } from './landingTemplates/TerrazzoTemplate.jsx';
 import { NeumorphicTemplate } from './landingTemplates/NeumorphicTemplate.jsx';
+import { FlareTemplate } from './landingTemplates/FlareTemplate.jsx';
 
 const TEMPLATES = {
   classic: ClassicTemplate,
@@ -52,6 +53,7 @@ const TEMPLATES = {
   neon: NeonTemplate,
   terrazzo: TerrazzoTemplate,
   neumorphic: NeumorphicTemplate,
+  flare: FlareTemplate,
 };
 
 /**

@@ -822,3 +822,44 @@
 .mockup[data-template='noir'] .mockLineShort {
   background: #fff;
 }
+
+/* Flare: near-black canvas, a white bookable-card panel with a pink CTA strip. */
+.mockup[data-template='flare'] {
+  background: #0c0c14;
+}
+
+.mockup[data-template='flare'] .mockNav {
+  background: #0c0c14;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.mockup[data-template='flare'] .mockBody {
+  background: #0c0c14;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
+}
+
+.mockup[data-template='flare'] .mockPanel {
+  flex: 0 0 56%;
+  max-width: 56%;
+  height: 70%;
+  border-radius: 6px;
+  background: #fff;
+  position: relative;
+}
+
+.mockup[data-template='flare'] .mockPanel::after {
+  content: '';
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: 10%;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--mock-accent, #ff2f87);
+}
+
+.mockup[data-template='flare'] .mockLines {
+  display: none;
+}

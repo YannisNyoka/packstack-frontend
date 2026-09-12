@@ -26,6 +26,7 @@ const TEMPLATE_OPTIONS = [
   { key: 'neon', name: 'Neon', description: 'Dark grid texture, glowing neon outlines.' },
   { key: 'terrazzo', name: 'Terrazzo', description: 'Confetti pattern, bubbly type, tilted pill services.' },
   { key: 'neumorphic', name: 'Neumorphic', description: 'Soft-UI raised cards, calm monochrome surface.' },
+  { key: 'flare', name: 'Flare', description: 'Dark photo hero, bookable white service cards, WhatsApp CTA.' },
 ];
 
 /**

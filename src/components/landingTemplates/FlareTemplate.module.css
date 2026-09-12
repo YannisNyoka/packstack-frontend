@@ -1,0 +1,297 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: var(--brand, #0c0c14);
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.page h1,
+.page h2 {
+  font-family: 'Sora', sans-serif;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 6%;
+  background: var(--brand, #0c0c14);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.navBrand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.navLogo {
+  height: 30px;
+  border-radius: 6px;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.navLink {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.navLink:hover {
+  color: #fff;
+}
+
+.navCta {
+  background: var(--accent, #ff2f87);
+  color: #fff;
+  padding: 9px 20px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 78vh;
+  overflow: hidden;
+}
+
+/* No banner image uploaded yet - a tall bottom-aligned box would just leave
+   a dead gap above the copy, so fall back to a compact, vertically-centered
+   hero on the plain dark background instead. */
+.heroNoImage {
+  min-height: auto;
+  align-items: center;
+  padding: 3rem 0;
+}
+
+.heroImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heroScrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(12, 12, 20, 0.55) 0%, rgba(12, 12, 20, 0.75) 55%, rgba(12, 12, 20, 0.96) 100%);
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 4rem 6% 4.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.heroLogo {
+  height: 96px;
+  width: auto;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.4));
+}
+
+.heroEyebrow {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent, #ff2f87);
+  margin-bottom: 14px;
+}
+
+.heroTitle {
+  font-size: clamp(2rem, 5.5vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  margin: 0 0 16px;
+  max-width: 16ch;
+}
+
+.heroTagline {
+  font-size: 15.5px;
+  color: rgba(255, 255, 255, 0.75);
+  max-width: 46ch;
+  margin: 0 0 30px;
+  line-height: 1.6;
+}
+
+.primaryCta {
+  background: var(--accent, #ff2f87);
+  color: #fff;
+  border: none;
+  padding: 15px 34px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 28px -8px color-mix(in srgb, var(--accent, #ff2f87) 70%, transparent);
+}
+
+.services {
+  padding: 4.5rem 6%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.servicesEyebrow {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent, #ff2f87);
+  margin-bottom: 28px;
+}
+
+.serviceStack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 440px;
+}
+
+.serviceCard {
+  background: #ffffff;
+  color: #16161c;
+  border-radius: 16px;
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+}
+
+.serviceName {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.serviceMeta {
+  font-size: 13px;
+  color: #6b6b76;
+  margin-bottom: 10px;
+}
+
+.bookBtn {
+  width: 100%;
+  background: var(--accent, #ff2f87);
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.seeAllBtn {
+  margin-top: 28px;
+  background: none;
+  border: none;
+  color: var(--accent, #ff2f87);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.contactSection {
+  padding: 4rem 6% 3.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.contactEyebrow {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent, #ff2f87);
+  margin-bottom: 16px;
+}
+
+.contactName {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 10px;
+}
+
+.contactLine {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 40ch;
+  margin: 0 0 6px;
+}
+
+.contactPhone {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent, #ff2f87);
+  text-decoration: none;
+  margin-bottom: 20px;
+}
+
+.whatsappBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  color: #16161c;
+  border-radius: 999px;
+  padding: 13px 26px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  margin-top: 8px;
+}
+
+.whatsappBtn svg {
+  color: #25d366;
+}
+
+@media (max-width: 760px) {
+  /* Same reasoning as ClassicTemplate.module.css - a logo already identifies
+     the business; the name text next to it just crowds a phone-width nav
+     alongside the auth links and CTA. */
+  .navBrand .navLogo + span {
+    display: none;
+  }
+
+  .hero {
+    min-height: 86vh;
+  }
+
+  .heroLogo {
+    height: 72px;
+  }
+}
