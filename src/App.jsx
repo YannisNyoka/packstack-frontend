@@ -9,6 +9,7 @@ import { StaffAcceptInvitePage } from './pages/StaffAcceptInvitePage.jsx';
 import { BillingSuccessPage } from './pages/BillingSuccessPage.jsx';
 import { BillingCancelledPage } from './pages/BillingCancelledPage.jsx';
 import { AppointmentsPage } from './pages/AppointmentsPage.jsx';
+import { SchedulePage } from './pages/SchedulePage.jsx';
 import { OverviewPage } from './pages/OverviewPage.jsx';
 import { AnalyticsPage } from './pages/AnalyticsPage.jsx';
 import { StaffPage } from './pages/StaffPage.jsx';
@@ -78,6 +79,7 @@ export default function App() {
                 >
                   <Route index element={<OverviewPage />} />
                   <Route path="appointments" element={<AppointmentsPage />} />
+                  <Route path="schedule" element={<SchedulePage />} />
                   <Route path="analytics" element={<AnalyticsPage />} />
                   <Route path="staff" element={<StaffPage />} />
                   <Route path="services" element={<ServicesPage />} />

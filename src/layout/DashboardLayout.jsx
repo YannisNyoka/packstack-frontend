@@ -3,6 +3,7 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-do
 import {
   LayoutDashboard,
   CalendarDays,
+  CalendarClock,
   LineChart,
   Users,
   UserRound,
@@ -42,6 +43,7 @@ export function trialBanner(tenantStatus, trialEndsAt) {
 const NAV_ITEMS = [
   { to: '/dashboard', label: 'Overview', end: true, icon: LayoutDashboard },
   { to: '/dashboard/appointments', label: 'Appointments', icon: CalendarDays },
+  { to: '/dashboard/schedule', label: 'Schedule', icon: CalendarClock },
   { to: '/dashboard/analytics', label: 'Analytics', icon: LineChart },
   { to: '/dashboard/customers', label: 'Customers', icon: Users },
   { to: '/dashboard/staff', label: 'Staff', icon: UserRound },

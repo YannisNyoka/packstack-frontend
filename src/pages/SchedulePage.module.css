@@ -1,0 +1,258 @@
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.viewToggle {
+  display: flex;
+  gap: 6px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 3px;
+}
+
+.viewBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: none;
+  color: var(--color-text-muted);
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.viewBtnActive {
+  background: var(--color-accent);
+  color: #ffffff;
+}
+
+.dateNav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rangeLabel {
+  margin-left: 6px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.toolbarActions {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.gridScroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.grid {
+  display: grid;
+  min-width: max-content;
+}
+
+.timeColumn {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+}
+
+.columnHeaderSpacer {
+  height: 58px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.timeLabels {
+  position: relative;
+}
+
+.timeLabel {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 0 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  transform: translateY(-6px);
+}
+
+.dataColumn {
+  border-right: 1px solid var(--color-border);
+}
+
+.dataColumn:last-child {
+  border-right: none;
+}
+
+.columnHeader {
+  height: 58px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.staffHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.staffAvatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-accent);
+  color: #ffffff;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.staffHeaderText {
+  min-width: 0;
+  flex: 1;
+}
+
+.staffName {
+  font-size: 13.5px;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.staffCount {
+  font-size: 11.5px;
+  color: var(--color-text-muted);
+}
+
+.staffGear {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+}
+
+.dayHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.dayName {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.dayDate {
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+}
+
+.columnBody {
+  position: relative;
+}
+
+.hourLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.columnEmpty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  font-size: 12.5px;
+  pointer-events: none;
+}
+
+.blockWrap {
+  position: absolute;
+  left: 4px;
+  right: 4px;
+}
+
+.block {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface));
+  border-left: 3px solid var(--color-accent);
+  border-radius: 6px;
+  padding: 4px 8px;
+  cursor: default;
+}
+
+.blockTime {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--color-accent);
+  line-height: 1.2;
+}
+
+.blockName {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.25;
+}
+
+.blockServices {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.blockCancelled {
+  background: var(--color-bg);
+  border-left-color: var(--color-text-muted);
+  opacity: 0.6;
+}
+
+.blockCancelled .blockName {
+  text-decoration: line-through;
+}
+
+.blockNoShow {
+  border-left-color: var(--color-warning);
+}
+
+@media (max-width: 640px) {
+  .toolbarActions {
+    margin-left: 0;
+  }
+}
