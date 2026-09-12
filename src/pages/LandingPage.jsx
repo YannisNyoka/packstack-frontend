@@ -3,6 +3,7 @@ import * as bookingApi from '../api/publicBooking.js';
 import { ApiError } from '../api/client.js';
 import { LandingPreview } from '../components/LandingPreview.jsx';
 import { useCustomerAuth } from '../auth/CustomerAuthContext.jsx';
+import { useTenantDocumentHead } from '../hooks/useTenantDocumentHead.js';
 import styles from './LandingPage.module.css';
 
 export function LandingPage() {
@@ -18,6 +19,8 @@ export function LandingPage() {
       .catch((err) => setLoadError(err instanceof ApiError ? err.message : 'This page is unavailable right now.'))
       .finally(() => setLoading(false));
   }, []);
+
+  useTenantDocumentHead({ businessName: theme?.businessName, logoUrl: theme?.logoUrl });
 
   if (loading) {
     return (

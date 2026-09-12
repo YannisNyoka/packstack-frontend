@@ -6,6 +6,7 @@ import { ApiError } from '../api/client.js';
 import { useCustomerAuth } from '../auth/CustomerAuthContext.jsx';
 import { AccountHeader } from '../components/AccountHeader.jsx';
 import { Calendar } from '../components/Calendar.jsx';
+import { useTenantDocumentHead } from '../hooks/useTenantDocumentHead.js';
 import styles from './BookingPage.module.css';
 
 const RETURN_STATUS = new URLSearchParams(window.location.search).get('depositSuccess')
@@ -64,6 +65,8 @@ export function BookingPage() {
       }
     })();
   }, []);
+
+  useTenantDocumentHead({ businessName: theme?.businessName, logoUrl: theme?.logoUrl });
 
   const selectedServices = useMemo(
     () => services.filter((s) => selectedServiceIds.includes(s._id)),

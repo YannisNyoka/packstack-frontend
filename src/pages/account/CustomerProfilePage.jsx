@@ -6,6 +6,7 @@ import * as bookingApi from '../../api/publicBooking.js';
 import { ApiError } from '../../api/client.js';
 import { AccountHeader } from '../../components/AccountHeader.jsx';
 import { Calendar } from '../../components/Calendar.jsx';
+import { useTenantDocumentHead } from '../../hooks/useTenantDocumentHead.js';
 import styles from './CustomerProfilePage.module.css';
 
 const TABS = [
@@ -384,6 +385,8 @@ export function CustomerProfilePage() {
   useEffect(() => {
     bookingApi.getTheme().then(setTheme).catch(() => {});
   }, []);
+
+  useTenantDocumentHead({ businessName: theme?.businessName, logoUrl: theme?.logoUrl });
 
   const primaryColor = theme?.colors?.primary || '#111827';
   const accentColor = theme?.colors?.accent || primaryColor;

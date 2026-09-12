@@ -5,6 +5,7 @@ import * as bookingApi from '../api/publicBooking.js';
 import { ApiError } from '../api/client.js';
 import { AccountHeader } from '../components/AccountHeader.jsx';
 import { Calendar } from '../components/Calendar.jsx';
+import { useTenantDocumentHead } from '../hooks/useTenantDocumentHead.js';
 import styles from './BookingPage.module.css';
 
 const FINAL_STATUSES = ['completed', 'cancelled', 'no_show'];
@@ -56,6 +57,8 @@ export function ManagePage() {
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
+
+  useTenantDocumentHead({ businessName: theme?.businessName, logoUrl: theme?.logoUrl });
 
   async function loadSlots(chosenDate) {
     setDate(chosenDate);

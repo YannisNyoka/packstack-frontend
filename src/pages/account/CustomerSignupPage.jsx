@@ -4,6 +4,7 @@ import { useCustomerAuth } from '../../auth/CustomerAuthContext.jsx';
 import * as bookingApi from '../../api/publicBooking.js';
 import { ApiError } from '../../api/client.js';
 import { AccountHeader } from '../../components/AccountHeader.jsx';
+import { useTenantDocumentHead } from '../../hooks/useTenantDocumentHead.js';
 import styles from './CustomerAuthPages.module.css';
 
 export function CustomerSignupPage() {
@@ -22,6 +23,8 @@ export function CustomerSignupPage() {
   useEffect(() => {
     bookingApi.getTheme().then(setTheme).catch(() => {});
   }, []);
+
+  useTenantDocumentHead({ businessName: theme?.businessName, logoUrl: theme?.logoUrl });
 
   async function handleSubmit(e) {
     e.preventDefault();

@@ -5,6 +5,7 @@ import { useAuth } from '../../auth/AuthContext.jsx';
 import * as bookingApi from '../../api/publicBooking.js';
 import { ApiError } from '../../api/client.js';
 import { AccountHeader } from '../../components/AccountHeader.jsx';
+import { useTenantDocumentHead } from '../../hooks/useTenantDocumentHead.js';
 import styles from './CustomerAuthPages.module.css';
 
 export function CustomerLoginPage() {
@@ -21,6 +22,8 @@ export function CustomerLoginPage() {
   useEffect(() => {
     bookingApi.getTheme().then(setTheme).catch(() => {});
   }, []);
+
+  useTenantDocumentHead({ businessName: theme?.businessName, logoUrl: theme?.logoUrl });
 
   // This is the only login form shown on the public site - there's no
   // separate, discoverable "owner/staff login" URL, since a labeled admin
