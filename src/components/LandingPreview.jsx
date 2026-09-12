@@ -1,59 +1,38 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import * as bookingApi from '../api/publicBooking.js';
-import { ClassicTemplate } from './landingTemplates/ClassicTemplate.jsx';
-import { ModernTemplate } from './landingTemplates/ModernTemplate.jsx';
-import { ElegantTemplate } from './landingTemplates/ElegantTemplate.jsx';
-import { BoldTemplate } from './landingTemplates/BoldTemplate.jsx';
-import { MinimalTemplate } from './landingTemplates/MinimalTemplate.jsx';
-import { EditorialTemplate } from './landingTemplates/EditorialTemplate.jsx';
-import { LuxeTemplate } from './landingTemplates/LuxeTemplate.jsx';
-import { BoutiqueTemplate } from './landingTemplates/BoutiqueTemplate.jsx';
-import { StudioTemplate } from './landingTemplates/StudioTemplate.jsx';
-import { GlowTemplate } from './landingTemplates/GlowTemplate.jsx';
-import { HeritageTemplate } from './landingTemplates/HeritageTemplate.jsx';
-import { LoftTemplate } from './landingTemplates/LoftTemplate.jsx';
-import { PetalTemplate } from './landingTemplates/PetalTemplate.jsx';
-import { NoirTemplate } from './landingTemplates/NoirTemplate.jsx';
-import { HorizonTemplate } from './landingTemplates/HorizonTemplate.jsx';
-import { AuraTemplate } from './landingTemplates/AuraTemplate.jsx';
-import { MarbleTemplate } from './landingTemplates/MarbleTemplate.jsx';
-import { CanvasTemplate } from './landingTemplates/CanvasTemplate.jsx';
-import { VelvetTemplate } from './landingTemplates/VelvetTemplate.jsx';
-import { PulseTemplate } from './landingTemplates/PulseTemplate.jsx';
-import { LinenTemplate } from './landingTemplates/LinenTemplate.jsx';
-import { SidebarTemplate } from './landingTemplates/SidebarTemplate.jsx';
-import { NeonTemplate } from './landingTemplates/NeonTemplate.jsx';
-import { TerrazzoTemplate } from './landingTemplates/TerrazzoTemplate.jsx';
-import { NeumorphicTemplate } from './landingTemplates/NeumorphicTemplate.jsx';
-import { FlareTemplate } from './landingTemplates/FlareTemplate.jsx';
 
+// Lazy per-template: a tenant only ever renders the one template they
+// picked, but the old static-import map pulled all 26 components (plus
+// their CSS modules) into every page's bundle regardless - the single
+// biggest contributor to the app's JS payload. Each import() becomes its
+// own chunk, fetched only when that specific template is actually chosen.
 const TEMPLATES = {
-  classic: ClassicTemplate,
-  modern: ModernTemplate,
-  elegant: ElegantTemplate,
-  bold: BoldTemplate,
-  minimal: MinimalTemplate,
-  editorial: EditorialTemplate,
-  luxe: LuxeTemplate,
-  boutique: BoutiqueTemplate,
-  studio: StudioTemplate,
-  glow: GlowTemplate,
-  heritage: HeritageTemplate,
-  loft: LoftTemplate,
-  petal: PetalTemplate,
-  noir: NoirTemplate,
-  horizon: HorizonTemplate,
-  aura: AuraTemplate,
-  marble: MarbleTemplate,
-  canvas: CanvasTemplate,
-  velvet: VelvetTemplate,
-  pulse: PulseTemplate,
-  linen: LinenTemplate,
-  sidebar: SidebarTemplate,
-  neon: NeonTemplate,
-  terrazzo: TerrazzoTemplate,
-  neumorphic: NeumorphicTemplate,
-  flare: FlareTemplate,
+  classic: lazy(() => import('./landingTemplates/ClassicTemplate.jsx').then((m) => ({ default: m.ClassicTemplate }))),
+  modern: lazy(() => import('./landingTemplates/ModernTemplate.jsx').then((m) => ({ default: m.ModernTemplate }))),
+  elegant: lazy(() => import('./landingTemplates/ElegantTemplate.jsx').then((m) => ({ default: m.ElegantTemplate }))),
+  bold: lazy(() => import('./landingTemplates/BoldTemplate.jsx').then((m) => ({ default: m.BoldTemplate }))),
+  minimal: lazy(() => import('./landingTemplates/MinimalTemplate.jsx').then((m) => ({ default: m.MinimalTemplate }))),
+  editorial: lazy(() => import('./landingTemplates/EditorialTemplate.jsx').then((m) => ({ default: m.EditorialTemplate }))),
+  luxe: lazy(() => import('./landingTemplates/LuxeTemplate.jsx').then((m) => ({ default: m.LuxeTemplate }))),
+  boutique: lazy(() => import('./landingTemplates/BoutiqueTemplate.jsx').then((m) => ({ default: m.BoutiqueTemplate }))),
+  studio: lazy(() => import('./landingTemplates/StudioTemplate.jsx').then((m) => ({ default: m.StudioTemplate }))),
+  glow: lazy(() => import('./landingTemplates/GlowTemplate.jsx').then((m) => ({ default: m.GlowTemplate }))),
+  heritage: lazy(() => import('./landingTemplates/HeritageTemplate.jsx').then((m) => ({ default: m.HeritageTemplate }))),
+  loft: lazy(() => import('./landingTemplates/LoftTemplate.jsx').then((m) => ({ default: m.LoftTemplate }))),
+  petal: lazy(() => import('./landingTemplates/PetalTemplate.jsx').then((m) => ({ default: m.PetalTemplate }))),
+  noir: lazy(() => import('./landingTemplates/NoirTemplate.jsx').then((m) => ({ default: m.NoirTemplate }))),
+  horizon: lazy(() => import('./landingTemplates/HorizonTemplate.jsx').then((m) => ({ default: m.HorizonTemplate }))),
+  aura: lazy(() => import('./landingTemplates/AuraTemplate.jsx').then((m) => ({ default: m.AuraTemplate }))),
+  marble: lazy(() => import('./landingTemplates/MarbleTemplate.jsx').then((m) => ({ default: m.MarbleTemplate }))),
+  canvas: lazy(() => import('./landingTemplates/CanvasTemplate.jsx').then((m) => ({ default: m.CanvasTemplate }))),
+  velvet: lazy(() => import('./landingTemplates/VelvetTemplate.jsx').then((m) => ({ default: m.VelvetTemplate }))),
+  pulse: lazy(() => import('./landingTemplates/PulseTemplate.jsx').then((m) => ({ default: m.PulseTemplate }))),
+  linen: lazy(() => import('./landingTemplates/LinenTemplate.jsx').then((m) => ({ default: m.LinenTemplate }))),
+  sidebar: lazy(() => import('./landingTemplates/SidebarTemplate.jsx').then((m) => ({ default: m.SidebarTemplate }))),
+  neon: lazy(() => import('./landingTemplates/NeonTemplate.jsx').then((m) => ({ default: m.NeonTemplate }))),
+  terrazzo: lazy(() => import('./landingTemplates/TerrazzoTemplate.jsx').then((m) => ({ default: m.TerrazzoTemplate }))),
+  neumorphic: lazy(() => import('./landingTemplates/NeumorphicTemplate.jsx').then((m) => ({ default: m.NeumorphicTemplate }))),
+  flare: lazy(() => import('./landingTemplates/FlareTemplate.jsx').then((m) => ({ default: m.FlareTemplate }))),
 };
 
 /**
@@ -78,6 +57,10 @@ export function LandingPreview({ theme, customer = null }) {
     bookingApi.listStaff().then(setStaff).catch(() => {});
   }, []);
 
-  const Template = TEMPLATES[theme?.template] || ClassicTemplate;
-  return <Template theme={theme} customer={customer} services={services} staff={staff} />;
+  const Template = TEMPLATES[theme?.template] || TEMPLATES.classic;
+  return (
+    <Suspense fallback={null}>
+      <Template theme={theme} customer={customer} services={services} staff={staff} />
+    </Suspense>
+  );
 }

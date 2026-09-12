@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useSuperAdminAuth } from '../superadmin/SuperAdminAuthContext.jsx';
+import { PageLoadingFallback } from '../components/PageLoadingFallback.jsx';
 import styles from './DashboardLayout.module.css';
 
 const NAV_ITEMS = [
@@ -60,7 +61,9 @@ export function SuperAdminLayout() {
         </div>
       </aside>
       <main className={styles.main}>
-        <Outlet />
+        <Suspense fallback={<PageLoadingFallback />}>
+          <Outlet />
+        </Suspense>
       </main>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -16,6 +16,7 @@ import { useAuth } from '../auth/AuthContext.jsx';
 import * as themeApi from '../api/theme.js';
 import { getTenantSlug } from '../api/tenant.js';
 import { OnboardingChecklist } from '../components/OnboardingChecklist.jsx';
+import { PageLoadingFallback } from '../components/PageLoadingFallback.jsx';
 import styles from './DashboardLayout.module.css';
 
 const STATUS_BANNER = {
@@ -241,7 +242,9 @@ export function DashboardLayout() {
           </div>
         )}
         <OnboardingChecklist />
-        <Outlet />
+        <Suspense fallback={<PageLoadingFallback />}>
+          <Outlet />
+        </Suspense>
       </main>
     </div>
   );
