@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { CalendarDays, User, RotateCw, ChevronLeft, ChevronRight, Settings2 } from 'lucide-react';
+import { useAuth } from '../auth/AuthContext.jsx';
 import * as appointmentsApi from '../api/appointments.js';
 import * as staffApi from '../api/staff.js';
 import { ApiError } from '../api/client.js';
 import { useSlowLoad } from '../hooks/useSlowLoad.js';
+import { WorkingHoursModal } from '../components/WorkingHoursModal.jsx';
 import styles from './SchedulePage.module.css';
 
 const ROW_HEIGHT = 56; // px per hour on the time axis
@@ -145,6 +147,8 @@ function TimeGridColumns({ startHour, endHour, columns }) {
 }
 
 export function SchedulePage() {
+  const { user } = useAuth();
+  const isOwner = user?.role === 'owner';
   const [view, setView] = useState('daily'); // 'daily' | 'weekly'
   const [selectedDate, setSelectedDate] = useState(() => startOfDay(new Date()));
   const [staff, setStaff] = useState([]);
@@ -152,6 +156,7 @@ export function SchedulePage() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [workingHoursStaff, setWorkingHoursStaff] = useState(null);
   const slowLoad = useSlowLoad(loading);
 
   useEffect(() => {
@@ -214,12 +219,22 @@ export function SchedulePage() {
                 <div className={styles.staffName}>{s.name}</div>
                 <div className={styles.staffCount}>{staffAppointments.length} appts</div>
               </div>
-              <Settings2 size={15} className={styles.staffGear} aria-hidden="true" />
+              {isOwner && (
+                <button
+                  type="button"
+                  className={styles.staffGear}
+                  onClick={() => setWorkingHoursStaff(s)}
+                  aria-label={`Set working hours for ${s.name}`}
+                  title="Working hours"
+                >
+                  <Settings2 size={15} aria-hidden="true" />
+                </button>
+              )}
             </div>
           ),
         };
       });
-  }, [staff, appointments]);
+  }, [staff, appointments, isOwner]);
 
   const weeklyColumns = useMemo(() => {
     const weekStart = startOfWeek(selectedDate);
@@ -322,6 +337,14 @@ export function SchedulePage() {
           <TimeGridColumns startHour={startHour} endHour={endHour} columns={view === 'daily' ? dailyColumns : weeklyColumns} />
         )}
       </div>
+
+      {workingHoursStaff && (
+        <WorkingHoursModal
+          staffMember={workingHoursStaff}
+          onClose={() => setWorkingHoursStaff(null)}
+          onSaved={(updated) => setStaff((list) => list.map((s) => (s._id === updated._id ? updated : s)))}
+        />
+      )}
     </div>
   );
 }
