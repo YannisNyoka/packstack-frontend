@@ -10,6 +10,7 @@ const emptyThemeForm = {
   tagline: '',
   logoUrl: '',
   bannerUrl: '',
+  faviconUrl: '',
   heroMediaType: 'image',
   heroVideoUrl: '',
   heroVideoUrls: [],
@@ -35,6 +36,8 @@ export function BrandingSettingsPage() {
   const [logoUploadError, setLogoUploadError] = useState(null);
   const [bannerUploading, setBannerUploading] = useState(false);
   const [bannerUploadError, setBannerUploadError] = useState(null);
+  const [faviconUploading, setFaviconUploading] = useState(false);
+  const [faviconUploadError, setFaviconUploadError] = useState(null);
   const [heroVideoUploading, setHeroVideoUploading] = useState(false);
   const [heroVideoUploadError, setHeroVideoUploadError] = useState(null);
   const [previewDevice, setPreviewDevice] = useState('desktop');
@@ -48,6 +51,7 @@ export function BrandingSettingsPage() {
         tagline: theme.tagline || '',
         logoUrl: theme.logoUrl || '',
         bannerUrl: theme.bannerUrl || '',
+        faviconUrl: theme.faviconUrl || '',
         heroMediaType: theme.heroMediaType || 'image',
         heroVideoUrl: theme.heroVideoUrl || '',
         heroVideoUrls: theme.heroVideoUrls || [],
@@ -126,6 +130,22 @@ export function BrandingSettingsPage() {
       setBannerUploadError(err instanceof ApiError ? err.message : 'Failed to upload banner.');
     } finally {
       setBannerUploading(false);
+    }
+  }
+
+  async function handleFaviconFile(e) {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    setFaviconUploading(true);
+    setFaviconUploadError(null);
+    try {
+      const theme = await themeApi.uploadFavicon(file);
+      setForm((f) => ({ ...f, faviconUrl: theme.faviconUrl || '' }));
+    } catch (err) {
+      setFaviconUploadError(err instanceof ApiError ? err.message : 'Failed to upload favicon.');
+    } finally {
+      setFaviconUploading(false);
     }
   }
 
@@ -253,6 +273,47 @@ export function BrandingSettingsPage() {
               />
             </div>
           )}
+
+          <div className="field">
+            <label htmlFor="theme-favicon">Favicon URL</label>
+            <p className="muted" style={{ marginTop: -2, marginBottom: 6, fontSize: 13 }}>
+              Shown as your browser tab icon. Leave blank to use a version of your logo cropped to a square.
+            </p>
+            <input
+              id="theme-favicon"
+              className="input"
+              placeholder="https://…"
+              value={form.faviconUrl}
+              onChange={(e) => setForm({ ...form, faviconUrl: e.target.value })}
+            />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 6 }}>
+              <input
+                id="theme-favicon-file"
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+                onChange={handleFaviconFile}
+                disabled={faviconUploading}
+                style={{ fontSize: 13 }}
+              />
+              {faviconUploading && <span className="muted" style={{ fontSize: 13 }}>Uploading…</span>}
+            </div>
+            {faviconUploadError && <p className="error-text" style={{ fontSize: 13 }}>{faviconUploadError}</p>}
+            {form.faviconUrl && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 8 }}>
+                <span className="muted" style={{ fontSize: 13 }}>
+                  Favicon preview:
+                </span>
+                <img
+                  src={form.faviconUrl}
+                  alt="Favicon preview"
+                  style={{ height: 24, width: 24, borderRadius: 4, border: '1px solid var(--color-border)' }}
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+              </div>
+            )}
+          </div>
 
           <div>
             <label style={{ display: 'block', marginBottom: 8, fontSize: 14, fontWeight: 600 }}>Landing page hero</label>

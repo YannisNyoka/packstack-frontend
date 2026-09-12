@@ -58,7 +58,7 @@ export function ManagePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
-  useTenantDocumentHead({ businessName: theme?.businessName, logoUrl: theme?.logoUrl });
+  useTenantDocumentHead({ businessName: theme?.businessName, logoUrl: theme?.logoUrl, faviconUrl: theme?.faviconUrl });
 
   async function loadSlots(chosenDate) {
     setDate(chosenDate);

@@ -66,7 +66,7 @@ export function BookingPage() {
     })();
   }, []);
 
-  useTenantDocumentHead({ businessName: theme?.businessName, logoUrl: theme?.logoUrl });
+  useTenantDocumentHead({ businessName: theme?.businessName, logoUrl: theme?.logoUrl, faviconUrl: theme?.faviconUrl });
 
   const selectedServices = useMemo(
     () => services.filter((s) => selectedServiceIds.includes(s._id)),

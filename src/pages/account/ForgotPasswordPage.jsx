@@ -19,7 +19,7 @@ export function ForgotPasswordPage() {
     bookingApi.getTheme().then(setTheme).catch(() => {});
   }, []);
 
-  useTenantDocumentHead({ businessName: theme?.businessName, logoUrl: theme?.logoUrl });
+  useTenantDocumentHead({ businessName: theme?.businessName, logoUrl: theme?.logoUrl, faviconUrl: theme?.faviconUrl });
 
   async function handleSubmit(e) {
     e.preventDefault();

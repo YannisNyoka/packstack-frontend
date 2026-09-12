@@ -23,6 +23,7 @@ const baseTheme = {
   tagline: '',
   logoUrl: '',
   bannerUrl: '',
+  faviconUrl: '',
   colors: { primary: '#111827', secondary: '#6B7280', accent: '#D946EF' },
   contactInfo: { phone: '', email: '', address: '' },
   socialLinks: { instagram: '', facebook: '', whatsapp: '' },
@@ -104,6 +105,21 @@ describe('BrandingSettingsPage', () => {
     await user.click(screen.getByRole('button', { name: 'Save branding' }))
 
     await waitFor(() => expect(themeApi.updateTheme).toHaveBeenCalledWith(expect.objectContaining({ template: 'bold' })))
+  })
+
+  it('uploads a favicon file and updates the Favicon URL field from the response', async () => {
+    themeApi.getTheme.mockResolvedValue(baseTheme)
+    themeApi.uploadFavicon.mockResolvedValue({ ...baseTheme, faviconUrl: 'https://res.cloudinary.com/demo/favicon.png' })
+    const user = userEvent.setup()
+    renderPage()
+    await waitFor(() => expect(screen.getByLabelText('Business name')).toHaveValue('Verify Test Salon'))
+
+    const file = new File(['fake-bytes'], 'favicon.png', { type: 'image/png' })
+    const fileInput = document.getElementById('theme-favicon-file')
+    await user.upload(fileInput, file)
+
+    await waitFor(() => expect(themeApi.uploadFavicon).toHaveBeenCalledWith(file))
+    await waitFor(() => expect(screen.getByLabelText('Favicon URL')).toHaveValue('https://res.cloudinary.com/demo/favicon.png'))
   })
 
   it('shows an error if the upload fails server-side, without touching the Logo URL field', async () => {

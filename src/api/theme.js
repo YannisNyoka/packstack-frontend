@@ -22,6 +22,10 @@ export function uploadBanner(file) {
   return uploadImage('/settings/theme/banner', file);
 }
 
+export function uploadFavicon(file) {
+  return uploadImage('/settings/theme/favicon', file);
+}
+
 export function uploadHeroVideo(file) {
   const formData = new FormData();
   formData.append('video', file);

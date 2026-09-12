@@ -37,14 +37,19 @@ const DEFAULT_FAVICON_TYPE = DEFAULT_ICON_LINK?.getAttribute('type') ?? null;
  * index.html's static defaults (title "packstack-frontend", /favicon.svg)
  * until theme data has actually loaded, and again for any tenant who
  * hasn't uploaded a logo yet - no new upload step required to benefit here.
+ *
+ * faviconUrl (ThemeConfig.faviconUrl) lets a tenant override the favicon
+ * outright instead of relying on the auto-crop of their logo - a wide or
+ * rectangular logo can crop badly at favicon size, so an explicit favicon
+ * always wins when set.
  */
-export function useTenantDocumentHead({ businessName, logoUrl } = {}) {
+export function useTenantDocumentHead({ businessName, logoUrl, faviconUrl: explicitFaviconUrl } = {}) {
   useEffect(() => {
     if (businessName) {
       document.title = businessName;
     }
 
-    const faviconUrl = deriveFaviconUrl(logoUrl);
+    const faviconUrl = deriveFaviconUrl(explicitFaviconUrl || logoUrl);
     if (faviconUrl) {
       let link = document.querySelector('link[rel="icon"]');
       if (!link) {
@@ -68,5 +73,5 @@ export function useTenantDocumentHead({ businessName, logoUrl } = {}) {
         }
       }
     };
-  }, [businessName, logoUrl]);
+  }, [businessName, logoUrl, explicitFaviconUrl]);
 }

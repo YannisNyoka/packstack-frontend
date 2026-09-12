@@ -386,7 +386,7 @@ export function CustomerProfilePage() {
     bookingApi.getTheme().then(setTheme).catch(() => {});
   }, []);
 
-  useTenantDocumentHead({ businessName: theme?.businessName, logoUrl: theme?.logoUrl });
+  useTenantDocumentHead({ businessName: theme?.businessName, logoUrl: theme?.logoUrl, faviconUrl: theme?.faviconUrl });
 
   const primaryColor = theme?.colors?.primary || '#111827';
   const accentColor = theme?.colors?.accent || primaryColor;
