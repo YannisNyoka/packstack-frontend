@@ -62,6 +62,18 @@
   opacity: 0.8;
 }
 
+.directionsLink {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  opacity: 1;
+  margin-top: 2px;
+}
+
+.directionsLink:hover {
+  text-decoration: underline;
+}
+
 .socials {
   display: flex;
   gap: 12px;

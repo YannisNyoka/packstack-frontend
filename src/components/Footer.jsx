@@ -59,6 +59,14 @@ function socialHref(key, value) {
  * 'minimal' drops the contact block and collapses to a single slim bar;
  * every other variant gets the full brand/contact/socials row + copyright.
  */
+/** A plain Google Maps search URL needs no API key/geocoding setup - just
+ * the address text, url-encoded. Works for any address a tenant can type.
+ * Exported so a template with its own bespoke contact section (e.g.
+ * FlareTemplate) can build the same link without duplicating this. */
+export function directionsHref(address) {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+}
+
 export function Footer({ theme, variant = 'classic' }) {
   const socialLinks = theme?.socialLinks || {};
   const activeSocials = Object.entries(socialLinks).filter(([, value]) => value && value.trim());
@@ -114,6 +122,11 @@ export function Footer({ theme, variant = 'classic' }) {
             {contact.address && <span>{contact.address}</span>}
             {contact.phone && <span>{contact.phone}</span>}
             {contact.email && <span>{contact.email}</span>}
+            {contact.address && (
+              <a href={directionsHref(contact.address)} target="_blank" rel="noopener noreferrer" className={styles.directionsLink}>
+                Get Directions →
+              </a>
+            )}
           </div>
         )}
 

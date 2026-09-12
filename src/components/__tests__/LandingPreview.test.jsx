@@ -32,6 +32,7 @@ const ALL_TEMPLATES = [
   'neon',
   'terrazzo',
   'neumorphic',
+  'flare',
 ]
 
 const baseTheme = {
@@ -101,5 +102,23 @@ describe('LandingPreview', () => {
   it('falls back to Classic when theme is null (still loading)', () => {
     renderPreview(null)
     expect(screen.getByTestId('landing-template-classic')).toBeInTheDocument()
+  })
+
+  it('shows a "Get Directions" link to Google Maps once an address is set, and not before', async () => {
+    const { rerender } = renderPreview({ ...baseTheme, template: 'classic' })
+    await waitFor(() => expect(screen.getByTestId('landing-template-classic')).toBeInTheDocument())
+    expect(screen.queryByText('Get Directions →')).not.toBeInTheDocument()
+
+    rerender(
+      <MemoryRouter>
+        <LandingPreview theme={{ ...baseTheme, template: 'classic', contactInfo: { address: '1948 Mahalefele Rd, Dube, Soweto' } }} />
+      </MemoryRouter>
+    )
+    const link = await screen.findByText('Get Directions →')
+    expect(link).toHaveAttribute(
+      'href',
+      'https://www.google.com/maps/search/?api=1&query=1948%20Mahalefele%20Rd%2C%20Dube%2C%20Soweto'
+    )
+    expect(link).toHaveAttribute('target', '_blank')
   })
 })

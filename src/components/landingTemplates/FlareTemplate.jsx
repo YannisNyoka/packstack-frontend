@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Footer } from '../Footer.jsx';
+import { Footer, directionsHref } from '../Footer.jsx';
 import { businessNameVisibility } from './businessNameVisibility.js';
 import styles from './FlareTemplate.module.css';
 
@@ -97,7 +97,14 @@ export function FlareTemplate({ theme, customer, services }) {
         <section className={styles.contactSection}>
           <div className={styles.contactEyebrow}>Contact Us</div>
           {theme?.businessName && <h2 className={styles.contactName}>{theme.businessName}</h2>}
-          {contact.address && <p className={styles.contactLine}>{contact.address}</p>}
+          {contact.address && (
+            <>
+              <p className={styles.contactLine}>{contact.address}</p>
+              <a href={directionsHref(contact.address)} target="_blank" rel="noopener noreferrer" className={styles.directionsLink}>
+                Get Directions →
+              </a>
+            </>
+          )}
           {contact.phone && (
             <a href={`tel:${contact.phone}`} className={styles.contactPhone}>
               {contact.phone}

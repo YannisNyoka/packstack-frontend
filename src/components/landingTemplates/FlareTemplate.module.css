@@ -253,6 +253,18 @@
   margin: 0 0 6px;
 }
 
+.directionsLink {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  margin-bottom: 16px;
+}
+
+.directionsLink:hover {
+  text-decoration: underline;
+}
+
 .contactPhone {
   font-size: 14px;
   font-weight: 700;
