@@ -130,7 +130,7 @@ export function TenantDetailPage() {
     setDeleteError(null);
     try {
       await tenantsApi.deleteTenant(id, deleteConfirm);
-      navigate('/superadmin', { replace: true });
+      navigate('/superadmin/tenants', { replace: true });
     } catch (err) {
       setDeleteError(err instanceof ApiError ? err.message : 'Failed to delete tenant.');
       setDeleting(false);
@@ -147,7 +147,7 @@ export function TenantDetailPage() {
     <div>
       <div className="page-header">
         <div>
-          <Link to="/superadmin" className="muted" style={{ fontSize: 13 }}>
+          <Link to="/superadmin/tenants" className="muted" style={{ fontSize: 13 }}>
             ← Back to tenants
           </Link>
           <h1 style={{ marginTop: 6 }}>{tenant.displayName}</h1>

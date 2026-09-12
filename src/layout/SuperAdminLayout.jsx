@@ -4,7 +4,8 @@ import { useSuperAdminAuth } from '../superadmin/SuperAdminAuthContext.jsx';
 import styles from './DashboardLayout.module.css';
 
 const NAV_ITEMS = [
-  { to: '/superadmin', label: 'Tenants', end: true },
+  { to: '/superadmin', label: 'Overview', end: true },
+  { to: '/superadmin/tenants', label: 'Tenants' },
   { to: '/superadmin/plans', label: 'Plans' },
 ];
 

@@ -30,6 +30,7 @@ import { SuperAdminAuthProvider } from './superadmin/SuperAdminAuthContext.jsx';
 import { RequireSuperAdmin } from './superadmin/RequireSuperAdmin.jsx';
 import { SuperAdminLayout } from './layout/SuperAdminLayout.jsx';
 import { SuperAdminLoginPage } from './pages/SuperAdminLoginPage.jsx';
+import { OverviewPage as SuperAdminOverviewPage } from './pages/superadmin/OverviewPage.jsx';
 import { TenantsPage } from './pages/superadmin/TenantsPage.jsx';
 import { TenantDetailPage } from './pages/superadmin/TenantDetailPage.jsx';
 import { PlansPage } from './pages/superadmin/PlansPage.jsx';
@@ -118,7 +119,8 @@ export default function App() {
                       </RequireSuperAdmin>
                     }
                   >
-                    <Route index element={<TenantsPage />} />
+                    <Route index element={<SuperAdminOverviewPage />} />
+                    <Route path="tenants" element={<TenantsPage />} />
                     <Route path="tenants/:id" element={<TenantDetailPage />} />
                     <Route path="plans" element={<PlansPage />} />
                   </Route>
