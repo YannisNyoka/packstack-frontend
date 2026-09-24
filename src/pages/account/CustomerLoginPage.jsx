@@ -23,7 +23,7 @@ export function CustomerLoginPage() {
     bookingApi.getTheme().then(setTheme).catch(() => {});
   }, []);
 
-  useTenantDocumentHead({ businessName: theme?.businessName, logoUrl: theme?.logoUrl, faviconUrl: theme?.faviconUrl });
+  useTenantDocumentHead({ businessName: theme?.businessName, logoUrl: theme?.logoUrl, faviconUrl: theme?.faviconUrl, themeColor: theme?.colors?.primary });
 
   // This is the only login form shown on the public site - there's no
   // separate, discoverable "owner/staff login" URL, since a labeled admin

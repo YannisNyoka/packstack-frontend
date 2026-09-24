@@ -24,7 +24,7 @@ export function CustomerSignupPage() {
     bookingApi.getTheme().then(setTheme).catch(() => {});
   }, []);
 
-  useTenantDocumentHead({ businessName: theme?.businessName, logoUrl: theme?.logoUrl, faviconUrl: theme?.faviconUrl });
+  useTenantDocumentHead({ businessName: theme?.businessName, logoUrl: theme?.logoUrl, faviconUrl: theme?.faviconUrl, themeColor: theme?.colors?.primary });
 
   async function handleSubmit(e) {
     e.preventDefault();

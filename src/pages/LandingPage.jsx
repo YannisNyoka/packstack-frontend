@@ -20,7 +20,7 @@ export function LandingPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  useTenantDocumentHead({ businessName: theme?.businessName, logoUrl: theme?.logoUrl, faviconUrl: theme?.faviconUrl });
+  useTenantDocumentHead({ businessName: theme?.businessName, logoUrl: theme?.logoUrl, faviconUrl: theme?.faviconUrl, themeColor: theme?.colors?.primary });
 
   if (loading) {
     return (
