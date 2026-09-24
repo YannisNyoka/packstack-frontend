@@ -6,6 +6,7 @@ import { ApiError } from '../api/client.js';
 import { useCustomerAuth } from '../auth/CustomerAuthContext.jsx';
 import { AccountHeader } from '../components/AccountHeader.jsx';
 import { Calendar } from '../components/Calendar.jsx';
+import { InstallAppPrompt } from '../components/InstallAppPrompt.jsx';
 import { useTenantDocumentHead } from '../hooks/useTenantDocumentHead.js';
 import styles from './BookingPage.module.css';
 
@@ -467,6 +468,7 @@ export function BookingPage() {
             >
               Add to Google Calendar
             </a>
+            <InstallAppPrompt businessName={theme?.businessName} />
           </div>
         )}
       </div>
