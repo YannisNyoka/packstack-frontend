@@ -2,6 +2,7 @@ import { Suspense, useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useSuperAdminAuth } from '../superadmin/SuperAdminAuthContext.jsx';
 import { PageLoadingFallback } from '../components/PageLoadingFallback.jsx';
+import { RouteErrorBoundary } from '../components/RouteErrorBoundary.jsx';
 import styles from './DashboardLayout.module.css';
 
 const NAV_ITEMS = [
@@ -61,9 +62,11 @@ export function SuperAdminLayout() {
         </div>
       </aside>
       <main className={styles.main}>
-        <Suspense fallback={<PageLoadingFallback />}>
-          <Outlet />
-        </Suspense>
+        <RouteErrorBoundary>
+          <Suspense fallback={<PageLoadingFallback />}>
+            <Outlet />
+          </Suspense>
+        </RouteErrorBoundary>
       </main>
     </div>
   );

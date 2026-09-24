@@ -150,6 +150,17 @@ export function BookingPage() {
       setStep('confirmation');
     } catch (err) {
       setSubmitError(err instanceof ApiError ? err.message : 'Failed to book this appointment.');
+      if (err instanceof ApiError && err.code === 'SLOT_CONFLICT') {
+        // Someone else just took this slot - the times list on the previous
+        // step is now stale. Refresh it and send the customer back there
+        // instead of leaving them stuck resubmitting a slot that's gone;
+        // loadSlots() already clears the stale selectedSlot/slots itself.
+        // Set slotsError *after* loadSlots resolves, since loadSlots clears
+        // it itself at the start of every call.
+        setStep('time');
+        await loadSlots(date);
+        setSlotsError('Someone just booked that time - pick another below.');
+      }
     } finally {
       setSubmitting(false);
     }
@@ -394,7 +405,14 @@ export function BookingPage() {
             )}
             <div className="field">
               <label htmlFor="booking-notes">Notes (optional)</label>
-              <textarea id="booking-notes" className="textarea" rows={3} value={details.notes} onChange={(e) => setDetails({ ...details, notes: e.target.value })} />
+              <textarea
+                id="booking-notes"
+                className="textarea"
+                rows={3}
+                maxLength={1000}
+                value={details.notes}
+                onChange={(e) => setDetails({ ...details, notes: e.target.value })}
+              />
             </div>
 
             {submitError && <p className="error-text">{submitError}</p>}

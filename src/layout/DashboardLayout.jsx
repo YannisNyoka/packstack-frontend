@@ -17,6 +17,7 @@ import * as themeApi from '../api/theme.js';
 import { getTenantSlug } from '../api/tenant.js';
 import { OnboardingChecklist } from '../components/OnboardingChecklist.jsx';
 import { PageLoadingFallback } from '../components/PageLoadingFallback.jsx';
+import { RouteErrorBoundary } from '../components/RouteErrorBoundary.jsx';
 import styles from './DashboardLayout.module.css';
 
 const STATUS_BANNER = {
@@ -242,9 +243,11 @@ export function DashboardLayout() {
           </div>
         )}
         <OnboardingChecklist />
-        <Suspense fallback={<PageLoadingFallback />}>
-          <Outlet />
-        </Suspense>
+        <RouteErrorBoundary>
+          <Suspense fallback={<PageLoadingFallback />}>
+            <Outlet />
+          </Suspense>
+        </RouteErrorBoundary>
       </main>
     </div>
   );

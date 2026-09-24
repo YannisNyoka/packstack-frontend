@@ -90,6 +90,12 @@ export function ManagePage() {
       await load();
     } catch (err) {
       setActionError(err instanceof ApiError ? err.message : 'Failed to reschedule.');
+      if (err instanceof ApiError && err.code === 'SLOT_CONFLICT') {
+        // Someone else just took this slot - refresh the stale times list
+        // (also clears selectedSlot) instead of leaving the customer stuck
+        // re-submitting a slot that's gone.
+        await loadSlots(date);
+      }
     } finally {
       setSubmitting(false);
     }

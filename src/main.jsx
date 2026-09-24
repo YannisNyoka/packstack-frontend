@@ -4,6 +4,7 @@ import * as Sentry from '@sentry/react'
 import './index.css'
 import App from './App.jsx'
 import { resolveTenantSlug } from './api/tenant.js'
+import { RouteErrorBoundary } from './components/RouteErrorBoundary.jsx'
 
 // This app routinely renders real customer PII (name, phone, email) pulled
 // from packstack-backend - opt out of Sentry's default user/request data
@@ -23,7 +24,9 @@ const root = createRoot(document.getElementById('root'))
 function renderApp() {
   root.render(
     <StrictMode>
-      <App />
+      <RouteErrorBoundary>
+        <App />
+      </RouteErrorBoundary>
     </StrictMode>,
   )
 }
