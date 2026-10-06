@@ -47,6 +47,32 @@ function setOrCreateLink(rel, href, extraAttrs = {}) {
   return link;
 }
 
+/**
+ * index.html declares TWO rel="icon" links (an SVG one plus a sizes="any"
+ * .ico fallback, for browsers that don't support SVG favicons) - querying
+ * and updating only the first match (the old setOrCreateLink behavior) left
+ * the second one still pointing at PackStack's own generic favicon.ico,
+ * which is exactly what several browsers display instead of the updated SVG
+ * link - a tenant's uploaded favicon silently never showed up. Every
+ * existing rel="icon" link must be updated, not just whichever one
+ * querySelector happens to return first.
+ */
+function setAllIconLinks(href) {
+  const existing = document.querySelectorAll('link[rel="icon"]');
+  if (existing.length === 0) {
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    document.head.appendChild(link);
+    link.href = href;
+    link.removeAttribute('type');
+    return;
+  }
+  existing.forEach((link) => {
+    link.href = href;
+    link.removeAttribute('type'); // no longer necessarily each link's originally-declared type (svg+xml / ico)
+  });
+}
+
 function setOrCreateMeta(name, content) {
   let meta = document.querySelector(`meta[name="${name}"]`);
   if (!meta) {
@@ -64,9 +90,16 @@ function setOrCreateMeta(name, content) {
 // /dashboard, which never calls this hook and so would otherwise be stuck
 // showing whichever tenant's favicon/title/manifest the login page last set).
 const DEFAULT_TITLE = typeof document !== 'undefined' ? document.title : '';
-const DEFAULT_ICON_LINK = typeof document !== 'undefined' ? document.querySelector('link[rel="icon"]') : null;
-const DEFAULT_FAVICON_HREF = DEFAULT_ICON_LINK?.href ?? null;
-const DEFAULT_FAVICON_TYPE = DEFAULT_ICON_LINK?.getAttribute('type') ?? null;
+// Every rel="icon" link present at module load (index.html declares two -
+// see setAllIconLinks' comment), each with its own original href/type, so
+// unmount can restore each one exactly rather than only the first.
+const DEFAULT_ICON_LINKS =
+  typeof document !== 'undefined'
+    ? Array.from(document.querySelectorAll('link[rel="icon"]')).map((link) => ({
+        href: link.href,
+        type: link.getAttribute('type'),
+      }))
+    : [];
 const DEFAULT_MANIFEST_HREF = typeof document !== 'undefined' ? document.querySelector('link[rel="manifest"]')?.href ?? null : null;
 const DEFAULT_APPLE_ICON_HREF = typeof document !== 'undefined' ? document.querySelector('link[rel="apple-touch-icon"]')?.href ?? null : null;
 const DEFAULT_THEME_COLOR = typeof document !== 'undefined' ? document.querySelector('meta[name="theme-color"]')?.content ?? null : null;
@@ -109,8 +142,7 @@ export function useTenantDocumentHead({ businessName, logoUrl, faviconUrl: expli
 
     const faviconUrl = deriveFaviconUrl(explicitFaviconUrl || logoUrl);
     if (faviconUrl) {
-      const link = setOrCreateLink('icon', faviconUrl);
-      link.removeAttribute('type'); // no longer necessarily the static favicon.svg's declared type
+      setAllIconLinks(faviconUrl);
     }
 
     const iconSource = explicitFaviconUrl || logoUrl;
@@ -151,15 +183,20 @@ export function useTenantDocumentHead({ businessName, logoUrl, faviconUrl: expli
     return () => {
       document.title = DEFAULT_TITLE;
 
-      const link = document.querySelector('link[rel="icon"]');
-      if (link && DEFAULT_FAVICON_HREF) {
-        link.href = DEFAULT_FAVICON_HREF;
-        if (DEFAULT_FAVICON_TYPE) {
-          link.setAttribute('type', DEFAULT_FAVICON_TYPE);
+      // setAllIconLinks never adds/removes rel="icon" links once any exist
+      // (only mutates href/type), so document order still lines up with
+      // DEFAULT_ICON_LINKS captured at module load - restore each by position.
+      const links = document.querySelectorAll('link[rel="icon"]');
+      links.forEach((link, i) => {
+        const original = DEFAULT_ICON_LINKS[i];
+        if (!original) return;
+        link.href = original.href;
+        if (original.type) {
+          link.setAttribute('type', original.type);
         } else {
           link.removeAttribute('type');
         }
-      }
+      });
 
       if (DEFAULT_MANIFEST_HREF) setOrCreateLink('manifest', DEFAULT_MANIFEST_HREF);
       if (DEFAULT_APPLE_ICON_HREF) setOrCreateLink('apple-touch-icon', DEFAULT_APPLE_ICON_HREF);

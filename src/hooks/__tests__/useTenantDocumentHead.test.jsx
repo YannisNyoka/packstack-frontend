@@ -87,6 +87,33 @@ describe('useTenantDocumentHead', () => {
     unmount()
   })
 
+  it('updates every rel="icon" link, not just the first (index.html declares an svg one plus an .ico fallback)', () => {
+    const svgLink = document.createElement('link');
+    svgLink.rel = 'icon';
+    svgLink.type = 'image/svg+xml';
+    svgLink.href = '/favicon.svg';
+    document.head.appendChild(svgLink);
+
+    const icoLink = document.createElement('link');
+    icoLink.rel = 'icon';
+    icoLink.setAttribute('sizes', 'any');
+    icoLink.href = '/favicon.ico';
+    document.head.appendChild(icoLink);
+
+    const { unmount } = renderHook(() => useTenantDocumentHead({ businessName: 'Nailsbynaledi', logoUrl: LOGO_URL }));
+
+    const iconLinks = document.querySelectorAll('link[rel="icon"]');
+    expect(iconLinks).toHaveLength(2);
+    iconLinks.forEach((link) => {
+      expect(link.href).toContain('w_64,h_64,c_fill,g_auto,f_auto,q_auto');
+      expect(link.getAttribute('type')).toBeNull();
+    });
+
+    unmount();
+    svgLink.remove();
+    icoLink.remove();
+  });
+
   it('an explicit faviconUrl overrides logoUrl as the icon source', () => {
     renderHook(() =>
       useTenantDocumentHead({
