@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCustomerAuth } from '../../auth/CustomerAuthContext.jsx';
 import * as accountApi from '../../api/customerAccount.js';
+import * as messagingApi from '../../api/customerMessaging.js';
 import * as bookingApi from '../../api/publicBooking.js';
 import { ApiError } from '../../api/client.js';
 import { AccountHeader } from '../../components/AccountHeader.jsx';
@@ -13,9 +14,12 @@ const TABS = [
   { key: 'upcoming', label: 'Upcoming' },
   { key: 'history', label: 'History' },
   { key: 'loyalty', label: 'Loyalty Points' },
+  { key: 'messages', label: 'Messages' },
   { key: 'profile', label: 'Edit Profile' },
   { key: 'password', label: 'Password' },
 ];
+
+const MESSAGES_POLL_MS = 6000;
 
 const STATUS_LABEL = { booked: 'Booked', confirmed: 'Confirmed', completed: 'Completed', cancelled: 'Cancelled', no_show: 'No-show' };
 const STATUS_BADGE = {
@@ -251,6 +255,72 @@ function LoyaltyTab() {
   );
 }
 
+function MessagesTab() {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [body, setBody] = useState('');
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState(null);
+
+  function load() {
+    messagingApi
+      .getMyMessages()
+      .then(setData)
+      .catch((err) => setError(err instanceof ApiError ? err.message : 'Failed to load messages.'));
+  }
+
+  useEffect(() => {
+    load();
+    const timer = setInterval(load, MESSAGES_POLL_MS);
+    return () => clearInterval(timer);
+  }, []);
+
+  async function handleSend(e) {
+    e.preventDefault();
+    if (!body.trim()) return;
+    setSending(true);
+    setSendError(null);
+    try {
+      await messagingApi.sendMyMessage(body.trim());
+      setBody('');
+      load();
+    } catch (err) {
+      setSendError(err instanceof ApiError ? err.message : 'Failed to send message.');
+    } finally {
+      setSending(false);
+    }
+  }
+
+  if (error) return <p className="error-text">{error}</p>;
+  if (!data) return <p className="muted">Loading…</p>;
+
+  return (
+    <div>
+      {data.messages.length === 0 ? (
+        <p className="empty-state">No messages yet - send one below to get in touch.</p>
+      ) : (
+        <div className={styles.messages}>
+          {data.messages.map((m) => (
+            <div key={m._id} className={`${styles.message} ${m.senderType === 'customer' ? styles.messageMine : styles.messageTheirs}`}>
+              <div className={styles.messageMeta}>
+                {m.senderName} · {new Date(m.createdAt).toLocaleString()}
+              </div>
+              <div>{m.body}</div>
+            </div>
+          ))}
+        </div>
+      )}
+      <form onSubmit={handleSend} style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+        <input className="input" placeholder="Type a message…" value={body} onChange={(e) => setBody(e.target.value)} style={{ flex: 1 }} />
+        <button type="submit" className="btn btn-primary" disabled={sending || !body.trim()}>
+          {sending ? 'Sending…' : 'Send'}
+        </button>
+      </form>
+      {sendError && <p className="error-text">{sendError}</p>}
+    </div>
+  );
+}
+
 function ProfileTab() {
   const { customer, setCustomer } = useCustomerAuth();
   const [name, setName] = useState(customer?.name || '');
@@ -428,6 +498,7 @@ export function CustomerProfilePage() {
         {activeTab === 'upcoming' && <AppointmentsTab status="upcoming" />}
         {activeTab === 'history' && <AppointmentsTab status="history" />}
         {activeTab === 'loyalty' && <LoyaltyTab />}
+        {activeTab === 'messages' && <MessagesTab />}
         {activeTab === 'profile' && <ProfileTab />}
         {activeTab === 'password' && <PasswordTab />}
       </div>

@@ -9,20 +9,21 @@ const emptyForm = {
   billingInterval: 'monthly',
   maxStaff: '',
   maxAppointmentsPerMonth: '',
-  whatsappMessagesPerMonth: '',
+  unlimitedAppointments: false,
   customDomainAllowed: false,
   active: true,
 };
 
 function toForm(plan) {
+  const unlimited = plan.limits.maxAppointmentsPerMonth === null;
   return {
     key: plan.key,
     name: plan.name,
     priceZAR: String(plan.priceZAR),
     billingInterval: plan.billingInterval,
     maxStaff: String(plan.limits.maxStaff),
-    maxAppointmentsPerMonth: String(plan.limits.maxAppointmentsPerMonth),
-    whatsappMessagesPerMonth: String(plan.limits.whatsappMessagesPerMonth),
+    maxAppointmentsPerMonth: unlimited ? '' : String(plan.limits.maxAppointmentsPerMonth),
+    unlimitedAppointments: unlimited,
     customDomainAllowed: plan.limits.customDomainAllowed,
     active: plan.active,
   };
@@ -37,8 +38,7 @@ function toPayload(form) {
     active: form.active,
     limits: {
       maxStaff: Number(form.maxStaff),
-      maxAppointmentsPerMonth: Number(form.maxAppointmentsPerMonth),
-      whatsappMessagesPerMonth: Number(form.whatsappMessagesPerMonth),
+      maxAppointmentsPerMonth: form.unlimitedAppointments ? null : Number(form.maxAppointmentsPerMonth),
       customDomainAllowed: form.customDomainAllowed,
     },
   };
@@ -185,20 +185,17 @@ export function PlansPage() {
                 className="input"
                 value={form.maxAppointmentsPerMonth}
                 onChange={(e) => setForm({ ...form, maxAppointmentsPerMonth: e.target.value })}
-                required
+                disabled={form.unlimitedAppointments}
+                required={!form.unlimitedAppointments}
               />
-            </div>
-            <div className="field">
-              <label htmlFor="plan-max-whatsapp">Max WhatsApp msgs/mo</label>
-              <input
-                id="plan-max-whatsapp"
-                type="number"
-                min="0"
-                className="input"
-                value={form.whatsappMessagesPerMonth}
-                onChange={(e) => setForm({ ...form, whatsappMessagesPerMonth: e.target.value })}
-                required
-              />
+              <label style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 6, fontWeight: 400 }}>
+                <input
+                  type="checkbox"
+                  checked={form.unlimitedAppointments}
+                  onChange={(e) => setForm({ ...form, unlimitedAppointments: e.target.checked, maxAppointmentsPerMonth: e.target.checked ? '' : form.maxAppointmentsPerMonth })}
+                />
+                Unlimited
+              </label>
             </div>
             <div className="field">
               <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -219,6 +216,9 @@ export function PlansPage() {
               </div>
             )}
           </div>
+          <p className="muted" style={{ fontSize: 13, marginTop: -4 }}>
+            Every plan also includes unlimited in-app messaging - there's nothing to configure here since it doesn't vary by tier.
+          </p>
           {formError && <p className="error-text">{formError}</p>}
           <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
             <button type="submit" className="btn btn-primary" disabled={saving}>
@@ -254,7 +254,7 @@ export function PlansPage() {
                     R{plan.priceZAR.toFixed(2)} / {plan.billingInterval === 'annual' ? 'yr' : 'mo'}
                   </td>
                   <td className="muted">
-                    {plan.limits.maxStaff} staff · {plan.limits.maxAppointmentsPerMonth} appts/mo · {plan.limits.whatsappMessagesPerMonth} WA/mo
+                    {plan.limits.maxStaff} staff · {plan.limits.maxAppointmentsPerMonth === null ? 'unlimited' : plan.limits.maxAppointmentsPerMonth} appts/mo
                     {plan.limits.customDomainAllowed ? ' · custom domain' : ''}
                   </td>
                   <td>

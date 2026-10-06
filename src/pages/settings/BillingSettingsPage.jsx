@@ -142,8 +142,8 @@ export function BillingSettingsPage() {
                   </div>
                   <ul className="muted" style={{ fontSize: 13, paddingLeft: 18, marginBottom: 12 }}>
                     <li>{plan.limits.maxStaff} staff</li>
-                    <li>{plan.limits.maxAppointmentsPerMonth} appointments/mo</li>
-                    <li>{plan.limits.whatsappMessagesPerMonth} WhatsApp msgs/mo</li>
+                    <li>{plan.limits.maxAppointmentsPerMonth === null ? 'Unlimited' : plan.limits.maxAppointmentsPerMonth} appointments/mo</li>
+                    <li>Unlimited in-app messaging</li>
                     {plan.limits.customDomainAllowed && <li>Custom domain</li>}
                   </ul>
                   <button

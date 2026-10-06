@@ -63,6 +63,38 @@
   margin-bottom: 16px;
 }
 
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.message {
+  max-width: 80%;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  font-size: 14px;
+}
+
+.messageMine {
+  align-self: flex-end;
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.messageTheirs {
+  align-self: flex-start;
+  background: var(--color-bg);
+}
+
+.messageMeta {
+  font-size: 11px;
+  opacity: 0.75;
+  margin-bottom: 2px;
+}
+
 .loyaltyNumber {
   font-size: 32px;
   font-weight: 700;

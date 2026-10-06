@@ -8,12 +8,14 @@ import {
   Users,
   UserRound,
   Scissors,
+  MessageSquare,
   Settings,
   ChevronRight,
   LogOut,
 } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext.jsx';
 import * as themeApi from '../api/theme.js';
+import * as messagingApi from '../api/messaging.js';
 import { getTenantSlug } from '../api/tenant.js';
 import { OnboardingChecklist } from '../components/OnboardingChecklist.jsx';
 import { PageLoadingFallback } from '../components/PageLoadingFallback.jsx';
@@ -48,6 +50,7 @@ const NAV_ITEMS = [
   { to: '/dashboard/schedule', label: 'Schedule', icon: CalendarClock },
   { to: '/dashboard/analytics', label: 'Analytics', icon: LineChart },
   { to: '/dashboard/customers', label: 'Customers', icon: Users },
+  { to: '/dashboard/messages', label: 'Messages', icon: MessageSquare },
   { to: '/dashboard/staff', label: 'Staff', icon: UserRound },
   { to: '/dashboard/services', label: 'Services', icon: Scissors },
   {
@@ -109,7 +112,7 @@ function LiveLinkButton() {
   );
 }
 
-function SidebarNav({ isOwner, onNavigate }) {
+function SidebarNav({ isOwner, onNavigate, unreadMessageCount }) {
   const location = useLocation();
   const [settingsOpen, setSettingsOpen] = useState(location.pathname.startsWith('/dashboard/settings'));
 
@@ -128,6 +131,9 @@ function SidebarNav({ isOwner, onNavigate }) {
             >
               <Icon size={17} className={styles.navIcon} aria-hidden="true" />
               {item.label}
+              {item.to === '/dashboard/messages' && unreadMessageCount > 0 && (
+                <span className={styles.navBadge}>{unreadMessageCount}</span>
+              )}
             </NavLink>
           );
         }
@@ -173,11 +179,24 @@ export function DashboardLayout() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState(null);
+  const [unreadMessageCount, setUnreadMessageCount] = useState(0);
   const isOwner = user?.role === 'owner';
   const banner = STATUS_BANNER[user?.tenantStatus] || trialBanner(user?.tenantStatus, user?.trialEndsAt);
 
   useEffect(() => {
     themeApi.getTheme().then(setTheme).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    function poll() {
+      messagingApi
+        .getUnreadCount()
+        .then((res) => setUnreadMessageCount(res.count))
+        .catch(() => {});
+    }
+    poll();
+    const timer = setInterval(poll, 30000);
+    return () => clearInterval(timer);
   }, []);
 
   async function handleLogout() {
@@ -222,7 +241,7 @@ export function DashboardLayout() {
 
         <LiveLinkButton />
 
-        <SidebarNav isOwner={isOwner} onNavigate={() => setMenuOpen(false)} />
+        <SidebarNav isOwner={isOwner} onNavigate={() => setMenuOpen(false)} unreadMessageCount={unreadMessageCount} />
 
         <div className={styles.account}>
           <span className={styles.accountEmail}>{user?.email}</span>

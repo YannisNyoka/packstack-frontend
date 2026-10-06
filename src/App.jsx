@@ -15,6 +15,7 @@ import { OverviewPage } from './pages/OverviewPage.jsx';
 import { StaffPage } from './pages/StaffPage.jsx';
 import { ServicesPage } from './pages/ServicesPage.jsx';
 import { CustomersPage } from './pages/CustomersPage.jsx';
+import { MessagesPage } from './pages/MessagesPage.jsx';
 import { BookingPage } from './pages/BookingPage.jsx';
 import { LandingPage } from './pages/LandingPage.jsx';
 import { ManagePage } from './pages/ManagePage.jsx';
@@ -108,6 +109,7 @@ export default function App() {
                     <Route path="staff" element={<StaffPage />} />
                     <Route path="services" element={<ServicesPage />} />
                     <Route path="customers" element={<CustomersPage />} />
+                    <Route path="messages" element={<MessagesPage />} />
                     <Route
                       path="settings"
                       element={
