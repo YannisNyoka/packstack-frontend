@@ -35,7 +35,7 @@ export function deriveIconUrl(sourceUrl, size) {
   return `${sourceUrl.slice(0, insertAt)}w_${size},h_${size},c_fill,g_auto,f_png,q_auto/${sourceUrl.slice(insertAt)}`;
 }
 
-function setOrCreateLink(rel, href, extraAttrs = {}) {
+export function setOrCreateLink(rel, href, extraAttrs = {}) {
   let link = document.querySelector(`link[rel="${rel}"]`);
   if (!link) {
     link = document.createElement('link');
@@ -73,7 +73,7 @@ function setAllIconLinks(href) {
   });
 }
 
-function setOrCreateMeta(name, content) {
+export function setOrCreateMeta(name, content) {
   let meta = document.querySelector(`meta[name="${name}"]`);
   if (!meta) {
     meta = document.createElement('meta');
@@ -82,6 +82,40 @@ function setOrCreateMeta(name, content) {
   }
   meta.content = content;
   return meta;
+}
+
+/**
+ * Same shape as setOrCreateMeta, keyed by the property="" attribute instead
+ * of name="" - Open Graph tags are conventionally property="og:..." rather
+ * than name="...", and index.html ships none of these at all for this app
+ * (unlike the marketing site), so there's nothing to merely update here.
+ */
+export function setOrCreateOgMeta(property, content) {
+  let meta = document.querySelector(`meta[property="${property}"]`);
+  if (!meta) {
+    meta = document.createElement('meta');
+    meta.setAttribute('property', property);
+    document.head.appendChild(meta);
+  }
+  meta.content = content;
+  return meta;
+}
+
+/**
+ * Same create-or-update contract as the two helpers above, for the one
+ * JSON-LD <script> tag a tenant page needs at a time - see
+ * useSEO.js's setJsonLd on the marketing site for the identical pattern.
+ */
+export function setOrCreateJsonLd(data) {
+  let script = document.querySelector('script[data-tenant-jsonld]');
+  if (!script) {
+    script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.setAttribute('data-tenant-jsonld', 'true');
+    document.head.appendChild(script);
+  }
+  script.textContent = JSON.stringify(data);
+  return script;
 }
 
 // Captured once, at module load, before any tenant page has had a chance to
