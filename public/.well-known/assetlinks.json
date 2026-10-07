@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "za.co.packstack.twa",
+    "sha256_cert_fingerprints": ["92:15:F0:8C:42:54:92:1C:99:FC:36:76:85:4C:8B:EF:F6:4D:C2:DD:A1:A6:79:C1:62:5D:BE:C3:FA:93:F7:FD"]
+  }
+}]
